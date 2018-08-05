@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f49b4a1d18757c45aa3a9feee14f947, type: 3}
+  m_Name: HelpSprites
+  m_EditorClassIdentifier: 
+  sprites:
+  - targetPlayer: 1
+    sprite: {fileID: 21300000, guid: 920e3ec7acb7769449fd3af13dd5984f, type: 3}
+  - targetPlayer: 2
+    sprite: {fileID: 21300000, guid: 5b25dee0d6443ac43945ea4a4371f1f3, type: 3}
+  - targetPlayer: 3
+    sprite: {fileID: 21300000, guid: dfa29ed64c2815a41a1f5ec6ceea0a45, type: 3}
+  ecoColor: {r: 0, g: 0.42068958, b: 1, a: 1}
+  gouvColor: {r: 0.88235295, g: 0.11678202, b: 0.11678202, a: 1}
+  ngoColor: {r: 0.16854188, g: 0.63235295, b: 0.106942035, a: 1}

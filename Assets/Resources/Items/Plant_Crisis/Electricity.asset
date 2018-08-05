@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf20b24073c2dc94097539f890cc6e2f, type: 3}
+  m_Name: Electricity
+  m_EditorClassIdentifier: 
+  name: Electricity
+  prefab: {fileID: 1182672331902042, guid: 1df182488987ce841a6302da8b84fad7, type: 2}
+  itemsLinked: []
+  type: 0
+  isPrimary: 0
+  NGOItem: {fileID: 0}
+  EcoItem: {fileID: 0}
+  GouvItem: {fileID: 0}
+  originalItem: {fileID: 11400000, guid: b196fb2bb9bfcfc49ba5845e4f974745, type: 2}
+  icon: {fileID: 21300000, guid: bf756632782e8b048ab948cff53dd3bf, type: 3}
+  hiddenIcon: {fileID: 21300000, guid: 3de97d667deae884e85b67560a51effa, type: 3}

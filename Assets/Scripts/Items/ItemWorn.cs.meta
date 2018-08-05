@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 4a3f98e9606f9834b9eb86b734edc89d
+timeCreated: 1518372579
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - associateCell: {instanceID: 0}
+  - propLinked: {instanceID: 0}
+  - item: {instanceID: 0}
+  - _meshRenderer: {instanceID: 0}
+  - _materialRed: {fileID: 2100000, guid: 07ad77fe96aae934f9752def1646e634, type: 2}
+  - _materialYellow: {fileID: 2100000, guid: e944ab18f9f8cfd4eb8c0771f9c439ef, type: 2}
+  - _materialGreen: {fileID: 2100000, guid: 6c6cedb94b5634d4aaf2669ddd0c7ab0, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

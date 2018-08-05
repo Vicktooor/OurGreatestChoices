@@ -1,0 +1,1 @@
+Drag and drop Money from a Building to another to change its allocation

@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - NonWalkable
+  - Planet
+  - Cell
+  - QuitButton
+  - SwitchButton
+  - UI_InGame_Panel
+  - SceneButton
+  - Loading_Panel
+  - Switch_Scene_Panel
+  - FocusButton
+  - Interactable
+  - Dialogue_Panel
+  - GlossaryButton
+  - Worker_Panel
+  - Budget_Panel
+  - NewsBox
+  - Dialogue_Box
+  - Dialogue_Building_Panel
+  - PauseButton
+  - BoxBuilding
+  - Information
+  - BudgetButton
+  - BackButton
+  - Instruction
+  - Dialogue_Building_Box
+  - BudgetText
+  - Box
+  - Symbol
+  - BuildingNameBox
+  - CloseButton
+  - WorkerButton
+  - WorkerText
+  - ToggleButton
+  - PoolContainer
+  - PlayerBudget
+  - PageRightButton
+  - PageLeftButton
+  - PlayerRigidBody
+  - Inventory_Panel
+  - Slots_Panel
+  - NPC_Panel
+  - BagButton
+  - Draggable
+  - 3DEmitter
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - Cell
+  - Nature
+  - Building
+  - Interactable
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - ParticleUI
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Notification
+    uniqueID: 735462691
+    locked: 0

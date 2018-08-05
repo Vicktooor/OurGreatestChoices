@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a1b0fc28f6fe604d85c897f5e1d4f5e, type: 3}
+  m_Name: VehicleCarcass_information
+  m_EditorClassIdentifier: 
+  topicTitles:
+  - lang: 14
+    text: Carrosserie
+  - lang: 10
+    text: Vehicle Carcass
+  targetItem: {fileID: 11400000, guid: 9b78eb044653e9841afa3193b7656385, type: 2}
+  texts:
+  - lang: 10
+    texts:
+    - I just got done setting up my shop in this town, and things aren't going smoothly
+      so far...
+    - If you could find us an investor to get ourselves started, that would be great!
+    - I'm certain us doing well would prove beneficial to the town's development!
+    - Oh, and if by any chance you can find us a supplier for metallic frameworks,
+      come tell me!
+  - lang: 14
+    texts:
+    - Je viens tout juste de m'installer dans la region, et les affaires ne vont pas
+      fort...
+    - Si vous pouviez nous trouver un investisseur pour demarrer, ce serait formidable
+      !
+    - Je suis meme sur que nous pourrions participer a la croissance de la ville !
+    - "Oh, si jamais vous trouvez un design de voiture innovant, \xE7a m'interesse
+      aussi !"
+  icon: {fileID: 21300000, guid: 69979d061c197114abfe5f1552e4f659, type: 3}

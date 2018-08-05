@@ -1,0 +1,126 @@
+fileFormatVersion: 2
+guid: 939561c2fe83dbd4682feddea08821f1
+timeCreated: 1519213735
+licenseType: Free
+ModelImporter:
+  serializedVersion: 21
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: ECOWOMAN_All_FK_CTRL
+    100004: ECOWOMAN_All_FK_CTRL_offset
+    100006: ECOWOMAN_Bones
+    100008: ECOWOMAN_Case_FK_CTRL
+    100010: ECOWOMAN_Case_FK_CTRL_offset
+    100012: ECOWOMAN_CaseEndJoint
+    100014: ECOWOMAN_CaseJoint
+    100016: ECOWOMAN_Head_FK_CTRL
+    100018: ECOWOMAN_Head_FK_CTRL_offset
+    100020: ECOWOMAN_HeadEndJoint
+    100022: ECOWOMAN_HeadJoint
+    100024: ECOWOMAN_Hips_FK_CTRL
+    100026: ECOWOMAN_Hips_FK_CTRL_offset
+    100028: ECOWOMAN_HipsJoint
+    100030: ECOWOMAN_Legs_FK_CTRL
+    100032: ECOWOMAN_Legs_FK_CTRL_offset
+    100034: ECOWOMAN_LegsJoint
+    100036: FBX_Ecowoman
+    400000: //RootNode
+    400002: ECOWOMAN_All_FK_CTRL
+    400004: ECOWOMAN_All_FK_CTRL_offset
+    400006: ECOWOMAN_Bones
+    400008: ECOWOMAN_Case_FK_CTRL
+    400010: ECOWOMAN_Case_FK_CTRL_offset
+    400012: ECOWOMAN_CaseEndJoint
+    400014: ECOWOMAN_CaseJoint
+    400016: ECOWOMAN_Head_FK_CTRL
+    400018: ECOWOMAN_Head_FK_CTRL_offset
+    400020: ECOWOMAN_HeadEndJoint
+    400022: ECOWOMAN_HeadJoint
+    400024: ECOWOMAN_Hips_FK_CTRL
+    400026: ECOWOMAN_Hips_FK_CTRL_offset
+    400028: ECOWOMAN_HipsJoint
+    400030: ECOWOMAN_Legs_FK_CTRL
+    400032: ECOWOMAN_Legs_FK_CTRL_offset
+    400034: ECOWOMAN_LegsJoint
+    400036: FBX_Ecowoman
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: PC_Ecowoman
+    4300002: FBX_Ecowoman
+    9500000: //RootNode
+    13700000: FBX_Ecowoman
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

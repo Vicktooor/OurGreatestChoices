@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scene/Alexis/InitScene.unity
+    guid: d190c94b5f3cd354e8310253b8820ee7
+  - enabled: 1
+    path: Assets/Scene/DiscreetScene.unity
+    guid: f1340dbe7f062dc46a8dc7528a550c27
+  - enabled: 1
+    path: Assets/Scene/Alexis/MapView.unity
+    guid: 42f23d6a399beb641b9a2ae5342787a7
+  - enabled: 1
+    path: Assets/Scene/Alexis/ZoomView.unity
+    guid: 3b22fc275d916d648961e60b9baec634

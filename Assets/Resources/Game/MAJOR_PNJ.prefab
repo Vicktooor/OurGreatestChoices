@@ -1,0 +1,227 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1955134370128172}
+  m_IsPrefabParent: 1
+--- !u!1 &1955134370128172
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4902809128778996}
+  - component: {fileID: 33359171710283648}
+  - component: {fileID: 23180560101166510}
+  - component: {fileID: 114008665533991772}
+  - component: {fileID: 114682119389381236}
+  - component: {fileID: 136513561132755664}
+  - component: {fileID: 114322718431608438}
+  m_Layer: 11
+  m_Name: MAJOR_PNJ
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4902809128778996
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1955134370128172}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &23180560101166510
+MeshRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1955134370128172}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 44fc8d9f9bc4255479e7368b5c5e27c0, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &33359171710283648
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1955134370128172}
+  m_Mesh: {fileID: 4300000, guid: beb2f477ea36d484385b3764e69bd4af, type: 3}
+--- !u!114 &114008665533991772
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1955134370128172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f6b82ec9584f6741969172c66f0b924, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  displayView: 1
+  offsetY: 0
+  associateCell: {fileID: 0}
+  buildingLink:
+    type: 1
+    id: 0
+  propLinked: {fileID: 0}
+  radius: 1
+  item: {fileID: 11400000, guid: 045ecb4f47bd0844a8837086c8a27d00, type: 2}
+  _meshRenderer: {fileID: 0}
+  budgetComponent:
+    worldValues:
+      forest:
+        val: 0
+        multiplicator: 0
+      npc:
+        val: 0
+        multiplicator: 0
+      economy:
+        val: 0
+        multiplicator: 0
+      cleanliness:
+        val: 0
+        multiplicator: 0
+    name: 
+    minBudget: 0
+    targetBudget: 0
+    productBenefit: 0
+    budget: 0
+    bubgetSteps: []
+    budgetLinks: []
+  presentationTexts: []
+  govTopics: []
+  contTopics: []
+  leavingTexts: []
+  thanksTexts:
+  - key: 4
+    text:
+    - lang: 14
+      text: "Avec \xE7a, plus de railleries sur nos moyens de transport !"
+    - lang: 10
+      text: We should never lose track of our transportation systems... Hoho!
+  - key: 5
+    text:
+    - lang: 14
+      text: "Je peux d\xE9j\xE0 voir le panneau Ville fleurie d'ici..."
+    - lang: 10
+      text: I can already see the green city award from here...
+  - key: 6
+    text:
+    - lang: 14
+      text: "Bonne nouvelle, tout le monde : Le march\xE9 aux fruits vient d'ouvrir
+        !"
+    - lang: 10
+      text: 'Rejoice, everyone: The fruit market is now open for business!'
+  - key: 7
+    text:
+    - lang: 14
+      text: Si j'avais su qu'on pouvait jardiner sur son propre toit...
+    - lang: 10
+      text: If I ever thought you could have a garden on your own roof...
+  - key: 8
+    text:
+    - lang: 14
+      text: "Hoho, de quoi \xE9clairer la journ\xE9e de nos concitoyens !"
+    - lang: 10
+      text: Hoho, this should lighten up the mood for our citizens!
+  - key: 9
+    text:
+    - lang: 14
+      text: "Le conseil municipal n'h\xE9sitera pas \xE0 donner son feu vert \xE0
+        cette id\xE9e !"
+    - lang: 10
+      text: The city council should gladly greenlight this energy proposal!
+  pictoHead: {fileID: 21300000, guid: fa495673163465147bc83beb42bd0700, type: 3}
+  normalHousesLinked: []
+  citizensList: []
+  metroLinked: []
+  metroWorldValues:
+    forest:
+      val: 0
+      multiplicator: 0
+    npc:
+      val: 0.2
+      multiplicator: 0
+    economy:
+      val: 1
+      multiplicator: 0
+    cleanliness:
+      val: 0.5
+      multiplicator: 0
+--- !u!114 &114322718431608438
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1955134370128172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9be6ae5606cc76141b25bd104002fad8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gender: 1
+--- !u!114 &114682119389381236
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1955134370128172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f03df2e243c55da41ba3637a4e8fe8de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textFiles: []
+  frenchTextFile: {fileID: 4900000, guid: 2b2e2452d100412478a77e86e6fb1887, type: 3}
+  englishTextFile: {fileID: 4900000, guid: 2b2e2452d100412478a77e86e6fb1887, type: 3}
+--- !u!136 &136513561132755664
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1955134370128172}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.035
+  m_Height: 0.08
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.04, z: 0.02}

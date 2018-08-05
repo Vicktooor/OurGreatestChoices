@@ -1,0 +1,158 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1358160813968412}
+  m_IsPrefabParent: 1
+--- !u!1 &1358160813968412
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4647629347213452}
+  - component: {fileID: 33301482716336992}
+  - component: {fileID: 23101808580701998}
+  - component: {fileID: 136082837575649256}
+  - component: {fileID: 114597528312607494}
+  - component: {fileID: 114590558714513340}
+  m_Layer: 11
+  m_Name: Water_Diversion_PNJ
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4647629347213452
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1358160813968412}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &23101808580701998
+MeshRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1358160813968412}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 44fc8d9f9bc4255479e7368b5c5e27c0, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &33301482716336992
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1358160813968412}
+  m_Mesh: {fileID: 4300000, guid: 3c02ad41b8d85e54a935fa8038d893d0, type: 3}
+--- !u!114 &114590558714513340
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1358160813968412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecb2e3decc12136478cde8488aae07e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  displayView: 1
+  offsetY: 0.245
+  associateCell: {fileID: 0}
+  buildingLink:
+    type: 0
+    id: 0
+  propLinked: {fileID: 0}
+  radius: 1
+  item: {fileID: 11400000, guid: 56d77dc70a3bc4e498f5e03b3fe86fc8, type: 2}
+  _meshRenderer: {fileID: 0}
+  budgetComponent:
+    worldValues:
+      forest:
+        val: 0
+        multiplicator: 0
+      npc:
+        val: 0
+        multiplicator: 0
+      economy:
+        val: 0
+        multiplicator: 0
+      cleanliness:
+        val: 0
+        multiplicator: 0
+    name: 
+    minBudget: 0
+    targetBudget: 0
+    productBenefit: 0
+    budget: 0
+    bubgetSteps: []
+    budgetLinks: []
+  presentationTexts: []
+  govTopics: []
+  contTopics: []
+  leavingTexts: []
+  thanksTexts: []
+  pictoHead: {fileID: 0}
+--- !u!114 &114597528312607494
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1358160813968412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9be6ae5606cc76141b25bd104002fad8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gender: 0
+--- !u!136 &136082837575649256
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1358160813968412}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.16208774
+  m_Height: 0.32417548
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}

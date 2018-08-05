@@ -1,0 +1,1 @@
+Drag and drop Workers from a Building to another to change their allocation

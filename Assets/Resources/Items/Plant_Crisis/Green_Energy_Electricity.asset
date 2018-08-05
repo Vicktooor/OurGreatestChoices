@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf20b24073c2dc94097539f890cc6e2f, type: 3}
+  m_Name: Green_Energy_Electricity
+  m_EditorClassIdentifier: 
+  name: Green_Energy_Electricity
+  prefab: {fileID: 1691813164237570, guid: 95a3907737ac6fc438a9b0a1c4d0a02a, type: 2}
+  itemsLinked:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  type: 0
+  isPrimary: 1
+  NGOItem: {fileID: 11400000, guid: 55671b850176eb34f8f15cfee0282f00, type: 2}
+  EcoItem: {fileID: 11400000, guid: 55671b850176eb34f8f15cfee0282f00, type: 2}
+  GouvItem: {fileID: 11400000, guid: be21ee070325d1743836c7401b8d7877, type: 2}
+  originalItem: {fileID: 11400000}
+  icon: {fileID: 21300000, guid: 69777005b970bf142a0b65b877fab99e, type: 3}
+  hiddenIcon: {fileID: 21300000, guid: 0dd9f27bca3a6914f9b66c480ced32d2, type: 3}

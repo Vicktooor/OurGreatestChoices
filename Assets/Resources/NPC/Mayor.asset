@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63aa2080cbdd78347bf223b194b36a4e, type: 3}
+  m_Name: Mayor
+  m_EditorClassIdentifier: 
+  name: Mayor
+  prefab: {fileID: 1798147932480452, guid: 334110a047963cd4789ea73d97d80206, type: 2}
+  itemsLinked:
+  - {fileID: 11400000, guid: 090c1381c0ed40c45a4f9cedd5b9cba7, type: 2}
+  - {fileID: 11400000, guid: be21ee070325d1743836c7401b8d7877, type: 2}
+  - {fileID: 11400000, guid: d2d1e6762cdc52d40aa8c6b5adc326a3, type: 2}
+  - {fileID: 11400000, guid: 76d42ae169cd23341b5e6a7478e826a8, type: 2}
+  - {fileID: 11400000, guid: af7ef54eb5a5e3944869f116eabd9608, type: 2}
+  - {fileID: 11400000, guid: 88f6bad7ffcf6a245a6ad73e56385e22, type: 2}
+  itemsGiven: []
+  assetEvolution: {fileID: 0}
+  itemPickUp: {fileID: 0}
+  type: 2
+  isPrimary: 0
+  NGOItem: {fileID: 0}
+  EcoItem: {fileID: 0}
+  GouvItem: {fileID: 0}
+  originalItem: {fileID: 0}
+  icon: {fileID: 0}
+  hiddenIcon: {fileID: 0}

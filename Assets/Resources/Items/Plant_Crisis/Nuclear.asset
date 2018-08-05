@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d37007a0bfa49dc4dae7b89c3f23b92f, type: 3}
+  m_Name: Nuclear
+  m_EditorClassIdentifier: 
+  name: Energy Plant
+  prefab: {fileID: 0}
+  itemsLinked: []
+  itemsGiven: []
+  itemsFusion: []
+  assetEvolution: {fileID: 1768192921403076, guid: 994f0d43e42ef47498f8da0045ad22d6,
+    type: 2}
+  itemPickUp: {fileID: 11400000, guid: c4bedf2233f705e44a407e40184d6b25, type: 2}
+  isPrimary: 0

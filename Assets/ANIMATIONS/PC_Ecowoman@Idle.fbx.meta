@@ -1,0 +1,149 @@
+fileFormatVersion: 2
+guid: 074eafe68ecd73440994d80c29fc68cf
+timeCreated: 1522857060
+licenseType: Free
+ModelImporter:
+  serializedVersion: 21
+  fileIDToRecycleName:
+    100000: ECOWOMAN_All_FK_CTRL
+    100002: ECOWOMAN_All_FK_CTRL_offset
+    100004: ECOWOMAN_Bones
+    100006: ECOWOMAN_Case_FK_CTRL
+    100008: ECOWOMAN_Case_FK_CTRL_offset
+    100010: ECOWOMAN_CaseEndJoint
+    100012: ECOWOMAN_CaseJoint
+    100014: ECOWOMAN_Head_FK_CTRL
+    100016: ECOWOMAN_Head_FK_CTRL_offset
+    100018: ECOWOMAN_HeadEndJoint
+    100020: ECOWOMAN_HeadJoint
+    100022: ECOWOMAN_Hips_FK_CTRL
+    100024: ECOWOMAN_Hips_FK_CTRL_offset
+    100026: ECOWOMAN_HipsJoint
+    100028: ECOWOMAN_Legs_FK_CTRL
+    100030: ECOWOMAN_Legs_FK_CTRL_offset
+    100032: ECOWOMAN_LegsJoint
+    100034: //RootNode
+    400000: ECOWOMAN_All_FK_CTRL
+    400002: ECOWOMAN_All_FK_CTRL_offset
+    400004: ECOWOMAN_Bones
+    400006: ECOWOMAN_Case_FK_CTRL
+    400008: ECOWOMAN_Case_FK_CTRL_offset
+    400010: ECOWOMAN_CaseEndJoint
+    400012: ECOWOMAN_CaseJoint
+    400014: ECOWOMAN_Head_FK_CTRL
+    400016: ECOWOMAN_Head_FK_CTRL_offset
+    400018: ECOWOMAN_HeadEndJoint
+    400020: ECOWOMAN_HeadJoint
+    400022: ECOWOMAN_Hips_FK_CTRL
+    400024: ECOWOMAN_Hips_FK_CTRL_offset
+    400026: ECOWOMAN_HipsJoint
+    400028: ECOWOMAN_Legs_FK_CTRL
+    400030: ECOWOMAN_Legs_FK_CTRL_offset
+    400032: ECOWOMAN_LegsJoint
+    400034: //RootNode
+    7400000: Idle
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Idle
+      takeName: Take 001
+      firstFrame: 13
+      lastFrame: 253
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: ECOWOMAN_HipsJoint
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 939561c2fe83dbd4682feddea08821f1,
+    type: 3}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
