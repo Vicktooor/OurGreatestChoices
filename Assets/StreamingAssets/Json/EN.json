@@ -1,0 +1,32 @@
+{
+    "objects": [
+        {
+            "key": "__MajorName",
+            "txt": "Major"
+        },
+        {
+            "key": "__MajorPresentation1",
+            "txt": "Hello"
+        },
+        {
+            "key": "__MajorPresentation2",
+            "txt": "What do you want ?"
+        },
+        {
+            "key": "__MajorEnd1",
+            "txt": "Fine"
+        },
+        {
+            "key": "__MajorEnd2",
+            "txt": "Bye"
+        },
+        {
+            "key": "__MajorThanks1",
+            "txt": "Thanks"
+        },
+        {
+            "key": "__MajorThanks2",
+            "txt": "Thanks 2"
+        }
+    ]
+}

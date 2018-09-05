@@ -57,12 +57,12 @@ public class DontDestroyElement : MonoBehaviour {
 
     private void Reset()
     {
-        foreach (GameObject go in _gos.Objs)
+        foreach (DataStruct<GameObject> go in _gos.Objs)
         {
-            if (go.GetComponent<DynamicUI>() != null) continue;
-            go.SetActive(_states[go].state);
-            go.transform.position = _states[go].position;
-            go.transform.rotation = _states[go].rotation;
+            if (go.obj.GetComponent<DynamicUI>() != null) continue;
+            go.obj.SetActive(_states[go.obj].state);
+            go.obj.transform.position = _states[go.obj].position;
+            go.obj.transform.rotation = _states[go.obj].rotation;
         }
     }
 

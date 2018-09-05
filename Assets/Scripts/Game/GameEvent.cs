@@ -516,6 +516,7 @@ public class OnShowPin : GameEvent
     }
 }
 
+public class OnSaveRoads : GameEvent { }
 
 public class Events
 {

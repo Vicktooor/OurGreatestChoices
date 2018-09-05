@@ -50,7 +50,7 @@ namespace Assets.Scripts.Manager
 			{
 				if (cellIterator < iArray.Length && cellIterator >= 0)
 				{
-					iArray.Objs[cellIterator].SetPolution(toPoluted);
+					iArray.Objs[cellIterator].obj.SetPolution(toPoluted);
 					cellIterator++;
 				}
 				else ExtendPolution(iArray.Objs);
@@ -59,23 +59,23 @@ namespace Assets.Scripts.Manager
 				if (cellIterator <= iArray.Length && cellIterator > 0)
 				{
 					cellIterator--;
-					iArray.Objs[cellIterator].SetPolution(toPoluted);					
+					iArray.Objs[cellIterator].obj.SetPolution(toPoluted);					
 				}
 				else RetractPolution();
 			}
 		}
 
-		protected void ExtendPolution(Cell[] tCells)
+		protected void ExtendPolution(DataStruct<Cell>[] tCells)
 		{
 			ObjectArray<Cell> newArray = new ObjectArray<Cell>();
 
 			int nbCell = tCells.Length;
 			for (int i = 0; i < nbCell; i++)
 			{
-				int nbICell = tCells[i].Neighbors.Count;
+				int nbICell = tCells[i].obj.Neighbors.Count;
 				for (int j = 0; j < nbICell; j++)
 				{
-					Cell neighbor = tCells[i].Neighbors[j];
+					Cell neighbor = tCells[i].obj.Neighbors[j];
 					if (!neighbor.Poluted && !newArray.Contains(neighbor) && neighbor.State == polutionState)
 						newArray.Add(neighbor);
 				}
@@ -141,7 +141,7 @@ namespace Assets.Scripts.Manager
                 if (WorldValues.STATE_FOREST >= -1.5f && NB_FOREST_CUT >= EarthManager.NB_FOREST_PROPS * 0.75f) return;
                 if (cellIterator < iArray.Length && cellIterator >= 0)
 				{
-					foreach (KeyValuePair<Props, string> p in iArray.Objs[cellIterator].Props)
+					foreach (KeyValuePair<Props, string> p in iArray.Objs[cellIterator].obj.Props)
 					{
 						if (p.Key.GetType() == typeof(PoolTree))
 						{
@@ -159,7 +159,7 @@ namespace Assets.Scripts.Manager
                 if (cellIterator <= iArray.Length && cellIterator > 0)
 				{
 					cellIterator--;
-					foreach (KeyValuePair<Props, string> p in iArray.Objs[cellIterator].Props)
+					foreach (KeyValuePair<Props, string> p in iArray.Objs[cellIterator].obj.Props)
 					{
 						if (p.Key.GetType() == typeof(PoolTree))
 						{
@@ -172,17 +172,17 @@ namespace Assets.Scripts.Manager
 			}
 		}
 
-		protected void ExtendDeforestation(Cell[] tCells)
+		protected void ExtendDeforestation(DataStruct<Cell>[] tCells)
 		{
 			ObjectArray<Cell> newArray = new ObjectArray<Cell>();
 
 			int nbCell = tCells.Length;
 			for (int i = 0; i < nbCell; i++)
 			{
-				int nbICell = tCells[i].Neighbors.Count;
+				int nbICell = tCells[i].obj.Neighbors.Count;
 				for (int j = 0; j < nbICell; j++)
 				{
-					Cell neighbor = tCells[i].Neighbors[j];
+					Cell neighbor = tCells[i].obj.Neighbors[j];
 					if (!newArray.Contains(neighbor) && PoolTree.ForestCells.Contains(neighbor) && !CELLS_USED.Contains(neighbor))
 					{
 						newArray.Add(neighbor);
@@ -204,12 +204,12 @@ namespace Assets.Scripts.Manager
         protected void ForceExtend()
         {
             List<Cell> catchCells = new List<Cell>();   
-            foreach (Cell c in PoolTree.ForestCells.Objs)
+            foreach (DataStruct<Cell> c in PoolTree.ForestCells.Objs)
             {
-                if (!CELLS_USED.Contains(c))
+                if (!CELLS_USED.Contains(c.obj))
                 {
                     bool containUncutAsset = false;
-                    List<PoolTree> treesAsset = c.GetProps<PoolTree>();
+                    List<PoolTree> treesAsset = c.obj.GetProps<PoolTree>();
                     foreach (PoolTree pt in treesAsset)
                     {
                         if (!pt.IsCut)
@@ -220,8 +220,8 @@ namespace Assets.Scripts.Manager
                     }
                     if (containUncutAsset)
                     {
-                        catchCells.Add(c);
-                        CELLS_USED.Add(c);
+                        catchCells.Add(c.obj);
+                        CELLS_USED.Add(c.obj);
                     } 
                 }
             }
@@ -242,7 +242,7 @@ namespace Assets.Scripts.Manager
 			if (iteration > 0)
 			{
                 int lLength = iterationCells[iteration].Length;
-                for (int i = 0; i < lLength; i++) CELLS_USED.Remove(iterationCells[iteration].Objs[i]);
+                for (int i = 0; i < lLength; i++) CELLS_USED.Remove(iterationCells[iteration].Objs[i].obj);
 
 				iterationCells.Remove(iterationCells[iteration]);
                 iteration--;
@@ -254,12 +254,12 @@ namespace Assets.Scripts.Manager
         private void ForceRetract()
         {
             List<Cell> catchCells = new List<Cell>();
-            foreach (Cell c in PoolTree.ForestCells.Objs)
+            foreach (DataStruct<Cell> c in PoolTree.ForestCells.Objs)
             {
-                if (!CELLS_USED.Contains(c))
+                if (!CELLS_USED.Contains(c.obj))
                 {
                     bool containCutAsset = false;
-                    List<PoolTree> treesAsset = c.GetProps<PoolTree>();
+                    List<PoolTree> treesAsset = c.obj.GetProps<PoolTree>();
                     foreach (PoolTree pt in treesAsset)
                     {
                         if (pt.IsCut)
@@ -270,8 +270,8 @@ namespace Assets.Scripts.Manager
                     }
                     if (containCutAsset)
                     {
-                        catchCells.Add(c);
-                        CELLS_USED.Add(c);
+                        catchCells.Add(c.obj);
+                        CELLS_USED.Add(c.obj);
                     }
                 }
             }

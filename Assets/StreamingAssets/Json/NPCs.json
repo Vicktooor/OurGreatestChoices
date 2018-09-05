@@ -1,0 +1,33 @@
+{
+    "NPCs": [
+        {
+            "name": "__MajorName",
+            "presentationTexts": [
+                "__MajorPresentation1",
+                "__MajorPresentation2"
+            ],
+            "leavingTexts": [
+                "__MajorEnd1",
+                "__MajorEnd2"
+            ],
+            "thanksTexts": [
+                {
+                    "item": "tracks",
+                    "texts": [
+                        "__MajorThanks1",
+                        "__MajorThanks2"
+                    ]
+                },
+                {
+                    "item": "FruitSeed",
+                    "texts": [
+                        "__MajorThanks1",
+                        "__MajorThanks2"
+                    ]
+                }
+            ],
+            "associatedIcon": "Logo_TownHall",
+            "budgetComponentName": "TownHall"
+        }
+    ]
+}

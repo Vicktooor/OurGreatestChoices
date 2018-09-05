@@ -101,6 +101,8 @@ namespace Assets.Scripts.Planet
 		protected Cell _targetCell;
 		protected Triangle _targetTriangle;
 
+        public RoadInfo roadInfo;
+
 		protected GameObject[] sizeVisualizer = new GameObject[2];
 
 		protected void Awake()
@@ -119,6 +121,7 @@ namespace Assets.Scripts.Planet
 
 				if (triangleSelect && edit == EEditGround.Start)
 				{
+                    roadInfo.tracks = new List<Vector3>();
 					roadVertice = new RoadVertices();
 					ShowPossibleEdge();
 					edit = EEditGround.SelectEdge;
@@ -127,6 +130,7 @@ namespace Assets.Scripts.Planet
 				{
 					for (int i = 0; i < 2; i++) sizeVisualizer[i] = Instantiate(widthModelPoint, Vector3.zero, Quaternion.identity);
 					edges.Add(selectedEdge);
+                    roadInfo.tracks.Add(selectedEdge.CenterPos);
 					edit = EEditGround.Width;
 				}
 				else if (triangleSelect && edit == EEditGround.Width)
@@ -139,7 +143,8 @@ namespace Assets.Scripts.Planet
 					PreviewWidth();
 					AddRoadPart(edges[edges.Count - 1], selectedEdge);
 					edges.Add(selectedEdge);
-					edit = EEditGround.Width;
+                    roadInfo.tracks.Add(selectedEdge.CenterPos);
+                    edit = EEditGround.Width;
 				}
 			}
 			else if (edit == EEditGround.Width)
@@ -153,6 +158,10 @@ namespace Assets.Scripts.Planet
 				SortPoints(edges[edges.Count - 1], selectedEdge);
 				edges.Add(selectedEdge);
 				SetUV();
+
+                JsonManager.SaveRoad(roadInfo);
+                roadInfo.name = string.Empty;
+                roadInfo.tracks = new List<Vector3>();
 			}
 
 			if (edit == EEditGround.CorrectUV)
@@ -164,18 +173,18 @@ namespace Assets.Scripts.Planet
 		protected void SortPoints(RoadEdge startEdge, RoadEdge targetEdge)
 		{
 			Vector3 tmp;			
-			if (Vector3.Angle((startEdge.CenterPos - targetEdge.CenterPos), (startEdge.meshPoints[0] - targetEdge.meshPoints[0])) > 2f)
+			if (Vector3.Angle((startEdge.CenterPos - targetEdge.CenterPos), (startEdge.meshPoints[0] - targetEdge.meshPoints[0])) > 10f)
 			{
 				targetEdge.haveSwap = true;
-				tmp = startEdge.meshPoints[0];
-				startEdge.meshPoints[0] = startEdge.meshPoints[1];
-				startEdge.meshPoints[1] = tmp;
+				tmp = targetEdge.meshPoints[0];
+				targetEdge.meshPoints[0] = targetEdge.meshPoints[1];
+				targetEdge.meshPoints[1] = tmp;
 			}
 		}
 
 		protected void AddRoadPart(RoadEdge startEdge, RoadEdge targetEdge)
 		{
-			SortPoints(startEdge, targetEdge);
+            SortPoints(startEdge, targetEdge);
 
 			List<Vector3[]> preTris = new List<Vector3[]>();
 			preTris.Add(new Vector3[3] { startEdge.meshPoints[1], startEdge.meshPoints[0], targetEdge.meshPoints[0] });
@@ -205,15 +214,11 @@ namespace Assets.Scripts.Planet
 
 			SetUV();
 			roadMeshObject.mesh.uv = roadVertice.UV.ToArray();
-
 			roadMeshCollider.sharedMesh = roadMeshObject.mesh;
 		}
 
 		protected void SetUV()
 		{
-			float uvSize = 1f;
-			float k = 0f;
-
 			for (int j = 0; j < edges.Count; j++)
 			{
 				RoadEdge re = edges[j];
@@ -221,30 +226,16 @@ namespace Assets.Scripts.Planet
 				{
 					if (roadVertice.vertex[i] == re.meshPoints[0])
 					{
-						if (!re.haveSwap)
-						{
-							if (j % 2 != 0) roadVertice.UV[i] = new Vector2(k, k + uvSize);
-							else roadVertice.UV[i] = new Vector2(k, k);
-						}
-						else
-						{
-							if (j % 2 != 0) roadVertice.UV[i] = new Vector2(0, k + uvSize);
-							else roadVertice.UV[i] = new Vector2(0, k);
-						}
+                        float uvx = (j % 2 != 0) ? 1f : 0f;
+						if (re.haveSwap) roadVertice.UV[i] = new Vector2(1, uvx);
+					    else roadVertice.UV[i] = new Vector2(0, uvx);
 					}
 					else if (roadVertice.vertex[i] == re.meshPoints[1])
 					{
-						if (!re.haveSwap)
-						{
-							if (j % 2 != 0) roadVertice.UV[i] = new Vector2(1, k + uvSize);
-							else roadVertice.UV[i] = new Vector2(1, k);
-						}
-						else
-						{
-							if (j % 2 != 0) roadVertice.UV[i] = new Vector2(k, k + uvSize);
-							else roadVertice.UV[i] = new Vector2(k, k);
-						}
-					}
+                        float uvx = (j % 2 != 0) ? 1f : 0f;
+                        if (re.haveSwap) roadVertice.UV[i] = new Vector2(0, uvx);
+                        else roadVertice.UV[i] = new Vector2(1, uvx);
+                    }
 				}
 			}
 		}

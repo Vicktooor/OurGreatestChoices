@@ -493,7 +493,7 @@ namespace Assets.Script {
             if (_sdgIconQueue.Length > 0)
             {
                 _sdgRunning = true;
-                Sprite spr = _sdgIconQueue.Objs[0];
+                Sprite spr = _sdgIconQueue.Objs[0].obj;
                 _sdgIconQueue.Remove(spr);
                 SDGNotification.Init(spr);
                 SDGNotification.ShowSDG(ShowSDGs);
