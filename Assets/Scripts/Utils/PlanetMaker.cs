@@ -47,17 +47,12 @@ namespace Assets.Scripts.Utils
 		protected bool _randomGroundColor = false;
 		public bool RandomGroundColor { get { return _randomGroundColor; } }
 
-		[SerializeField]
-		protected bool _autoColor = false;
-		public bool AutoColor { get { return _autoColor; } }
-
 		[Header("Runtime Edition")]
 		public EditState edit = EditState.NOTHING;
 
 		[SerializeField]
 		protected float _smoothNormalFactor;
-		public float SmoothNormalFactor { get { return _smoothNormalFactor; } }
-		
+		public float SmoothNormalFactor { get { return _smoothNormalFactor; } }	
 
 		[Header("Ground Edition")]
         [SerializeField]
@@ -469,10 +464,6 @@ namespace Assets.Scripts.Utils
             if (GUI.Button(new Rect(10, 45, 120, 25), "Save Player")) EarthManager.Instance.SavePlayer();
 			if (GUI.Button(new Rect(70, 10, 50, 25), "Light")) RecalulateNormals();
 			if (GUI.Button(new Rect(130, 10, 50, 25), "UVs")) EarthManager.Instance.RecalculateUVMap();
-			if (GUI.Button(new Rect(190, 10, 100, 25), "AutoColor"))
-			{
-				foreach (Cell c in EarthManager.Instance.Cells) c.SetStateFromElevation();
-			}
 			if (GUI.Button(new Rect(300, 10, 120, 25), "Save dialogues")) EarthManager.Instance.SaveDialogues();
 			if (GUI.Button(new Rect(430, 10, 120, 25), "Save Budget")) EarthManager.Instance.SaveBudget();
 

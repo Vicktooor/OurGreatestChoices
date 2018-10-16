@@ -731,6 +731,10 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 95a3c6c9ec7986f4195849b8a55ab548, type: 2}
+    - target: {fileID: 1551743246448996, guid: 79bed22ed26ebd24d9dd7afe851181de, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 79bed22ed26ebd24d9dd7afe851181de, type: 2}
   m_IsPrefabParent: 0
@@ -784,7 +788,6 @@ MonoBehaviour:
   buildForMobile: 0
   showButtons: 0
   _randomGroundColor: 1
-  _autoColor: 0
   edit: 1
   _smoothNormalFactor: 0.25
   _groundEditState: 1
@@ -1249,6 +1252,10 @@ Prefab:
         type: 2}
       propertyPath: m_Mesh
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1721263267601154, guid: bf6cb6e4ad3bdb84db801e0183e72394, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bf6cb6e4ad3bdb84db801e0183e72394, type: 2}

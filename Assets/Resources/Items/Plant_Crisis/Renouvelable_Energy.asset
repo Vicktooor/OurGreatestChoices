@@ -14,14 +14,12 @@ MonoBehaviour:
   name: Energy Plant
   prefab: {fileID: 1768192921403076, guid: 994f0d43e42ef47498f8da0045ad22d6, type: 2}
   itemsLinked: []
-  itemsGiven: []
-  assetEvolution: {fileID: 0}
-  itemPickUp: {fileID: 0}
   type: 0
   isPrimary: 0
   NGOItem: {fileID: 0}
   EcoItem: {fileID: 0}
   GouvItem: {fileID: 0}
+  nbForCraft: 3
   originalItem: {fileID: 0}
   icon: {fileID: 0}
   hiddenIcon: {fileID: 0}

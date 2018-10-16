@@ -14,14 +14,14 @@ namespace Assets.Scripts.Game.Elements
 	{
 		protected void Start()
 		{
-			//StartCoroutine(StartCoroutine());
+			StartCoroutine(StartCoroutine());
 		}
 
 		IEnumerator StartCoroutine()
 		{
 			yield return new WaitForEndOfFrame();
 			yield return new WaitForEndOfFrame();
-			WorldManager.instance.StartPolutionWay(associateCell);
+			WorldManager.instance.StartPolutionWay(associateCell.ID, new List<CellState>() { CellState.SEA });
 		}
 	}
 }

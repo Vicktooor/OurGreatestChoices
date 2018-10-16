@@ -27,9 +27,7 @@ public class ItemPickup : Interactable {
 
     public void PickUp() {
         if (!InteractableManager.instance.canTake(gameObject)) return;
-        NotePad.Instance.CleanBillboard(transform.position);
-
-        bool wasPickedUp = false;
+        NotePad.Instance.CleanBillboard(transform.position); 
 
         //Son
         Events.Instance.Raise(new OnPickUp());
@@ -37,37 +35,23 @@ public class ItemPickup : Interactable {
         ParticleSystem ps = particlesSystem.GetComponent<ParticleSystem>();
         ps.Play();
 
-        if (item.isPrimary) {
-            //A CLEANER
-            wasPickedUp = InventoryPlayer.instance.Add(item);
-            //SOLUTION DE SECOURS
-			if (associateCell) associateCell.PropsCollider.Remove(this);
-            if (wasPickedUp) {
-                InteractableManager.instance.RecreatePrimaryPickUp(gameObject, item.prefab, associateCell);
-            }
-         }
-        else InventoryPlayer.instance.Add(item);
-
-		//PlayerManager.instance.player.GetComponent<Player>().AssociateCell.Props.Remove(this);
-		//PlayerManager.instance.player.GetComponent<Player>().AssociateCell.PropsCollider.Remove(this);
-        Destroy(gameObject);
+        if (item.isPrimary)
+        {
+            UIManager.instance.MoveObjectToInventory(transform, OnInventory);
+        }
+        else
+        {
+            InventoryPlayer.instance.Add(item);
+            Destroy(gameObject);
+        }
     }
 
-	private float t = 0;
-	public void Update()
-	{
-		if (PlanetMaker.instance.edit != EditState.INACTIVE) return;
-
-        //if (GameManager.Instance.LoadedScene == SceneString.ZoomView) CheckDistance();
-
-        Transform lTransform = transform;
-		lTransform.Rotate(transform.up, rotationSpeed * Time.deltaTime, Space.World);
-
-		t += floatingSpeed * Time.deltaTime;
-		t = Mathf.Clamp01(t);
-		lTransform.position = Vector3.Lerp(sourcePosition, sourcePosition + (lTransform.up * floatingDistance), t);
-		if (t == 1 || t == 0) floatingSpeed *= -1;		
-	}
+    private void OnInventory()
+    {
+        InventoryPlayer.instance.Add(item);
+        if (associateCell) associateCell.DestroyProps(this);
+        Destroy(gameObject);
+    }
 
     public void FullDestroy()
     {

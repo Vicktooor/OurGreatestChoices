@@ -136,6 +136,7 @@ public class OnNewWeek : TimeEvent
 }
 
 public class OnUpdateForest : GameEvent { }
+public class OnUpdateGround : GameEvent { }
 
 /* PlayerManager */
 public class SelectPlayer : GameEvent
@@ -224,7 +225,8 @@ public class CloudOut : GameEvent { }
 /*Music Event*/
 public class OnMusicBeta : GameEvent { }
 
-public class OnClear : GameEvent { }
+public class OnClearInventory : GameEvent { }
+public class OnUpdateInventory : GameEvent { }
 
 /*Interaction NPC */
 public class OnOpenNPCScreen : GameEvent {
@@ -232,6 +234,18 @@ public class OnOpenNPCScreen : GameEvent {
 
     public OnOpenNPCScreen(InteractablePNJ pNPC) {
         NPC = pNPC;
+    }
+}
+
+public class OnEndTransformation : GameEvent
+{
+    public int index;
+    public Item item;
+
+    public OnEndTransformation(int pIndex, Item pItem)
+    {
+        index = pIndex;
+        item = pItem;
     }
 }
 
@@ -260,17 +274,6 @@ public class OnGiveNPC : GameEvent {
     public OnGiveNPC(Item pItem, InteractablePNJ npc) {
         item = pItem;
         targetNPC = npc;
-    }
-}
-
-/*Scrolling Event */
-public class OnScrolling : GameEvent {
-    public int index;
-    public EScrollList targetList;
-
-    public OnScrolling(int pIndex, EScrollList list) {
-        index = pIndex;
-        targetList = list;
     }
 }
 

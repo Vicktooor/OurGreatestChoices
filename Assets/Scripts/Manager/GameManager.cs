@@ -145,7 +145,6 @@ public class GameManager : MonoBehaviour
         CameraManager.Instance.Reset();
         Cell.ResetCells();
 
-        PoolingManager.Instance.Clear();
         LinkDatabase.Instance.Clear();
         WorldManager.instance.Clear();
         ResourcesManager.instance.Clear();

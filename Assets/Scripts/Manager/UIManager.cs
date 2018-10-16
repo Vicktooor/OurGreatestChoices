@@ -31,6 +31,8 @@ namespace Assets.Script {
     public class UIManager : MonoBehaviour {
 
         #region Public Variable
+        public ObjectUIPerceptor inventoryTarget;
+
         [SerializeField]
         GameObject NPCPanel;
         [SerializeField]
@@ -55,13 +57,7 @@ namespace Assets.Script {
         #region Private Variable
         [Header("Notifications Buttons")]
         [SerializeField]
-        Button glossaryButton;
-
-        [SerializeField]
         Button inventoryButton;
-
-        [SerializeField]
-        Button sdgButton;
 
         // Debug Input Feedback
         [SerializeField]
@@ -87,7 +83,7 @@ namespace Assets.Script {
         Button _currentSwitchButton;
 
         // Bag Button
-        Button _bagButton;
+        Image _bagButton;
 
         // Quit Button
         Button _quitButton;
@@ -221,16 +217,22 @@ namespace Assets.Script {
             Events.Instance.AddListener<OnNotifications>(UpdateNotificationButton);
             Events.Instance.AddListener<OnChangeGauges>(UpdateGauges);
             Events.Instance.AddListener<PanelLerpEnd>(PanelTransitionEnd);
-            Events.Instance.AddListener<OnGoToMenu>(Reset);
             Events.Instance.AddListener<OnPlayerInitFinish>(InitSwitchButton);
             Events.Instance.AddListener<OnRemove>(UnPressClickableButtons);
             Events.Instance.AddListener<LerpEnd>(EnableSwitchButton);
             Events.Instance.AddListener<ZoomEndUI>(ChangeScene);
             Events.Instance.AddListener<OnOpenNPCScreen>(OpenNPCScreen);
             Events.Instance.AddListener<OnPinchEnd>(OnClickOnSceneButton);
+            Events.Instance.AddListener<OnUpdateInventory>(InventoryScreen.Instance.MajInventory);
+            Events.Instance.AddListener<OnHold>(OnHoldMovement);
         }
 
         #region Init
+
+        protected void OnHoldMovement(OnHold e)
+        {
+            _bagButton.raycastTarget = false;
+        }
 
         void InitButtonArray() {
             int i;
@@ -262,7 +264,7 @@ namespace Assets.Script {
         }
 
         void InitBagButton() {
-            _bagButton = GameObject.FindGameObjectWithTag(BAG_BUTTON_TAG).GetComponent<Button>();
+            _bagButton = GameObject.FindGameObjectWithTag(BAG_BUTTON_TAG).GetComponent<Image>();
             _bagButton.gameObject.SetActive(false);
         }
 
@@ -292,6 +294,11 @@ namespace Assets.Script {
             else if (Input.touchCount == 0) {
                 _UIPointer.SetActive(false);
             }
+        }
+
+        public void MoveObjectToInventory(Transform obj, Action callBack)
+        {
+            inventoryTarget.AttractObject(obj, callBack);
         }
 
         #region SceneLoaded
@@ -327,6 +334,7 @@ namespace Assets.Script {
         }
 
         void UnPressClickableButtons(OnRemove e) {
+            _bagButton.raycastTarget = true;
             _press = false;
         }
 
@@ -419,6 +427,7 @@ namespace Assets.Script {
         #region NPC Screen
 
         protected void OpenNPCScreen(OnOpenNPCScreen e) {
+            inventoryButton.gameObject.SetActive(false);
             NPCPanel.GetComponent<NPCScreen>().clickedNPC = e.NPC;
             NPCPanel.SetActive(true);
             NPCPanel.transform.parent.gameObject.SetActive(true);         
@@ -517,34 +526,19 @@ namespace Assets.Script {
             ShowSDGs();
         }
 
-        protected void Reset(OnGoToMenu e)
-        {
-            Events.Instance.RemoveListener<OnSceneLoaded>(SceneLoaded);
-            Events.Instance.RemoveListener<OnNotifications>(UpdateNotificationButton);
-            Events.Instance.RemoveListener<OnChangeGauges>(UpdateGauges);
-            Events.Instance.RemoveListener<PanelLerpEnd>(PanelTransitionEnd);
-            Events.Instance.RemoveListener<OnGoToMenu>(Reset);
-            Events.Instance.RemoveListener<OnPlayerInitFinish>(InitSwitchButton);
-            Events.Instance.RemoveListener<OnRemove>(UnPressClickableButtons);
-            Events.Instance.RemoveListener<LerpEnd>(EnableSwitchButton);
-            Events.Instance.RemoveListener<ZoomEndUI>(ChangeScene);
-            Events.Instance.RemoveListener<OnOpenNPCScreen>(OpenNPCScreen);
-            Events.Instance.RemoveListener<OnPinchEnd>(OnClickOnSceneButton);
-            Start();
-        }
-
         protected void OnDestroy() {
             Events.Instance.RemoveListener<OnSceneLoaded>(SceneLoaded);
             Events.Instance.RemoveListener<OnNotifications>(UpdateNotificationButton);
             Events.Instance.RemoveListener<OnChangeGauges>(UpdateGauges);
             Events.Instance.RemoveListener<PanelLerpEnd>(PanelTransitionEnd);
-            Events.Instance.RemoveListener<OnGoToMenu>(Reset);
             Events.Instance.RemoveListener<OnPlayerInitFinish>(InitSwitchButton);
             Events.Instance.RemoveListener<OnRemove>(UnPressClickableButtons);
             Events.Instance.RemoveListener<LerpEnd>(EnableSwitchButton);
             Events.Instance.RemoveListener<ZoomEndUI>(ChangeScene);
             Events.Instance.RemoveListener<OnOpenNPCScreen>(OpenNPCScreen);
             Events.Instance.RemoveListener<OnPinchEnd>(OnClickOnSceneButton);
+            Events.Instance.RemoveListener<OnUpdateInventory>(InventoryScreen.Instance.MajInventory);
+            Events.Instance.RemoveListener<OnHold>(OnHoldMovement);
             _instance = null;
         }
     }

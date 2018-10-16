@@ -311,8 +311,8 @@ public class HoneycombPlanet : MonoBehaviour
                 lTriangles[i * 3 + 2] = ArrayContain(groundMesh.computedVertex, couples[i].vertices[0]);  
             }
 
-            Vector4 face = MathCustom.GetPlanValueWithThreePoints(Vector3.zero, couples[i].vertices[1], couples[i].vertices[0]);
-            if (MathCustom.GetDistanceToPlan(groundMesh.centerPosition, face) > 0)
+            Vector4 face = MathCustom.GetPlaneValues(Vector3.zero, couples[i].vertices[1], couples[i].vertices[0]);
+            if (MathCustom.GetDistanceToPlane(groundMesh.centerPosition, face) > 0)
             {
                 lTriangles[groundMesh.triangles.Length + i * 3] = ArrayContain(groundMesh.computedVertex, Vector3.zero);
                 lTriangles[groundMesh.triangles.Length + i * 3 + 1] = ArrayContain(groundMesh.computedVertex, couples[i].vertices[0]);
@@ -348,8 +348,8 @@ public class HoneycombPlanet : MonoBehaviour
             }
         }
 
-        Vector4 groundPlan = MathCustom.GetPlanValueWithThreePoints(planPoints[0], planPoints[1], planPoints[2]);
-        Vector3 newCenterPosition = MathCustom.GetCoordinatesWhereLineCutPlan(origin, groundMesh.centerPosition * int.MaxValue, groundPlan);
+        Vector4 groundPlan = MathCustom.GetPlaneValues(planPoints[0], planPoints[1], planPoints[2]);
+        Vector3 newCenterPosition = MathCustom.LineCutPlaneCoordinates(origin, groundMesh.centerPosition * int.MaxValue, groundPlan);
 
         for (int i = 0; i < nbVertex; i++)
         {

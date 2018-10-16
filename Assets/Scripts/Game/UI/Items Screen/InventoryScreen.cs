@@ -2,100 +2,62 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InventoryScreen : MonoBehaviour {
+public class InventoryScreen : MonoSingleton<InventoryScreen>
+{
+    public GameObject elementModel;
+    public OneLineScroller scroller;
+    public List<InventoryElement> scrollElement;
 
-    private List<GameObject> _slotsList;
-
-    [SerializeField]
-    private GameObject _slotsContainer;
-
-    private void Awake() {
-        Init();
-        Events.Instance.AddListener<OnTransformation>(Transformation);
+    protected override void Awake() {
+        base.Awake();
+        scroller.Init();
         Events.Instance.AddListener<OnGive>(Give);
-        Events.Instance.AddListener<OnClear>(Clear);
+        Events.Instance.AddListener<OnClearInventory>(Clear);
+        gameObject.SetActive(false);
     }
 
-    private void OnEnable() {
-        SetIcons();
-        Events.Instance.Raise(new OnClickGlossary());
-    }
-
-    private void OnDisable() {
-        for (int i = 0; i < _slotsList.Count; i++) {
-            _slotsList[i].gameObject.SetActive(false);
-        }
-    }
-
-    void Init() {
-        _slotsList = new List<GameObject>();
-        InitSlots();
-    }
-
-    void InitSlots() {
-        int numberChildren = _slotsContainer.transform.childCount;
-
-        for (int i = 0; i < numberChildren; i++) {
-            _slotsList.Add(_slotsContainer.transform.GetChild(i).gameObject);
-            _slotsList[i].gameObject.SetActive(false);
-        }
-    }
-
-    void SetIcons() {
-        List<Item> itemsArray = InventoryPlayer.instance.itemsWornArray;
-        CleanIcons();
-
-        for (int i = 0; i < itemsArray.Count; i++) {
-
-            _slotsList[i].gameObject.SetActive(false);
-
-            if (itemsArray[i].icon) {
-                _slotsList[i].gameObject.SetActive(true);
-                _slotsList[i].GetComponent<Image>().sprite = itemsArray[i].icon;
-            }
-            else Debug.Log("THIS ITEM DOESN T HAVE ICON");
-        }
-    }
-
-    void Transformation(OnTransformation e) {
-        if (e.item)
+    public void MajInventory(OnUpdateInventory e)
+    {
+        List<Item> items = InventoryPlayer.instance.itemsWornArray;
+        int length = items.Count;
+        Item item;
+        for (int i = length - 1; i >= 0; i--)
         {
-            _slotsList[e.index].GetComponent<Image>().sprite = e.item.icon;
+            item = items[i];
+            InventoryElement ie = scrollElement.Find(el => el.itemName == item.name);
+            if (ie != null && InventoryPlayer.instance.nbItems[item.name] <= 0)
+            {
+                InventoryPlayer.instance.itemsWornArray.Remove(item);
+                scrollElement.Remove(ie);
+                scroller.Remove(ie);
+            }
+            else
+            {
+                if (ie != null) ie.MajText();
+                else
+                {
+                    InventoryElement newE = scroller.Add<InventoryElement>(elementModel);
+                    newE.itemName = item.name;
+                    newE.Init();
+                    scrollElement.Add(newE);
+                }
+            }
         }
+        scroller.Scale();
     }
 
-    void Give(OnGive e) {
-        for (int i = 0; i < _slotsList.Count; i++) {
-            _slotsList[i].gameObject.SetActive(false);
-        }
+    private void Give(OnGive e)
+    {
 
-        SetIcons();
     }
 
-    void Clear(OnClear e) {
-        _slotsList = new List<GameObject>();
-        ResetIcons();
-    }
+    private void Clear(OnClearInventory e)
+    {
 
-    void ResetIcons() {
-        int numberChildren = _slotsContainer.transform.childCount;
-
-        for (int i = 0; i < numberChildren; i++) {
-            _slotsList.Add(_slotsContainer.transform.GetChild(i).gameObject);
-            _slotsList[i].gameObject.SetActive(false);
-            _slotsList[i].GetComponent<Image>().sprite = null;
-        }
-    }
-
-    void CleanIcons() {
-        for (int i = 0; i < _slotsList.Count; i++) {
-            _slotsList[i].gameObject.SetActive(false);
-        }
     }
 
     private void OnDestroy() {
-        Events.Instance.RemoveListener<OnTransformation>(Transformation);
         Events.Instance.RemoveListener<OnGive>(Give);
-        Events.Instance.RemoveListener<OnClear>(Clear);
+        Events.Instance.RemoveListener<OnClearInventory>(Clear);
     }
 }

@@ -7,7 +7,7 @@ public class PinController : MonoBehaviour
 
     protected void Awake()
     {
-        allPins = GetComponentsInChildren<Pin>(true);
+        allPins = GameObject.FindObjectsOfType<Pin>();
         for (int i = 0; i < allPins.Length; i++) allPins[i].gameObject.SetActive(false);
         Events.Instance.AddListener<OnShowPin>(HandleShowPin);
     }

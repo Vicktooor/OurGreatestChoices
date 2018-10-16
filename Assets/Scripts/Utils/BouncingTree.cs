@@ -1,4 +1,6 @@
 ﻿using Assets.Script;
+using Assets.Scripts.Game;
+using Assets.Scripts.Manager;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,9 +8,6 @@ using UnityEngine;
 public class BouncingTree : MonoBehaviour {
 
     #region Private Variables
-
-    Transform _transform;
-
     /* -- Distance -- */
 
     [Header("Distance")]
@@ -39,8 +38,6 @@ public class BouncingTree : MonoBehaviour {
 
     /* -- Vector Rotation -- */
     [Header("Pivot")]
-    [SerializeField]
-    Transform _pivot;
 
     Vector3 _originVecUp;
     Vector3 _vecUp;
@@ -58,48 +55,39 @@ public class BouncingTree : MonoBehaviour {
     [SerializeField]
     GameObject _player;
 
+    public bool canPopItem = false;
+    public Item popItem;
+    public float popTime;
+    public float popPct;
+    private bool poping = false;
+    private bool popJumping = false;
+
 #endregion
 
     // Use this for initialization
-    void Start () {
-        _transform = transform;
-
+    private void Start()
+    {
         InitOriginTransform();
         InitOriginVecUp();
         InitFunctionValues();
-
-        InitPivot();
         InitPlayer();
     }
 
     #region Init
 
     void InitOriginTransform() {
-        _originPosition = _transform.position;
-        _originRotation = _transform.rotation;
+        _originPosition = transform.position;
+        _originRotation = transform.rotation;
     }
 
     void InitOriginVecUp () {
-        _originVecUp = _transform.TransformDirection(Vector3.up);
+        _originVecUp = transform.TransformDirection(Vector3.up);
         _vecUp = _originVecUp;
     }
 
     void InitFunctionValues() {
         _a = -1 / (_maxDistance - _minDistance);
         _b = -_maxDistance * _a;
-    }
-
-    void InitPivot() {
-        if(_pivot == null) {
-            _pivot = new GameObject().GetComponent<Transform>();
-            _pivot.parent = _transform;
-
-            _pivot.localPosition = new Vector3(0, 0, 0);
-            _pivot.localRotation = new Quaternion(0, 0, 0, 0);
-            _pivot.localScale = new Vector3(1, 1, 1);
-
-            _pivot.name = "Pivot";
-        }
     }
 
     void InitPlayer() {
@@ -111,11 +99,11 @@ public class BouncingTree : MonoBehaviour {
     public void CustomUpdate () {
         if (_player == null) InitPlayer();
         else {
-
             SetDistancePivot();
             SetVecUp();
 
             if (CheckDistancePivot()) {
+                if (!popJumping && canPopItem && !poping && transform.parent.gameObject.activeSelf) StartCoroutine(PopCoroutine());
 
                 SetAngle();
                 SetAxis();
@@ -130,13 +118,67 @@ public class BouncingTree : MonoBehaviour {
 
     #region Set
 
+    protected IEnumerator PopCoroutine()
+    {
+        poping = true;
+        float t = 0;
+        float random;
+        while (poping && CheckDistancePivot())
+        {
+            t += Time.deltaTime * (1f / popTime);
+            t = Mathf.Clamp01(t);
+            if (t >= 1)
+            {
+                random = Random.Range(0f, 100f);
+                if (random <= popPct) Pop();
+                t = 0;
+            }
+            yield return null;
+        }
+        if (!popJumping) poping = false;
+    }
+
+    private Vector3 popDirection = Vector3.zero;
+    private Vector3 popUpDirection = Vector3.zero;
+    private void Pop()
+    {
+        popUpDirection = transform.position.normalized;
+        float randomAngle = Random.Range(0f, 360f);
+        Vector3 groundVec = (_player.transform.position - transform.position).normalized;
+        popDirection = MathCustom.RotateDirectionAround(Vector3.Cross(popUpDirection, groundVec), randomAngle, popUpDirection);
+        Cell cell = GetComponentInParent<Cell>();
+        GameObject newProps = EarthManager.Instance.CreateProps(popItem.prefab, transform.position, cell);
+        StartCoroutine(PopJumpCoroutine(newProps.transform));
+    }
+
+    protected IEnumerator PopJumpCoroutine(Transform target)
+    {
+        poping = true;  
+        popJumping = true;
+        float t = 0f;
+        Vector3 basePos = target.position;
+        Vector3 baseScale = target.localScale;
+        float x = 0;
+        while (t < 1f)
+        {
+            t += Time.deltaTime * 2f;
+            t = Mathf.Clamp01(t);
+            x = Easing.Arch(t);
+            target.position = basePos + (((popDirection * t) + (popUpDirection * x)) * 0.1f);
+            target.localScale = new Vector3(t * baseScale.x, t * baseScale.y, t * baseScale.z);
+            yield return null;
+        }
+        popJumping = false;
+        poping = false;
+    }
+
     // Set Distance between Player and Pivot
     void SetDistancePivot() {
-        _distancePivot = Vector3.Distance(_pivot.position, _player.transform.position);
+        _distancePivot = Vector3.Distance(transform.position, _player.transform.position);
     }
 
     void SetVecUp() {
-        _vecUp = _transform.TransformDirection(Vector3.up);
+        _vecUp = transform.TransformDirection(Vector3.up);
     }
 
     void SetAngle() {
@@ -146,22 +188,27 @@ public class BouncingTree : MonoBehaviour {
     }
 
     void SetAxis() {
-        _vecDir = Vector3.Normalize(_player.transform.position - _pivot.position);
+        _vecDir = Vector3.Normalize(_player.transform.position - transform.position);
         _axis = Vector3.Cross(_vecDir, _vecUp);
     }
     
     void SetNewPosition() {
-        _transform.position = _originPosition;
-        _transform.rotation = _originRotation;
+        transform.position = _originPosition;
+        transform.rotation = _originRotation;
 
-        _transform.RotateAround(_pivot.position, _axis, _angle);
+        transform.RotateAround(transform.position, _axis, _angle);
     }
 
     void LerpToOriginPosition() {
-        float t = (Time.time - _startTimeLerp) / _timeToBack;
+        float t =  Mathf.Clamp01((Time.time - _startTimeLerp) / _timeToBack);
 
-        _transform.position = Vector3.Lerp(_transform.position, _originPosition, t);
-        _transform.rotation = Quaternion.Lerp(_transform.rotation, _originRotation, t);
+        transform.position = Vector3.Lerp(transform.position, _originPosition, t);
+        if (t <= 0)
+        {
+            transform.rotation = Quaternion.Lerp(transform.rotation, _originRotation, 0f);
+            if (!popJumping) poping = false;
+        }
+        else transform.rotation = Quaternion.Lerp(transform.rotation, _originRotation, 0.1f);
     }
 
     #endregion
@@ -173,11 +220,4 @@ public class BouncingTree : MonoBehaviour {
     }
 
     #endregion
-
-    public Transform playerTransform;
-
-    public void Rotate()
-    {
-        
-    }
 }

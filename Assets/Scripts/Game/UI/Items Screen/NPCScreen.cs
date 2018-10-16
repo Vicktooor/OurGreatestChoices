@@ -6,49 +6,48 @@ public class NPCScreen : MonoBehaviour {
 
     [SerializeField]
     GameObject InventoryStrip;
-
     [SerializeField]
     GameObject NPCPanel;
-
     [SerializeField]
     GameObject transformationPanel;
-
     [SerializeField]
-    GameObject _transformationButton;
-
+    Image _transformationButton;
     [SerializeField]
-    GameObject givePanel;
+    GameObject inventoryButtonClose;
 
-    [SerializeField]
-    GameObject _giveButton;
-
-    [SerializeField]
-    GameObject inventoryButtonClose; //DISABLE THE CLOSE BUTTON OF THE INVENTORY WHEN THIS PANEL IS SHOWN
-
+    public TransformThumbnail thumbnail;
     public InteractablePNJ clickedNPC;
+    public OneLineScroller scroller;
 
-    public int initIndex;
+    private Item _sourceItem;
+    private Item _resultItem;
+    private Sprite _noneSprite;
 
-    private int _currentIndex; //Index of the selected item
-    private Item _currentTransformedItem;
-    private Item _currentGiveItem;
-
-    [SerializeField]
-    Sprite wrongButtonSprite;
-
-    private void Awake() {
-        Events.Instance.AddListener<OnScrolling>(UpdateButton);
+    private void Awake()
+    {
+        _noneSprite = _transformationButton.sprite;
     }
 
     private void OnEnable() {
         transformationPanel.SetActive(true);
         inventoryButtonClose.SetActive(false);
-        givePanel.SetActive(false);
         InventoryStrip.SetActive(false);
+        thumbnail.gameObject.SetActive(true);
+
+        if (InventoryPlayer.instance.itemsWornArray.Count > 0)
+        {
+            scroller.Place(0);
+            Set(InventoryPlayer.instance.itemsWornArray[scroller.CurrentIndex]);
+        }
+        else
+        {
+            _transformationButton.sprite = _noneSprite;
+            thumbnail.gameObject.SetActive(false);
+        }
 
         Events.Instance.Raise(new OnPopUp());
         Events.Instance.Raise(new OnStartSpeakingNPC());
-        Init();
+        scroller.SetMoveCallback(SetByIndex);
     }
 
     private void OnDisable() {
@@ -56,9 +55,9 @@ public class NPCScreen : MonoBehaviour {
     }
 
     void Close() {
+        scroller.DelMoveCallback();
         inventoryButtonClose.SetActive(true);
         transformationPanel.SetActive(false);
-        givePanel.SetActive(false);
         InventoryStrip.SetActive(true);
         NPCPanel.SetActive(false);
 
@@ -67,81 +66,91 @@ public class NPCScreen : MonoBehaviour {
         PointingBubble.instance.Show(false);
 
         clickedNPC = null;
-        _currentIndex = 0;
-        _currentTransformedItem = null;
-        _currentGiveItem = null;
     }
 
-    void Init() {
-        _currentIndex = LayoutElementDisplayCheck.currentIndex;
-
-        if (InventoryPlayer.instance.itemsWornArray.Count > 0) UpdateTransformedButton(InventoryPlayer.instance.itemsWornArray[_currentIndex]);
-        if (InventoryPlayer.instance.itemsWornArray.Count > 0) UpdateGiveButton(InventoryPlayer.instance.itemsWornArray[_currentIndex]);
-    }
-
-	void UpdateButton(OnScrolling e) {
-        if (e.targetList == EScrollList.Glossary) return;
-        if (e.index < InventoryPlayer.instance.itemsWornArray.Count)
-        {
-            Item item = InventoryPlayer.instance.itemsWornArray[e.index];
-            _currentIndex = e.index;
-
-            if (transformationPanel.activeSelf) UpdateTransformedButton(item);
-            else UpdateGiveButton(item);
-        }
-    }
-
-    void UpdateTransformedButton(Item pItem) {
-        if (pItem.NGOItem == null || pItem.EcoItem == null || pItem.GouvItem == null) {
-            _transformationButton.GetComponent<Image>().sprite = pItem.icon;
-            return;
-        }
-
+    public void Set(Item pItem) {
+        _sourceItem = pItem;
+        thumbnail.gameObject.SetActive(true);
         if (clickedNPC.item.type == EPlayer.NGO) {
-            if (InventoryPlayer.instance.knowsItems.Contains(pItem.NGOItem))
-                _transformationButton.GetComponent<Image>().sprite = pItem.NGOItem.hiddenIcon;
-            else _transformationButton.GetComponent<Image>().sprite = pItem.NGOItem.hiddenIcon;
-
-            _currentTransformedItem = pItem.NGOItem;
+            if (InventoryPlayer.instance.knowsItems.Contains(pItem.NGOItem)) _transformationButton.sprite = pItem.NGOItem.icon;
+            else
+            {
+                if (pItem.NGOItem == null)
+                {
+                    _transformationButton.sprite = _noneSprite;
+                    thumbnail.gameObject.SetActive(false);
+                }
+                else _transformationButton.sprite = pItem.NGOItem.hiddenIcon;
+            }
+            _resultItem = pItem.NGOItem;
         }
-
         if (clickedNPC.item.type == EPlayer.ECO) {
-            if (InventoryPlayer.instance.knowsItems.Contains(pItem.EcoItem))
-                _transformationButton.GetComponent<Image>().sprite = pItem.EcoItem.icon;
-            else _transformationButton.GetComponent<Image>().sprite = pItem.EcoItem.hiddenIcon;
-
-            _currentTransformedItem = pItem.EcoItem;
+            if (InventoryPlayer.instance.knowsItems.Contains(pItem.EcoItem)) _transformationButton.sprite = pItem.EcoItem.icon;
+            else
+            {
+                if (pItem.EcoItem == null)
+                {
+                    _transformationButton.sprite = _noneSprite;
+                    thumbnail.gameObject.SetActive(false);
+                }
+                else _transformationButton.sprite = pItem.EcoItem.hiddenIcon;
+            }         
+            _resultItem = pItem.EcoItem;
         }
-
         if (clickedNPC.item.type == EPlayer.GOV) {
-            if (InventoryPlayer.instance.knowsItems.Contains(pItem.GouvItem))
-                _transformationButton.GetComponent<Image>().sprite = pItem.GouvItem.icon;
-            else _transformationButton.GetComponent<Image>().sprite = pItem.GouvItem.hiddenIcon;
-
-            _currentTransformedItem = pItem.GouvItem;
+            if (InventoryPlayer.instance.knowsItems.Contains(pItem.GouvItem)) _transformationButton.sprite = pItem.GouvItem.icon;
+            else
+            {
+                if (pItem.GouvItem == null)
+                {
+                    _transformationButton.sprite = _noneSprite;
+                    thumbnail.gameObject.SetActive(false);
+                }
+                else _transformationButton.sprite = pItem.GouvItem.hiddenIcon;
+            }
+            _resultItem = pItem.GouvItem;
         }
+        thumbnail.Set(_sourceItem, _resultItem);
     }
 
-    void UpdateGiveButton(Item pItem) {
-        if (pItem.icon != null)
+    private void SetByIndex()
+    {
+        Set(InventoryPlayer.instance.itemsWornArray[scroller.CurrentIndex]);
+    }
+
+    public void OnTransformation() {
+        int leftNB = InventoryPlayer.instance.nbItems[_sourceItem.name];
+        if (leftNB >= _resultItem.nbForCraft)
         {
-            _giveButton.GetComponent<Image>().sprite = pItem.icon;
-            _currentGiveItem = pItem;
+            leftNB -= _resultItem.nbForCraft;
+            InventoryPlayer.instance.nbItems[_sourceItem.name] = leftNB;
+            thumbnail.Set(_sourceItem, _resultItem);
+            Events.Instance.AddListener<OnEndTransformation>(OnEndTransformation);
+            Events.Instance.Raise(new OnTransformation(scroller.CurrentIndex, _resultItem));
+            FBX_Transform.instance.Play(_transformationButton.transform.position);
+            Events.Instance.Raise(new OnClickTransform());
         }
     }
 
-    //UI Event
-    public void Transformation() {
-        //Send an event to InventoryPlayer to update the items Array and to InventoryScreen to update UI
-        Events.Instance.Raise(new OnTransformation(_currentIndex, _currentTransformedItem));
-        UpdateTransformedButton(_currentTransformedItem);
-        FBX_Transform.instance.Play(_transformationButton.transform.position);
-        Events.Instance.Raise(new OnClickTransform());
+    private void OnEndTransformation(OnEndTransformation e)
+    {
+        Events.Instance.RemoveListener<OnEndTransformation>(OnEndTransformation);
+        if (InventoryPlayer.instance.itemsWornArray.Count > 0)
+        {
+            InventoryScreen.Instance.MajInventory(null);
+            if (scroller.CurrentIndex >= InventoryPlayer.instance.itemsWornArray.Count) scroller.Move(1);
+            else Set(InventoryPlayer.instance.itemsWornArray[scroller.CurrentIndex]);
+        }
+        else
+        {
+            _transformationButton.sprite = _noneSprite;
+            thumbnail.gameObject.SetActive(false);
+        }
     }
 
     //UI Event
     public void Give() {
-        if (clickedNPC.CanAccept(_currentGiveItem)) {
+        /*if (clickedNPC.CanAccept(_currentGiveItem)) {
             FBX_Give.instance.Play(new Vector3(_giveButton.transform.position.x, _giveButton.transform.position.y/2, _giveButton.transform.position.z));
             PointingBubble.instance.Show(true);
             PointingBubble.instance.SetPNJ(clickedNPC);
@@ -165,22 +174,6 @@ public class NPCScreen : MonoBehaviour {
 
             _giveButton.GetComponent<Shake>().DoShake();
             Events.Instance.Raise(new OnWrongObject());
-        }
-    }
-
-    //UI Event
-    public void TransformToGive() {
-        _transformationButton.GetComponent<Shake>().Clear();
-        transformationPanel.SetActive(false);
-        givePanel.SetActive(true);
-        if (_currentIndex < InventoryPlayer.instance.itemsWornArray.Count) UpdateGiveButton(InventoryPlayer.instance.itemsWornArray[_currentIndex]);
-    }
-
-    //UI Event
-    public void GiveToTransform() {
-        _giveButton.GetComponent<Shake>().Clear();
-        givePanel.SetActive(false);
-        transformationPanel.SetActive(true);
-        if (_currentIndex < InventoryPlayer.instance.itemsWornArray.Count) UpdateTransformedButton(InventoryPlayer.instance.itemsWornArray[_currentIndex]);
+        }*/
     }
 }

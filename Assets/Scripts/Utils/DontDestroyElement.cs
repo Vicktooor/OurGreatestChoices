@@ -57,7 +57,7 @@ public class DontDestroyElement : MonoBehaviour {
 
     private void Reset()
     {
-        foreach (DataStruct<GameObject> go in _gos.Objs)
+        foreach (NamedObject<GameObject> go in _gos.Objs)
         {
             if (go.obj.GetComponent<DynamicUI>() != null) continue;
             go.obj.SetActive(_states[go.obj].state);

@@ -13,7 +13,7 @@ namespace Assets.Scripts.Game.Load
             Type lType = typeof(O);
             if (ResourcesContainArrayOf(lType))
             {
-                O lAsset = _resources[lType].FindByName(fileName);
+                O lAsset = _resources[lType].Find(fileName);
                 if (lAsset != null) return lAsset;
                 else
                 {
@@ -42,7 +42,7 @@ namespace Assets.Scripts.Game.Load
             Type lType = typeof(O);
             if (ResourcesContainArrayOf(lType))
             {
-                O lAsset = _resources[lType].FindByName(fileName);
+                O lAsset = _resources[lType].Find(fileName);
                 if (lAsset != null) return;
                 else _resources[lType].Add(loadedAsset, fileName);
             }
@@ -58,7 +58,7 @@ namespace Assets.Scripts.Game.Load
             Type lType = typeof(O);
             if (_resources.ContainsKey(lType))
             {
-                return _resources[lType].FindByName(resourceName);
+                return _resources[lType].Find(resourceName);
             }
             else return null;
         }

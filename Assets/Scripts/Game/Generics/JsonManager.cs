@@ -43,7 +43,7 @@ public static class JsonManager
     public static void SaveRoad(RoadInfo road)
     {
         string newJson = JsonUtility.ToJson(road);
-        using (FileStream fs = new FileStream(_computerPath + "Json/Roads/" + road.name + ".json", FileMode.Create))
+        using (FileStream fs = new FileStream(_computerPath + "Json/Roads/" + ((road.name != "") ? road.name + ".json" : "toRename.json"), FileMode.Create))
         {
             using (StreamWriter writer = new StreamWriter(fs))
             {

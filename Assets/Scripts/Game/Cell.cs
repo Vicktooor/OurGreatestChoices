@@ -37,7 +37,6 @@ namespace Assets.Scripts.Game
         new public Vector3 Position { get { return GetCenterPosition(); } }
 
 		protected static int ITERATOR_ID = 0;
-		public static List<CellState> PolutionCellsType = new List<CellState> { CellState.GRASS, CellState.SEA, CellState.MOSS };
 
         public Material matModel;
 
@@ -127,8 +126,6 @@ namespace Assets.Scripts.Game
 			_state = CellState.MOSS;
 			UpdateHeight(0);
 			InitColor();
-
-			PoolingManager.Instance.CreatePoolObject(this);
 		}
 
 		/// <summary>
@@ -139,8 +136,9 @@ namespace Assets.Scripts.Game
         {
 			_state = savedProperties.state;
             _walkable = savedProperties.walkable;
+            if (savedProperties.state == CellState.SEA) _walkable = false;
             UpdateHeight(savedProperties.elevation - _groundMesh.centerPosition.magnitude);
-			InitColor();
+            InitColor();
 
 			if (savedProperties.Names != null)
 				SpawnSavedProps(savedProperties);
@@ -148,40 +146,28 @@ namespace Assets.Scripts.Game
 		
 		public void SetPolution(bool isPoluted)
 		{
-			if (!PolutionCellsType.Contains(_state)) return;
-
 			bool lPoluted = _poluted;
 			_poluted = isPoluted;
-			//if (lPoluted != isPoluted) StartCoroutine(UpdateCoroutine());
+            if (lPoluted != isPoluted)
+            {
+                EarthManager.PoluteCell(_state, isPoluted);
+                ChangeColor(isPoluted);
+            }
 		}
 
-		protected IEnumerator UpdateCoroutine()
+		protected void ChangeColor(bool poluted)
 		{
-			TimeManager timer = TimeManager.instance;
-			PlanetMaker maker = PlanetMaker.instance;
+            _selfPolution = (poluted) ? 1f : 0f;
+            _color = Color.Lerp(_initialColor, PlanetMaker.instance.Colors.Find(c => c.type == _state).PolutedColor, _selfPolution);
+            SetVertexColors();
+            foreach (Cell c in Neighbors) c.SetVertexColors();
+        }
 
-			_stabilized = false;
-			while (!_stabilized)
-			{
-				if (_poluted) _selfPolution += Time.deltaTime / timer.WeekTime;
-				else _selfPolution -= Time.deltaTime / timer.WeekTime;
-
-				_selfPolution = Mathf.Clamp(_selfPolution, 0f, 1f);
-				_color = Color.Lerp(_initialColor, maker.Colors.Find(c => c.type == _state).PolutedColor, _selfPolution);
-				SetVertexColors();
-				foreach (Cell c in Neighbors) c.SetVertexColors();
-
-				if (_selfPolution <= 0 || _selfPolution >= 1) _stabilized = true;
-				yield return null;
-				yield return null;
-			}
-		}
-
-		/// <summary>
-		/// Spawn saved Props
-		/// </summary>
-		/// <param name="savedItem"></param>
-		protected void SpawnSavedProps(SaveCell savedItem)
+        /// <summary>
+        /// Spawn saved Props
+        /// </summary>
+        /// <param name="savedItem"></param>
+        protected void SpawnSavedProps(SaveCell savedItem)
 		{
 			int nbProps = savedItem.Names.Length;
 			for (int i = 0; i < nbProps; i++)
@@ -222,16 +208,6 @@ namespace Assets.Scripts.Game
 			MeshCollider lSelfMeshCollider = (MeshCollider)_personnalCollider[0];
 			lSelfMeshCollider.sharedMesh = _personnalMesh;
 			foreach (KeyValuePair<Props, string> nat in _props) nat.Key.UpdatePosition();
-			if (PlanetMaker.instance.AutoColor) SetStateFromElevation();
-		}
-
-		public void SetStateFromElevation()
-		{
-			if (_elevation < 3.65f) SetCellState(_groundMesh, CellState.SEA);
-			else if (_elevation > 3.85f && _elevation <= 4f) SetCellState(_groundMesh, CellState.MOSS);
-			else if (_elevation > 4f && _elevation <= 4.5f) SetCellState(_groundMesh, CellState.ROCK);
-			else if (_elevation > 4.5f) SetCellState(_groundMesh, CellState.SNOW);
-			else SetCellState(_groundMesh, CellState.GRASS);
 		}
 
 		/// <summary>

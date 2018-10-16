@@ -232,7 +232,7 @@ public class Player : MonoBehaviour
             for (int i = 0; i < item.Value.Length; i++)
             {
                 if (!item.Value[i].enabled) continue;
-                if (item.Value[i].Raycast(rayfront, out buildHit, 0.1f))
+                if (item.Value[i].Raycast(rayfront, out buildHit, 0.1f) && !(item.Key is ItemPickup))
                 {
                     normalSlideVector = buildHit.normal;
                     return ECollision.WALL;
@@ -244,12 +244,12 @@ public class Player : MonoBehaviour
 		{			
 			foreach (KeyValuePair<Props, Collider[]> item in c.PropsCollider)
 			{
-				if (item.Key == null) break;
+				if (item.Key == null) continue;
 
                 for (int i = 0; i < item.Value.Length; i++)
                 {
                     if (!item.Value[i].enabled) continue;
-                    if (item.Value[i].Raycast(rayfront, out buildHit, 0.1f))
+                    if (item.Value[i].Raycast(rayfront, out buildHit, 0.1f) && !(item.Key is ItemPickup))
                     {
                         normalSlideVector = buildHit.normal;
                         return ECollision.WALL;

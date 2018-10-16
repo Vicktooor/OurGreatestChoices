@@ -50,17 +50,17 @@ public class MathCustom
     /// <summary>
     /// Calcul the a,b,c & d values of the plan equation
     /// </summary>
-    public static Vector4 GetPlanValueWithThreePoints(Vector3 A, Vector3 B, Vector3 C)
+    public static Vector4 GetPlaneValues(Vector3 A, Vector3 B, Vector3 C)
     {
         Vector3 AB = B - A;
         Vector3 AC = C - A;
 
-        float x = AB.y * AC.z - AC.y * AB.z;
-        float y = AB.z * AC.x - AC.z * AB.x;
-        float z = AB.x * AC.y - AC.x * AB.y;
+        float x = (AB.y * AC.z) - (AC.y * AB.z);
+        float y = (AB.z * AC.x) - (AC.z * AB.x);
+        float z = (AB.x * AC.y) - (AC.x * AB.y);
         Vector3 n = new Vector3(x, y, z);
 
-        float d = A.x * n.x + A.y * n.y + A.z * n.z;
+        float d = (A.x * n.x) + (A.y * n.y) + (A.z * n.z);
 
         return new Vector4(x, y, z, d);
     }
@@ -71,7 +71,7 @@ public class MathCustom
 	/// <param name="A">Vector origin</param>
 	/// <param name="B">Vector direction</param>
 	/// <param name="planValues">Values a,b,c & d of plan equation</param>
-	public static Vector3 GetCoordinatesWhereLineCutPlan(Vector3 A, Vector3 B, Vector4 planValues)
+	public static Vector3 LineCutPlaneCoordinates(Vector3 A, Vector3 B, Vector4 planValues)
     {
         Vector3 AB = B - A;
 
@@ -79,7 +79,7 @@ public class MathCustom
         float denominator = - (planValues.x * AB.x) - (planValues.y * AB.y) - (planValues.z * AB.z);
         float t = numerator / denominator;
         
-        return new Vector3(A.x + AB.x * t, A.y + AB.y * t, A.z + AB.z * t);
+        return new Vector3(A.x + (AB.x * t), A.y + (AB.y * t), A.z + (AB.z * t));
     }
 
     /// <summary>
@@ -87,13 +87,13 @@ public class MathCustom
     /// </summary>
     /// <param name="getAbs">Want you to get absolute value ?</param>
     /// <returns></returns>
-    public static float GetDistanceToPlan(Vector3 point, Vector4 planValues, bool getAbs = false)
+    public static float GetDistanceToPlane(Vector3 point, Vector4 planValues, bool getAbs = false)
     {
         float numerator;
         float denominator;
 
-        if (!getAbs) numerator = planValues.x * point.x + planValues.y * point.y + planValues.z * point.z - planValues.w;
-        else numerator = Mathf.Abs(planValues.x * point.x + planValues.y * point.y + planValues.z * point.z - planValues.w);
+        if (!getAbs) numerator = (planValues.x * point.x) + (planValues.y * point.y) + (planValues.z * point.z) - planValues.w;
+        else numerator = Mathf.Abs((planValues.x * point.x) + (planValues.y * point.y) + (planValues.z * point.z) - planValues.w);
         denominator = Mathf.Sqrt(Mathf.Pow(planValues.x, 2) + Mathf.Pow(planValues.y, 2) + Mathf.Pow(planValues.z, 2));
 
         return numerator / denominator;
@@ -107,21 +107,32 @@ public class MathCustom
         Matrix3x3 transformMatrix = new Matrix3x3();
 
         transformMatrix.m00 = Mathf.Pow(axis.x, 2) + (1 - Mathf.Pow(axis.x, 2)) * c;
-        transformMatrix.m01 = axis.x * axis.y * (1 - c) - axis.z * s;
-        transformMatrix.m02 = axis.x * axis.z * (1 - c) + axis.y * s;
+        transformMatrix.m01 = (axis.x * axis.y * (1 - c)) - (axis.z * s);
+        transformMatrix.m02 = (axis.x * axis.z * (1 - c)) + (axis.y * s);
 
-        transformMatrix.m10 = axis.x * axis.y * (1 - c) + axis.z * s;
+        transformMatrix.m10 = (axis.x * axis.y * (1 - c)) + (axis.z * s);
         transformMatrix.m11 = Mathf.Pow(axis.y, 2) + (1 - Mathf.Pow(axis.y, 2)) * c;
-        transformMatrix.m12 = axis.y * axis.z * (1 - c) - axis.x * s;
+        transformMatrix.m12 = (axis.y * axis.z * (1 - c)) - (axis.x * s);
 
-        transformMatrix.m20 = axis.x * axis.z * (1 - c) - axis.y * s;
-        transformMatrix.m21 = axis.y * axis.z * (1 - c) + axis.x * s;
+        transformMatrix.m20 = (axis.x * axis.z * (1 - c)) - (axis.y * s);
+        transformMatrix.m21 = (axis.y * axis.z * (1 - c)) + (axis.x * s);
         transformMatrix.m22 = Mathf.Pow(axis.z, 2) + (1 - Mathf.Pow(axis.z, 2)) * c;
 
         return Vector3TransformFromMatrix(origin, transformMatrix);
     }
 
-	public static Vector3 GetBarycenter(Vector3[] pointsCloud)
+    private static Vector3 Vector3TransformFromMatrix(Vector3 v, Matrix3x3 m)
+    {
+        Vector3 result = Vector3.zero;
+
+        result.x = (v.x * m.m00) + (v.y * m.m10) + (v.z * m.m20);
+        result.y = (v.x * m.m01) + (v.y * m.m11) + (v.z * m.m21);
+        result.z = (v.x * m.m02) + (v.y * m.m12) + (v.z * m.m22);
+
+        return result;
+    }
+
+    public static Vector3 GetBarycenter(Vector3[] pointsCloud)
 	{
 		float numX = 0;
 		float numY = 0;
@@ -138,17 +149,6 @@ public class MathCustom
 
 		return new Vector3(numX / den, numY / den, numZ / den);
 	}
-
-    protected static Vector3 Vector3TransformFromMatrix(Vector3 v, Matrix3x3 m)
-    {
-        Vector3 result = Vector3.zero;
-
-        result.x = v.x * m.m00 + v.y * m.m10 + v.z * m.m20;
-        result.y = v.x * m.m01 + v.y * m.m11 + v.z * m.m21;
-        result.z = v.x * m.m02 + v.y * m.m12 + v.z * m.m22;
-
-        return result;
-    }
 
 	public static void SphericalToCartesian(float radius, float polar, float elevation, out Vector3 outCart)
 	{
@@ -180,5 +180,58 @@ public class MathCustom
 
 	public static bool RandomBool() {
         return Random.value > 0.5;
+    }
+
+    /// <summary>
+    /// Boucing lerp with elasticity
+    /// </summary>
+    /// <param name="bounce">Elasticity</param>
+    /// <returns></returns>
+    public static float Berp(float start, float end, float bounce, float value)
+    {
+        value = Mathf.Clamp01(value);
+        value = (Mathf.Sin(value * Mathf.PI * (0.2f + bounce * value * value * value)) * Mathf.Pow(1f - value, 2.2f) + value) * (1f + (1.2f * (1f - value)));
+        return start + (end - start) * value;
+    }
+
+
+    /// <summary>
+    /// Circular lerp, avoid 0°/360° lerp problem (euler angles for ex)
+    /// </summary>
+    /// <returns></returns>
+    public static float Clerp(float start, float end, float value)
+    {
+        float min = 0.0f;
+        float max = 360.0f;
+        float half = Mathf.Abs((max - min) / 2.0f);
+        float retval = 0.0f;
+        float diff = 0.0f;
+
+        if ((end - start) < -half)
+        {
+            diff = ((max - start) + end) * value;
+            retval = start + diff;
+        }
+        else if ((end - start) > half)
+        {
+            diff = -((max - end) + start) * value;
+            retval = start + diff;
+        }
+        else retval = start + (end - start) * value;
+
+        Debug.Log("Start: "  + start + "   End: " + end + "  Value: " + value + "  Half: " + half + "  Diff: " + diff + "  Retval: " + retval);
+        return retval;
+    }
+
+    /// <summary>
+    /// Normalize val from [inStart, inEnd] to [outStart, outEnd]
+    /// </summary>
+    /// <returns></returns>
+    public static float NormalizeRange(float val, float inStart, float inEnd, float outStart, float outEnd)
+    {
+        float res = val - inStart;
+        res /= (inEnd - inStart);
+        res *= (outEnd - outStart);
+        return res - outStart;
     }
 }

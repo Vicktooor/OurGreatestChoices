@@ -101,7 +101,6 @@ public class HoneycombPlanetSmooth : MonoBehaviour
 
 	private void Awake()
 	{
-		PoolingManager.Instance.Active();
 		LinkDatabase.Instance.Init();
 		radius = GetComponent<SphereCollider>().radius;
 		referenceMesh = GetComponent<MeshFilter>().mesh;
@@ -228,7 +227,7 @@ public class HoneycombPlanetSmooth : MonoBehaviour
 		Vector3 cross = Vector3.Cross(Vector3.up, groundMesh.centerPosition);
 		Vector3 py = groundMesh.centerPosition + cross;
 		Vector3 pz = groundMesh.centerPosition + Vector3.Cross(cross, groundMesh.centerPosition);
-		Vector4 cellPlan = MathCustom.GetPlanValueWithThreePoints(groundMesh.centerPosition, py, pz);
+		Vector4 cellPlan = MathCustom.GetPlaneValues(groundMesh.centerPosition, py, pz);
 
 		for (int i = 0; i < groundMesh.smoothVertex.Length; i++)
 		{	
@@ -239,7 +238,7 @@ public class HoneycombPlanetSmooth : MonoBehaviour
 			}
 			else
 			{
-				Vector3 planeCoord = MathCustom.GetCoordinatesWhereLineCutPlan(Vector3.zero, vertex, cellPlan);
+				Vector3 planeCoord = MathCustom.LineCutPlaneCoordinates(Vector3.zero, vertex, cellPlan);
 				Vector3 cartesianPos = Quaternion.FromToRotation(groundMesh.centerPosition, Vector3.up) * planeCoord;
 				float lRadius;
 				float lPolar;
@@ -379,8 +378,8 @@ public class HoneycombPlanetSmooth : MonoBehaviour
                 lTriangles[i * 3 + 2] = CustomGeneric.ArrayContain(groundMesh.computedVertex, couples[i].vertices[0]);  
             }
 
-            Vector4 face = MathCustom.GetPlanValueWithThreePoints(Vector3.zero, couples[i].vertices[1], couples[i].vertices[0]);
-            if (MathCustom.GetDistanceToPlan(groundMesh.centerPosition, face) > 0)
+            Vector4 face = MathCustom.GetPlaneValues(Vector3.zero, couples[i].vertices[1], couples[i].vertices[0]);
+            if (MathCustom.GetDistanceToPlane(groundMesh.centerPosition, face) > 0)
             {
                 lTriangles[groundMesh.triangles.Length + i * 3] = CustomGeneric.ArrayContain(groundMesh.computedVertex, Vector3.zero);
                 lTriangles[groundMesh.triangles.Length + i * 3 + 1] = CustomGeneric.ArrayContain(groundMesh.computedVertex, couples[i].vertices[0]);
@@ -415,8 +414,8 @@ public class HoneycombPlanetSmooth : MonoBehaviour
 			}
 		}
 
-		Vector4 groundPlan = MathCustom.GetPlanValueWithThreePoints(planPoints[0], planPoints[1], planPoints[2]);
-		Vector3 newCenterPosition = MathCustom.GetCoordinatesWhereLineCutPlan(origin, groundMesh.centerPosition * int.MaxValue, groundPlan);
+		Vector4 groundPlan = MathCustom.GetPlaneValues(planPoints[0], planPoints[1], planPoints[2]);
+		Vector3 newCenterPosition = MathCustom.LineCutPlaneCoordinates(origin, groundMesh.centerPosition * int.MaxValue, groundPlan);
 
 		for (int i = 0; i < nbVertex; i++)
 		{

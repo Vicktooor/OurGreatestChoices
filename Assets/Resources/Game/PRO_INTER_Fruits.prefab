@@ -137,7 +137,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayView: 1
-  offsetY: 0.02
+  offsetY: 0
   associateCell: {fileID: 0}
   buildingLink:
     type: 0

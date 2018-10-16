@@ -16,7 +16,6 @@ public class UIElementDragger : MonoBehaviour {
 
     List<RaycastResult> hitObjects = new List<RaycastResult>();
 
-
     void Update() {
         if (Input.GetMouseButtonDown(0)) {
             objectToDrag = GetDraggableTransformUnderMouse();
@@ -78,12 +77,6 @@ public class UIElementDragger : MonoBehaviour {
 
     private Transform GetDraggableTransformUnderMouse() {
         var clickedObject = GetObjectUnderMouse();
-
-        // get top level object hit
-        /*if (clickedObject != null && clickedObject.tag == InventoryPlayer.instance.DRAGGABLE_TAG) {
-            return clickedObject.transform;
-        }*/
-
         return null;
     }
 }

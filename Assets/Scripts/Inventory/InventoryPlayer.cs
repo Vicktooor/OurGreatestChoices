@@ -44,9 +44,8 @@ public class InventoryPlayer : MonoBehaviour {
 
     public List<Item> knowsItems;
     public List<Item> itemsWornArray;
+    public Dictionary<string, int> nbItems;
 
-    [SerializeField]
-    int MAX_OBJECTS = 50;
     //PUBLIC FOR DEBUG CLASS
     public Item _cheatNPC;
     public Item _cheatItem;
@@ -75,63 +74,62 @@ public class InventoryPlayer : MonoBehaviour {
         Events.Instance.AddListener<OnGive>(Give);
 
         knowsItems = new List<Item>();
+        nbItems = new Dictionary<string, int>();
     }
 
     #endregion
-    public bool Add(Item pItem) {
+    public bool Add(Item pItem, bool fromTransformation = false) {
         //Avoid picking up objects on MapView
         if (pItem == null || GameManager.Instance.LoadedScene == SceneString.MapView) {
             return false;
         }
 
-        if (itemsWornArray.Count < MAX_OBJECTS) {
-            if (!knowsItems.Contains(pItem)) {
-                knowsItems.Add(pItem);
-                Events.Instance.Raise(new OnNewObject());
-            }
+        if (!knowsItems.Contains(pItem))
+        {
+            knowsItems.Add(pItem);
             itemsWornArray.Add(pItem);
-            Events.Instance.Raise(new OnShowPin(EPin.Bag, true));
+            nbItems.Add(pItem.name, 1);
+            Events.Instance.Raise(new OnNewObject());
+            if (fromTransformation)
+            {
+                Events.Instance.Raise(new OnTransformRewardNew());
+                Events.Instance.Raise(new OnShowPin(EPin.Glossary, true));
+            }
+        }
+        else
+        {
+            if (fromTransformation) Events.Instance.Raise(new OnTransformReward());
+            if (itemsWornArray.Contains(pItem))
+            {
+                nbItems[pItem.name]++;
+            } 
+            else
+            {
+                itemsWornArray.Add(pItem);
+                nbItems[pItem.name]++;
+            }           
         }
 
-        else {
-            print("NOMBRE D OBJETS MAXIMUM ATTEINT");
-            return false;
-        }
-
+        Events.Instance.Raise(new OnShowPin(EPin.Bag, true));
+        Events.Instance.Raise(new OnUpdateInventory());
         Events.Instance.Raise(new OnClickInteractable(InteractableManager.instance.FINISH_TYPE));
         if (QuestManager.Instance) QuestManager.Instance.DisplayQuest();
-
         return true;
     }
 
     public void Transformation(OnTransformation e) {
-        if (e.item == null) return;
-
-        if (!knowsItems.Contains(e.item)) {
-            knowsItems.Add(e.item);
-            Events.Instance.Raise(new OnTransformRewardNew());
-            Events.Instance.Raise(new OnShowPin(EPin.Glossary, true));
-        }
-        else {
-            print("not new");
-            Events.Instance.Raise(new OnTransformReward());
-        }
-        itemsWornArray[e.index] = e.item;
-        Events.Instance.Raise(new OnShowPin(EPin.Bag, true));
-        if (QuestManager.Instance) QuestManager.Instance.DisplayQuest();
+        Add(e.item, true);
+        Events.Instance.Raise(new OnEndTransformation(e.index, e.item));
     }
 
     void Give(OnGive e) {
-        List<Item> itemsArray = InventoryPlayer.instance.itemsWornArray;
-
-        for (int i = e.index; i < itemsArray.Count; i++) {
-            if ((i + 1) < itemsArray.Count) {
-                itemsArray[i] = itemsArray[i + 1];
-            }
-            else {
-                itemsArray.RemoveAt(i);
-                break;
-            }
+        string eName = itemsWornArray[e.index].name;
+        int nb = nbItems[eName] - 1;
+        nbItems[eName] = nb;
+        if (nb == 0)
+        {
+            itemsWornArray.RemoveAt(e.index);
+            nbItems[eName] = 0;
         }
     }
 
@@ -157,7 +155,7 @@ public class InventoryPlayer : MonoBehaviour {
         knowsItems.Clear();
         itemsWornArray.Clear();
 
-        Events.Instance.Raise(new OnClear());
+        Events.Instance.Raise(new OnClearInventory());
     }
 
     private void OnDestroy() {

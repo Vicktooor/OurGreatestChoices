@@ -27,7 +27,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1032929568292306
 GameObject:
   m_ObjectHideFlags: 1
@@ -45,7 +45,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1114487215685512
 GameObject:
   m_ObjectHideFlags: 0
@@ -113,7 +113,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1222665280938676
 GameObject:
   m_ObjectHideFlags: 1
@@ -131,7 +131,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1267580497189430
 GameObject:
   m_ObjectHideFlags: 1
@@ -148,7 +148,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1289666121309900
 GameObject:
   m_ObjectHideFlags: 1
@@ -166,7 +166,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1299456332744766
 GameObject:
   m_ObjectHideFlags: 1
@@ -184,7 +184,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1308399245092016
 GameObject:
   m_ObjectHideFlags: 1
@@ -201,7 +201,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1318402196861598
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,7 +236,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1388973376375914
 GameObject:
   m_ObjectHideFlags: 1
@@ -254,7 +254,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1413244343162846
 GameObject:
   m_ObjectHideFlags: 0
@@ -323,7 +323,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1514968256091170
 GameObject:
   m_ObjectHideFlags: 1
@@ -340,7 +340,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1532777693919140
 GameObject:
   m_ObjectHideFlags: 0
@@ -375,7 +375,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1552834458641414
 GameObject:
   m_ObjectHideFlags: 1
@@ -393,7 +393,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1559906853340268
 GameObject:
   m_ObjectHideFlags: 0
@@ -444,7 +444,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1651714195908278
 GameObject:
   m_ObjectHideFlags: 1
@@ -462,7 +462,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1654614944677460
 GameObject:
   m_ObjectHideFlags: 0
@@ -530,7 +530,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1769632628614382
 GameObject:
   m_ObjectHideFlags: 0
@@ -600,7 +600,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1935053275912950
 GameObject:
   m_ObjectHideFlags: 0
@@ -635,7 +635,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1968876025145430
 GameObject:
   m_ObjectHideFlags: 0
@@ -670,7 +670,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1976262721172612
 GameObject:
   m_ObjectHideFlags: 0
@@ -2826,8 +2826,11 @@ MonoBehaviour:
   _maxDistance: 0.1
   _maxAngle: 30
   _timeToBack: 2
-  _pivot: {fileID: 0}
   _player: {fileID: 0}
+  canPopItem: 1
+  popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
+  popTime: 0.25
+  popPct: 8
   playerTransform: {fileID: 0}
 --- !u!114 &114059446505585018
 MonoBehaviour:
@@ -2844,8 +2847,11 @@ MonoBehaviour:
   _maxDistance: 0.1
   _maxAngle: 30
   _timeToBack: 2
-  _pivot: {fileID: 0}
   _player: {fileID: 0}
+  canPopItem: 1
+  popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
+  popTime: 0.25
+  popPct: 8
   playerTransform: {fileID: 0}
 --- !u!114 &114165304253841454
 MonoBehaviour:
@@ -2862,8 +2868,11 @@ MonoBehaviour:
   _maxDistance: 0.1
   _maxAngle: 30
   _timeToBack: 2
-  _pivot: {fileID: 0}
   _player: {fileID: 0}
+  canPopItem: 1
+  popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
+  popTime: 0.25
+  popPct: 8
   playerTransform: {fileID: 0}
 --- !u!114 &114246663122151178
 MonoBehaviour:
@@ -2880,8 +2889,11 @@ MonoBehaviour:
   _maxDistance: 0.1
   _maxAngle: 30
   _timeToBack: 2
-  _pivot: {fileID: 0}
   _player: {fileID: 0}
+  canPopItem: 1
+  popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
+  popTime: 0.25
+  popPct: 8
   playerTransform: {fileID: 0}
 --- !u!114 &114252019789898768
 MonoBehaviour:
@@ -2898,8 +2910,11 @@ MonoBehaviour:
   _maxDistance: 0.1
   _maxAngle: 30
   _timeToBack: 2
-  _pivot: {fileID: 0}
   _player: {fileID: 0}
+  canPopItem: 1
+  popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
+  popTime: 0.25
+  popPct: 8
   playerTransform: {fileID: 0}
 --- !u!114 &114301463101639504
 MonoBehaviour:
@@ -2916,8 +2931,11 @@ MonoBehaviour:
   _maxDistance: 0.1
   _maxAngle: 30
   _timeToBack: 2
-  _pivot: {fileID: 0}
   _player: {fileID: 0}
+  canPopItem: 1
+  popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
+  popTime: 0.25
+  popPct: 8
   playerTransform: {fileID: 0}
 --- !u!114 &114373980934516598
 MonoBehaviour:
@@ -2935,6 +2953,7 @@ MonoBehaviour:
   associateCell: {fileID: 0}
   cutModel: 1
   opositeAsset: {fileID: 1976262721172612}
+  _modified: 0
 --- !u!114 &114430124352266920
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2950,8 +2969,11 @@ MonoBehaviour:
   _maxDistance: 0.1
   _maxAngle: 30
   _timeToBack: 2
-  _pivot: {fileID: 0}
   _player: {fileID: 0}
+  canPopItem: 1
+  popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
+  popTime: 0.25
+  popPct: 8
   playerTransform: {fileID: 0}
 --- !u!114 &114496526894532058
 MonoBehaviour:
@@ -2968,8 +2990,11 @@ MonoBehaviour:
   _maxDistance: 0.1
   _maxAngle: 30
   _timeToBack: 2
-  _pivot: {fileID: 0}
   _player: {fileID: 0}
+  canPopItem: 1
+  popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
+  popTime: 0.25
+  popPct: 8
   playerTransform: {fileID: 0}
 --- !u!114 &114559019039631682
 MonoBehaviour:
@@ -2986,8 +3011,11 @@ MonoBehaviour:
   _maxDistance: 0.1
   _maxAngle: 30
   _timeToBack: 2
-  _pivot: {fileID: 0}
   _player: {fileID: 0}
+  canPopItem: 1
+  popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
+  popTime: 0.25
+  popPct: 8
   playerTransform: {fileID: 0}
 --- !u!114 &114640687209636316
 MonoBehaviour:
@@ -3004,8 +3032,11 @@ MonoBehaviour:
   _maxDistance: 0.1
   _maxAngle: 30
   _timeToBack: 2
-  _pivot: {fileID: 0}
   _player: {fileID: 0}
+  canPopItem: 1
+  popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
+  popTime: 0.25
+  popPct: 8
   playerTransform: {fileID: 0}
 --- !u!114 &114697124251682484
 MonoBehaviour:
@@ -3022,8 +3053,11 @@ MonoBehaviour:
   _maxDistance: 0.1
   _maxAngle: 30
   _timeToBack: 2
-  _pivot: {fileID: 0}
   _player: {fileID: 0}
+  canPopItem: 1
+  popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
+  popTime: 0.25
+  popPct: 8
   playerTransform: {fileID: 0}
 --- !u!114 &114753534193861558
 MonoBehaviour:
@@ -3040,8 +3074,11 @@ MonoBehaviour:
   _maxDistance: 0.1
   _maxAngle: 30
   _timeToBack: 2
-  _pivot: {fileID: 0}
   _player: {fileID: 0}
+  canPopItem: 1
+  popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
+  popTime: 0.25
+  popPct: 8
   playerTransform: {fileID: 0}
 --- !u!114 &114794213035315300
 MonoBehaviour:
@@ -3058,6 +3095,9 @@ MonoBehaviour:
   _maxDistance: 0.1
   _maxAngle: 30
   _timeToBack: 2
-  _pivot: {fileID: 0}
   _player: {fileID: 0}
+  canPopItem: 1
+  popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
+  popTime: 0.25
+  popPct: 8
   playerTransform: {fileID: 0}

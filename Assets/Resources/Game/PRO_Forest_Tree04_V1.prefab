@@ -97,8 +97,11 @@ MonoBehaviour:
   _maxDistance: 0.1
   _maxAngle: 30
   _timeToBack: 2
-  _pivot: {fileID: 0}
   _player: {fileID: 0}
+  canPopItem: 1
+  popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
+  popTime: 0.25
+  popPct: 8
   playerTransform: {fileID: 0}
 --- !u!114 &114374405721934814
 MonoBehaviour:

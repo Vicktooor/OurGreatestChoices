@@ -9,16 +9,13 @@ public class Item : ScriptableObject {
     public GameObject prefab = null; //A METTRE DANS PICK UP
 
     public List<Item> itemsLinked;
-    //public List<Item> itemsGiven;
-    //public GameObject assetEvolution;
-    //public ItemPickUp itemPickUp; //Item produced by an item Prop
     public EPlayer type;
     public bool isPrimary = false;
-
     
     public Item NGOItem;
     public Item EcoItem;
     public Item GouvItem;
+    public int nbForCraft;
 
     public Item originalItem;
 

@@ -5,32 +5,31 @@ using UnityEngine;
 
 namespace Assets.Scripts.Game.Objects
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public class PoolTree : Props
-	{
+    /// <summary>
+    /// 
+    /// </summary>
+    public class PoolTree : Props
+    {
         public static ObjectArray<Cell> ForestCells = new ObjectArray<Cell>();
 
         public bool cutModel;
-		public GameObject opositeAsset;
+        public GameObject opositeAsset;
 
-        private bool _modified = false;
-        public bool Modified { get { return _modified; } }
+        public bool _modified = false;
 
-        public static void IncrementDeforestation(bool oldCutState, bool newCutState)
+        public bool IsCut
         {
-            if (oldCutState != newCutState)
+            get
             {
-                DeforestationArea.NB_FOREST_CUT += newCutState ? 1 : -1;
-            }
-        }
-
-        public bool IsCut {
-            get {
-                if (cutModel && !_modified) return true;
-                else if (!cutModel && _modified) return true;
-                else return false;
+                if (cutModel)
+                {
+                    if (_modified) return false;
+                    else return true;
+                }
+                else {
+                    if (_modified) return true;
+                    else return false;
+                }
             }
         }
 
@@ -38,47 +37,53 @@ namespace Assets.Scripts.Game.Objects
         {
             if (opositeAsset != null)
             {
-                if (cutModel) IncrementDeforestation(false, true);
+                if (cutModel) DeforestationArea.NB_FOREST_CUT++;
                 ForestCells.Add(associateCell);
                 opositeAsset.transform.parent = associateCell.transform;
             }
         }
 
         public void SetDeforestation(bool deforest)
-		{
-			if (opositeAsset == null) return;
+        {
+            if (opositeAsset == null) return;
             if (deforest && IsCut) return;
             if (!deforest && !IsCut) return;
 
-            bool oldIsCut = IsCut;
-			if (cutModel)
-			{
-				if (!deforest && !_modified)
-				{
+            if (cutModel)
+            {
+                if (!deforest && IsCut)
+                {
+                    DeforestationArea.NB_FOREST_CUT--;
+                    _modified = true;
                     opositeAsset.SetActive(true);
-					gameObject.SetActive(false);
-				}
-				else if (_modified)
-				{
+                    gameObject.SetActive(false);
+                }
+                else if (!IsCut)
+                {
+                    DeforestationArea.NB_FOREST_CUT++;
+                    _modified = false;
                     opositeAsset.SetActive(false);
-					gameObject.SetActive(true);
-				}
-			}
-			else
-			{
-				if (deforest && !_modified)
-				{
+                    gameObject.SetActive(true);
+                }
+            }
+            else
+            {
+                if (deforest && !IsCut)
+                {
+                    _modified = true;
+                    DeforestationArea.NB_FOREST_CUT++;
                     opositeAsset.SetActive(true);
-					gameObject.SetActive(false);
-				}
-				else if (_modified)
-				{
+                    gameObject.SetActive(false);
+                }
+                else if (IsCut)
+                {
+                    DeforestationArea.NB_FOREST_CUT--;
+                    _modified = false;
                     opositeAsset.SetActive(false);
-					gameObject.SetActive(true);
-				}
-			}
-            IncrementDeforestation(oldIsCut, IsCut);
-		}
+                    gameObject.SetActive(true);
+                }
+            }
+        }
 
         public override void Display(OnZoomFinish e)
         {

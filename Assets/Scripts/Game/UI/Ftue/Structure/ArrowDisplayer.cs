@@ -125,7 +125,7 @@ public class ArrowDisplayer
 
     public void SetActiveArrows(bool tState)
     {
-        foreach (DataStruct<UIObjectPointer> ps in _arrows.Objs) ps.obj.gameObject.SetActive(tState);
+        foreach (NamedObject<UIObjectPointer> ps in _arrows.Objs) ps.obj.gameObject.SetActive(tState);
     }
 
     public void DestroyArrow(UIObjectPointer arrow)
@@ -136,7 +136,7 @@ public class ArrowDisplayer
 
     public void CleanArrows()
     {
-        foreach (DataStruct<UIObjectPointer> ps in _arrows.Objs) GameObject.Destroy(ps.obj.gameObject);
+        foreach (NamedObject<UIObjectPointer> ps in _arrows.Objs) GameObject.Destroy(ps.obj.gameObject);
         _arrows.Clear();
     }
 }

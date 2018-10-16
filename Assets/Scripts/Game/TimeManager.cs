@@ -15,6 +15,7 @@ namespace Assets.Scripts.Game
 		protected float _currentMonthTime;
 		protected float _currentWeekTime;
 		protected float _currentDeforestationTime;
+		protected float _currentPolutionTime;
 
 		[SerializeField]
 		protected float _yearTime;
@@ -38,6 +39,7 @@ namespace Assets.Scripts.Game
         public bool canActive = false;
 
         public float deforestationTime;
+        public float polutionTime;
 
         public float skySpeed = 5f;
         private float SkyboxSpeed { get { return Mathf.Clamp(skySpeed, 0.1f, 10f); } }
@@ -76,7 +78,8 @@ namespace Assets.Scripts.Game
 			_currentMonthTime = 0;
 			_currentWeekTime = 0;
 			_currentDeforestationTime = 0;
-			_actualYear = 0;
+            _currentPolutionTime = 0;
+            _actualYear = 0;
 			_actualMonth = 0;
 			_actualWeek = 0;
 		}
@@ -102,7 +105,6 @@ namespace Assets.Scripts.Game
             _currentYearTime += Time.deltaTime;
 			_currentMonthTime += Time.deltaTime;
 			_currentWeekTime += Time.deltaTime;
-            _currentDeforestationTime += Time.deltaTime;
 
             if (_currentWeekTime >= _weekTime)
 			{
@@ -124,13 +126,26 @@ namespace Assets.Scripts.Game
 				++_actualYear;
 				Events.Instance.Raise(new OnNewYear(_actualYear + INITIAL_YEAR));
 			}
+            UpdateAreas();
+        }
+
+        protected void UpdateAreas()
+        {
+            _currentDeforestationTime += Time.deltaTime;
+            _currentPolutionTime += Time.deltaTime;
 
             if (_currentDeforestationTime >= deforestationTime)
             {
                 _currentDeforestationTime = 0;
                 Events.Instance.Raise(new OnUpdateForest());
             }
-		}
+
+            if (_currentPolutionTime >= polutionTime)
+            {
+                _currentPolutionTime = 0;
+                Events.Instance.Raise(new OnUpdateGround());
+            }
+        }
 
         public void Active()
         {

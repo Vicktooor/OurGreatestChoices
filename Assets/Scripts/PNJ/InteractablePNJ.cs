@@ -60,20 +60,18 @@ public class InteractablePNJ : Interactable
 		Events.Instance.AddListener<OnBudgetLoaded>(OnBudgetLoaded);
 		Events.Instance.AddListener<OnSelectTopic>(SelectTopic);
         Events.Instance.AddListener<OnGiveNPC>(TakeItem);
-	}
+        Events.Instance.AddListener<OnNewMonth>(OnUpdate);
+    }
 
     protected override void OnEnable() {
         base.OnEnable();
         Events.Instance.AddListener<OnReceiveBudget>(OnReceiveBudget);
-        Events.Instance.AddListener<OnGiveBudget>(OnSendBudget);
-        Events.Instance.AddListener<OnNewMonth>(OnUpdate);
-    }
+        Events.Instance.AddListener<OnGiveBudget>(OnSendBudget);    }
 
 	protected override void OnDisable() {
         base.OnDisable();
         Events.Instance.RemoveListener<OnReceiveBudget>(OnReceiveBudget);
         Events.Instance.RemoveListener<OnGiveBudget>(OnSendBudget);
-        Events.Instance.RemoveListener<OnNewMonth>(OnUpdate);
     }
 
     public virtual bool HaveHisItem()
@@ -278,6 +276,7 @@ public class InteractablePNJ : Interactable
 
     protected override void OnDestroy()
     {
+        Events.Instance.RemoveListener<OnNewMonth>(OnUpdate);
         Events.Instance.RemoveListener<OnDialoguesLoaded>(LoadDialogues);
         Events.Instance.RemoveListener<OnBudgetLoaded>(OnBudgetLoaded);
         Events.Instance.RemoveListener<OnSelectTopic>(SelectTopic);

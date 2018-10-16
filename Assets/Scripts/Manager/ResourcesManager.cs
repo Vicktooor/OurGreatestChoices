@@ -22,6 +22,7 @@ namespace Assets.Scripts.Manager
     {
         [SerializeField]
         private List<BudgetComponent> budgetComponents = new List<BudgetComponent>();
+        [SerializeField]
         private List<BudgetWorldValues> bonusValues = new List<BudgetWorldValues>();
         private Dictionary<string, float> boostedBudget = new Dictionary<string, float>();
 

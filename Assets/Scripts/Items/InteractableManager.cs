@@ -137,7 +137,7 @@ public class InteractableManager : MonoBehaviour {
         Events.Instance.Raise(new OnAction());
     }
 
-    public void RecreatePrimaryPickUp(GameObject item, GameObject prefab, Cell cell) {
+    /*public void RecreatePrimaryPickUp(GameObject item, GameObject prefab, Cell cell) {
         _prefab = prefab;
         _parentCell = cell;
         _position = item.transform.position;
@@ -154,7 +154,7 @@ public class InteractableManager : MonoBehaviour {
         _prefab = null;
         _parentCell = null;
         _position = Vector3.zero;
-    }
+    }*/
 
     private void OnDestroy() {
         _canTake = false;
