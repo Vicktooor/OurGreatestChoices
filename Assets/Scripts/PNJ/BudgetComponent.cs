@@ -61,32 +61,39 @@ namespace Assets.Scripts.Manager
         {
             if (minBudget > 0)
             {
-                if (budget + Investment < minBudget) working = false;
+                if (budget < minBudget) working = false;
                 else working = true;
             }
         }
 
         public bool TargetBudgetAchieved { get { return budget >= targetBudget; } }
 
-        public void ReceiveBudget()
+        public void GiveBudget()
         {
-            _investment += WorldValues.TRANSFERT_VALUE;
-            budget += WorldValues.TRANSFERT_VALUE;
-            SetWorking();
-            if (_investment >= WorldValues.BOOST_TARGET_VALUE) Events.Instance.Raise(new OnBudgetBoosted(name));
-            Events.Instance.Raise(new OnReceiveBudget().Init(this));
+            if (InventoryPlayer.instance.GetMoney(WorldValues.TRANSFERT_VALUE) != 0)
+            {
+                _investment += WorldValues.TRANSFERT_VALUE;
+                budget += WorldValues.TRANSFERT_VALUE;
+                SetWorking();
+                if (_investment >= WorldValues.BOOST_TARGET_VALUE) Events.Instance.Raise(new OnBudgetBoosted(name));
+                Events.Instance.Raise(new OnReceiveBudget().Init(this));
+            }
         }
 
-        public void SendBudget()
+        public void TakeBudget()
         {
-            budget -= WorldValues.TRANSFERT_VALUE;
-            SetWorking();
-            Events.Instance.Raise(new OnGiveBudget().Init(this));
+            if (budget - WorldValues.TRANSFERT_VALUE < 0) return;
+            if (InventoryPlayer.instance.AddMoney(WorldValues.TRANSFERT_VALUE))
+            {
+                budget -= WorldValues.TRANSFERT_VALUE;
+                SetWorking();
+                Events.Instance.Raise(new OnGiveBudget().Init(this));
+            }
         }
 
         public void PassAYear()
         {
-            float newBudget = Investment;
+            float newBudget = 0f;
             if (productBenefit)
             {
                 newBudget += budget * (1f + (0.1f * WorldValues.STATE_ECONOMY));

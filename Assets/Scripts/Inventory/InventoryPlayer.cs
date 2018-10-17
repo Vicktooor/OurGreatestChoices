@@ -40,7 +40,10 @@ public partial class SROptions {
 }
 #endregion
 
-public class InventoryPlayer : MonoBehaviour {
+public class InventoryPlayer : MonoBehaviour
+{
+    public float moneyStock;
+    public float maxStock = 10;
 
     public List<Item> knowsItems;
     public List<Item> itemsWornArray;
@@ -75,6 +78,28 @@ public class InventoryPlayer : MonoBehaviour {
 
         knowsItems = new List<Item>();
         nbItems = new Dictionary<string, int>();
+    }
+
+    public bool AddMoney(float value)
+    {
+        float newStock = moneyStock + value;
+        if (newStock > maxStock) return false;
+        else
+        {
+            moneyStock += value;
+            return true;
+        }
+    }
+
+    public float GetMoney(float value)
+    {
+        float newStock = moneyStock - value;
+        if (newStock < 0) return 0f;
+        else
+        {
+            moneyStock -= value;
+            return value;
+        }
     }
 
     #endregion

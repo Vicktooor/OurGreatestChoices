@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33462525614945524}
   - component: {fileID: 23777609357633882}
   - component: {fileID: 65991488324373782}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PRO_Desert_Pilar02
   m_TagString: Untagged
   m_Icon: {fileID: 0}

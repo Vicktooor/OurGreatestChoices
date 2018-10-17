@@ -149,7 +149,6 @@ public class GameManager : MonoBehaviour
         WorldManager.instance.Clear();
         ResourcesManager.instance.Clear();
 
-        BudgetPanelManager.instance.Clear();
         ControllerInput.instance.ResetDatasTouch();
 
         Events.Instance.Raise(new OnGoToMenu());

@@ -553,6 +553,11 @@ namespace Assets.Scripts.Utils
 
                 foreach (Props p in _selectedProps)
                 {
+                    if (_selectedProp == null)
+                    {
+                        _selectedProps.Remove(p);
+                        continue;
+                    }
 					MeshFilter[] objMeshes = p.GetComponentsInChildren<MeshFilter>();
 					foreach (MeshFilter lMesh in objMeshes)
 					{

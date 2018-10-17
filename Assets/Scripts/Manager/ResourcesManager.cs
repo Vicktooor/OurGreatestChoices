@@ -115,13 +115,6 @@ namespace Assets.Scripts.Manager
             return linkedBudgets;
         }
 
-        public EBudgetState GetState(BudgetComponent budget)
-        {
-            if (IsBoosted(budget.name)) return EBudgetState.Bonus;
-            if (budget.budget >= budget.minBudget) return EBudgetState.Good;
-            else return EBudgetState.Bad;
-        }
-
         private bool _updating = false;
         private void OnBudgetBoost(OnBudgetBoosted e)
         {

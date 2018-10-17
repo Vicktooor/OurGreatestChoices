@@ -66,7 +66,8 @@ public class InteractablePNJ : Interactable
     protected override void OnEnable() {
         base.OnEnable();
         Events.Instance.AddListener<OnReceiveBudget>(OnReceiveBudget);
-        Events.Instance.AddListener<OnGiveBudget>(OnSendBudget);    }
+        Events.Instance.AddListener<OnGiveBudget>(OnSendBudget);
+    }
 
 	protected override void OnDisable() {
         base.OnDisable();

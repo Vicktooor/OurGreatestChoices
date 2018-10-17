@@ -32,7 +32,7 @@ namespace Assets.Scripts.Game.UI
 		{
 			if (Input.GetMouseButtonDown(0))
 			{
-				_targetDraggable = GetDraggableTransformUnderMouse();
+				//_targetDraggable = GetDraggableTransformUnderMouse();
 				if (_targetDraggable)
 				{
 					_dragging = true;
@@ -49,8 +49,8 @@ namespace Assets.Scripts.Game.UI
 				if (Input.GetMouseButtonUp(0))
 				{
 					_dragging = false;
-					UIDraggableBudget UItargetBudget = GetDraggableTransformUnderMouse();
-					if (UItargetBudget)
+					//UIDraggableBudget UItargetBudget = GetDraggableTransformUnderMouse();
+					/*if (UItargetBudget)
 					{
 						dragImageTransform.gameObject.SetActive(false);
                         FBX_Money.instance.Play(dragImageTransform.position);
@@ -71,7 +71,7 @@ namespace Assets.Scripts.Game.UI
 					{
 						dragImageTransform.gameObject.SetActive(false);
                         _targetDraggable.GetComponent<Image>().raycastTarget = true;					
-					}
+					}*/
 				}
 			}
 		}
@@ -152,11 +152,11 @@ namespace Assets.Scripts.Game.UI
 			else return _hitObjects[0].gameObject;
 		}
 
-		public UIDraggableBudget GetDraggableTransformUnderMouse()
+		public T GetDraggableTransformUnderMouse<T>() where T : Component
 		{
 			GameObject go = GetObjectUnderMouse();
 			if (!go) return null;
-			UIDraggableBudget draggable = GetObjectUnderMouse().GetComponent<UIDraggableBudget>();
+			T draggable = GetObjectUnderMouse().GetComponent<T>();
 			if (draggable) return draggable;
 			return null;
 		}

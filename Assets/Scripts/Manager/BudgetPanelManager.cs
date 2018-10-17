@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using TMPro;
 using Assets.Scripts.Game.UI;
 using Assets.Script;
-using Assets.Scripts.Utils.Budget;
+using Assets.Scripts.Game;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.Manager
 {
@@ -33,10 +34,14 @@ namespace Assets.Scripts.Manager
 		#endregion
 
 		[SerializeField]
-		private BudgetPanelDrag diagramPanel;
-		[SerializeField]
 		private BudgetComponent buildingBudget;
 		public TextMeshProUGUI UIName;
+
+        private InteractablePNJ _npc;
+
+        public RawImage buildingIcon;
+        public TextMeshProUGUI buildingMoney;
+        public TextMeshProUGUI stockMoney;
 
 		protected void Awake()
 		{
@@ -62,8 +67,27 @@ namespace Assets.Scripts.Manager
 
         protected void EndTween(OnEndTween e)
         {
-            if (buildingBudget.name != string.Empty) diagramPanel.ConstructDiagram(buildingBudget);
+            if (buildingBudget.name != string.Empty) Set();
             else Close();
+        }
+
+        private void Set()
+        {
+            buildingIcon.texture = _npc.pictoHead.texture;
+            buildingMoney.text = (buildingBudget.budget * WorldValues.PLAYER_MONEY_MULTIPLICATOR) + "/" + (buildingBudget.targetBudget * WorldValues.PLAYER_MONEY_MULTIPLICATOR);
+            stockMoney.text = (InventoryPlayer.instance.moneyStock * WorldValues.PLAYER_MONEY_MULTIPLICATOR) + "/" + (InventoryPlayer.instance.maxStock * WorldValues.PLAYER_MONEY_MULTIPLICATOR);
+        }
+
+        public void ClickGive()
+        {
+            buildingBudget.GiveBudget();
+            Set();
+        }
+
+        public void ClickTake()
+        {
+            buildingBudget.TakeBudget();
+            Set();
         }
 
 		protected void Toggle()
@@ -82,6 +106,7 @@ namespace Assets.Scripts.Manager
 
 		protected void Open(OnPopupBuilding e)
 		{
+            _npc = e.npc;
 			buildingBudget = e.buildingbudget;
             UIName.text = buildingBudget.name;      
 			Toggle();
@@ -89,7 +114,6 @@ namespace Assets.Scripts.Manager
 
 		public void Close()
 		{
-			diagramPanel.Clear();
 			Toggle();
 		}
 
@@ -98,10 +122,5 @@ namespace Assets.Scripts.Manager
 			Events.Instance.RemoveListener<OnPopupBuilding>(Open);
 			_instance = null;
 		}
-
-        public void Clear()
-        {
-            diagramPanel.Clear();
-        }
 	}
 }
