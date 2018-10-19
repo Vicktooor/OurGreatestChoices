@@ -107,7 +107,6 @@ public class InteractablePNJ_CoalPower : InteractablePNJ {
         {
             EarthManager.Instance.CreateProps(item.prefab, lHit.point, associateCell);
         }
-        _powerPlantCollectible.FullDestroy();
         CatchPickUpItemPosition();
     }
 

@@ -52,10 +52,4 @@ public class ItemPickup : Interactable {
         if (associateCell) associateCell.DestroyProps(this);
         Destroy(gameObject);
     }
-
-    public void FullDestroy()
-    {
-        associateCell.DestroyProps(this);
-        Destroy(gameObject);
-    }
 }

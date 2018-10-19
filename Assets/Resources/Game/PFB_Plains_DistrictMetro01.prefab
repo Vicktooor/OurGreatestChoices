@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4332328595224124}
   - component: {fileID: 64437278302713856}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MOD_Colider_01 (12)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -275,7 +275,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4529743269400770}
   - component: {fileID: 64099775100024254}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MOD_Colider_01 (11)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -427,7 +427,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4818443403591988}
   - component: {fileID: 64618451546269538}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MOD_Colider_01 (10)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -443,7 +443,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4713377130133394}
   - component: {fileID: 64426197801881444}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MOD_Colider_01 (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

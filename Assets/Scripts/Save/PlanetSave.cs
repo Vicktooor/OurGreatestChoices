@@ -338,16 +338,20 @@ namespace Assets.Scripts.Game.Save
 			if (!PlanetMaker.instance.buildForMobile) androidPath = Application.streamingAssetsPath + "/Save/" + targetSaveName + "Save.gd";
 			var fileName = string.Format("{0}/{1}", Application.persistentDataPath, targetSaveName + "Save.gd");
 
-			WWW wwwfile = new WWW(androidPath);
-			while (!wwwfile.isDone) { }
-			File.WriteAllBytes(fileName, wwwfile.bytes);
-			StreamReader wr = new StreamReader(fileName);
-			SavedCells = (List<SaveCell>)bf.Deserialize(wr.BaseStream);
-			wr.Close();
+            if (File.Exists(fileName))
+            {
+                WWW wwwfile = new WWW(androidPath);
+                while (!wwwfile.isDone) { }
+                File.WriteAllBytes(fileName, wwwfile.bytes);
+                StreamReader wr = new StreamReader(fileName);
+                SavedCells = (List<SaveCell>)bf.Deserialize(wr.BaseStream);
+                wr.Close();
 
-            LoadPlayer();
+                LoadPlayer();
 
-            return true;
+                return true;
+            }
+            else return false;
 #endif
 
 #if UNITY_STANDALONE // DESKTOP PLANET LOAD FUNCTION

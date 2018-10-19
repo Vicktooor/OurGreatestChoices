@@ -225,7 +225,6 @@ public class CloudOut : GameEvent { }
 /*Music Event*/
 public class OnMusicBeta : GameEvent { }
 
-public class OnClearInventory : GameEvent { }
 public class OnUpdateInventory : GameEvent { }
 
 /*Interaction NPC */
@@ -476,15 +475,6 @@ public class OnBudgetTransition : GameEvent
 	{
 		budget = bComp;
 	}
-}
-
-public class OnBudgetBoosted : GameEvent
-{
-    public string name;
-    public OnBudgetBoosted(string budgetName)
-    {
-        name = budgetName;
-    }
 }
 
 public class OnUpdateMainMenu : GameEvent { }

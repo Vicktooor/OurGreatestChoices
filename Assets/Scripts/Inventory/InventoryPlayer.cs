@@ -103,11 +103,9 @@ public class InventoryPlayer : MonoBehaviour
     }
 
     #endregion
-    public bool Add(Item pItem, bool fromTransformation = false) {
+    public void Add(Item pItem, bool fromTransformation = false) {
         //Avoid picking up objects on MapView
-        if (pItem == null || GameManager.Instance.LoadedScene == SceneString.MapView) {
-            return false;
-        }
+        if (pItem == null || GameManager.Instance.LoadedScene == SceneString.MapView) { return; }
 
         if (!knowsItems.Contains(pItem))
         {
@@ -139,7 +137,6 @@ public class InventoryPlayer : MonoBehaviour
         Events.Instance.Raise(new OnUpdateInventory());
         Events.Instance.Raise(new OnClickInteractable(InteractableManager.instance.FINISH_TYPE));
         if (QuestManager.Instance) QuestManager.Instance.DisplayQuest();
-        return true;
     }
 
     public void Transformation(OnTransformation e) {
@@ -179,8 +176,6 @@ public class InventoryPlayer : MonoBehaviour
     public void Clear() {
         knowsItems.Clear();
         itemsWornArray.Clear();
-
-        Events.Instance.Raise(new OnClearInventory());
     }
 
     private void OnDestroy() {

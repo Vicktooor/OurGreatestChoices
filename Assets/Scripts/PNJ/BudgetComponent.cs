@@ -75,7 +75,6 @@ namespace Assets.Scripts.Manager
                 _investment += WorldValues.TRANSFERT_VALUE;
                 budget += WorldValues.TRANSFERT_VALUE;
                 SetWorking();
-                if (_investment >= WorldValues.BOOST_TARGET_VALUE) Events.Instance.Raise(new OnBudgetBoosted(name));
                 Events.Instance.Raise(new OnReceiveBudget().Init(this));
             }
         }
@@ -85,6 +84,7 @@ namespace Assets.Scripts.Manager
             if (budget - WorldValues.TRANSFERT_VALUE < 0) return;
             if (InventoryPlayer.instance.AddMoney(WorldValues.TRANSFERT_VALUE))
             {
+                _investment -= WorldValues.TRANSFERT_VALUE;
                 budget -= WorldValues.TRANSFERT_VALUE;
                 SetWorking();
                 Events.Instance.Raise(new OnGiveBudget().Init(this));
@@ -94,6 +94,7 @@ namespace Assets.Scripts.Manager
         public void PassAYear()
         {
             float newBudget = 0f;
+            newBudget += (WorldValues.BOOST_TARGET_VALUE * _investment);
             if (productBenefit)
             {
                 newBudget += budget * (1f + (0.1f * WorldValues.STATE_ECONOMY));

@@ -3,7 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine.UI;
 
-public class InventoryElement : MonoBehaviour
+public class InventoryElement : DraggableComponent
 {
     public string itemName;
     private Image img;
@@ -22,4 +22,5 @@ public class InventoryElement : MonoBehaviour
     {
         textMesh.text = InventoryPlayer.instance.nbItems[itemName].ToString();
     }
+
 }

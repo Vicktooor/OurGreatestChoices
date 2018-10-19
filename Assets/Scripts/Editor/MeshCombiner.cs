@@ -42,11 +42,14 @@ public class MeshCombiner : ScriptableObject
             {
                 if (groundMeshFilter.name != "Planet")
                 {
-                    CombineInstance lGroundMesh = new CombineInstance();
-                    lGroundMesh.mesh = groundMeshFilter.mesh;
-                    lGroundMesh.transform = groundMeshFilter.transform.localToWorldMatrix;
-                    combine.Add(lGroundMesh);
-                    i++;
+                    if (groundMeshFilter.gameObject != selection[0].gameObject)
+                    {
+                        CombineInstance lGroundMesh = new CombineInstance();
+                        lGroundMesh.mesh = groundMeshFilter.mesh;
+                        lGroundMesh.transform = groundMeshFilter.transform.localToWorldMatrix;
+                        combine.Add(lGroundMesh);
+                        i++;
+                    }
                 }
             }
 
@@ -56,7 +59,7 @@ public class MeshCombiner : ScriptableObject
                 var savePath = "Assets/ExportedObj/" + targetContainer.name + ".asset";
                 mf.sharedMesh = new Mesh();
                 mf.mesh.CombineMeshes(combine.ToArray());
-                AssetDatabase.CreateAsset(mf.mesh, savePath);             
+                AssetDatabase.CreateAsset(mf.mesh, savePath);
 
                 EditorUtility.DisplayDialog("Mesh generated", "Mesh have been generated in the root folder", "ok");
             }

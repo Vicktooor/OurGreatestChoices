@@ -6,7 +6,6 @@ namespace Assets.Scripts.Game
 {
     public class WorldValues
 	{
-        public static float BOOST_ECONOMIC_TIME = 30f;
         public static float BOOST_TARGET_VALUE = 2f;
         public static float TRANSFERT_VALUE = 1f;
         public static float PLAYER_MONEY_MULTIPLICATOR = 2500f;

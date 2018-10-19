@@ -78,7 +78,7 @@ namespace Assets.Scripts.Manager
 
         public void CreatePlanet()
         {
-            StartCoroutine(LoadCoroutine());
+            _planetLink.StartGeneration(CreateFullPlanet);
         }
 
         protected bool ResourcesLoaded()
@@ -92,21 +92,6 @@ namespace Assets.Scripts.Manager
 
             if (nbLoaded >= nbFolder) return true;
             else return false;
-        }
-
-        protected IEnumerator LoadCoroutine()
-        {
-            /*for (int i = 0; i < assetsFolder.Length; i++)
-			{
-				ResourceLoader.LoadFolderAsync(assetsFolder[i]);
-			}
-
-			while (!ResourcesLoaded())
-			{
-				yield return null;
-			}*/
-            yield return null;
-            _planetLink.StartGeneration(CreateFullPlanet);
         }
 
         public GameObject CreateProps(GameObject model, Vector3 pos, Cell associateCell)
@@ -167,6 +152,15 @@ namespace Assets.Scripts.Manager
                 Cell newCell = newGo.GetComponent<Cell>();
                 newCell.SetID();
                 newCell.Init(ground);
+
+                Mesh finalMesh = newCell.gameObject.GetComponent<MeshFilter>().mesh;
+                finalMesh.vertices = ground.smoothVertex;
+                finalMesh.triangles = ground.smoothTriangles;
+                finalMesh.normals = ground.smoothNormals;
+                finalMesh.uv = ground.UVs;
+                newCell.gameObject.GetComponent<MeshCollider>().sharedMesh = finalMesh;
+                finalMesh.RecalculateBounds();
+
                 _cells.Add(newCell);
             }
 
@@ -215,7 +209,7 @@ namespace Assets.Scripts.Manager
                 }
             }
             RecalculateUVMap();
-            if (!_loaded)
+            if (!_loaded && PlanetMaker.instance.edit == EditState.INACTIVE)
             {
                 LoadDialogues();
                 LoadBudget();

@@ -110,7 +110,6 @@ public class EditorObjExporter : ScriptableObject
     private static Dictionary<string, ObjMaterial> PrepareFileWrite()
     {
         Clear();
-
         return new Dictionary<string, ObjMaterial>();
     }
 
@@ -272,8 +271,8 @@ public class EditorObjExporter : ScriptableObject
             {
 				if (meshfilter[m].GetComponent<MeshFilter>().mesh != null && meshfilter[m].gameObject.name != EarthManager.Instance.name)
 				{
-					exportedObjects++;
-					mfList.Add(meshfilter[m]);
+                    exportedObjects++;
+                    mfList.Add(meshfilter[m]);
 				}
             }
         }
@@ -287,7 +286,7 @@ public class EditorObjExporter : ScriptableObject
                 mf[i] = (MeshFilter)mfList[i];
             }
 
-            string filename = EditorSceneManager.GetActiveScene().name + "_" + exportedObjects;
+            string filename = selection[0].name + "_" + exportedObjects;
 
             int stripIndex = filename.LastIndexOf(Path.PathSeparator);
 
@@ -295,7 +294,6 @@ public class EditorObjExporter : ScriptableObject
                 filename = filename.Substring(stripIndex + 1).Trim();
 
             MeshesToFile(mf, targetFolder, filename);
-
 
             EditorUtility.DisplayDialog("Objects exported", "Exported " + exportedObjects + " objects to " + filename, "");
         }

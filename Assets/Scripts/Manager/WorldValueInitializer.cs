@@ -5,7 +5,6 @@ public class WorldValueInitializer : MonoBehaviour
 {
     [Header("Economic values")]
     public float boostTargetValue = 2f;
-    public float boostTime = 30f;
     public float transfertValue = 0.1f;
     public float moneyMultiplicator = 2500f;
 
@@ -24,7 +23,6 @@ public class WorldValueInitializer : MonoBehaviour
     protected void Awake()
     {
         WorldValues.BOOST_TARGET_VALUE = boostTargetValue;
-        WorldValues.BOOST_ECONOMIC_TIME = boostTime;
         WorldValues.TRANSFERT_VALUE = transfertValue;
         WorldValues.PLAYER_MONEY_MULTIPLICATOR = moneyMultiplicator;
 

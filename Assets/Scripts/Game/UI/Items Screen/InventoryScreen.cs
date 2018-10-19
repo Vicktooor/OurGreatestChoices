@@ -1,18 +1,25 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class InventoryScreen : MonoSingleton<InventoryScreen>
 {
+    public Transform dragImageTransform;
+    private InventoryElement _targetDraggable;
+    private List<RaycastResult> _hitObjects = new List<RaycastResult>();
+    private bool _dragging;
+
     public GameObject elementModel;
     public OneLineScroller scroller;
     public List<InventoryElement> scrollElement;
+
+    public RawImage draggerTransform;
 
     protected override void Awake() {
         base.Awake();
         scroller.Init();
         Events.Instance.AddListener<OnGive>(Give);
-        Events.Instance.AddListener<OnClearInventory>(Clear);
         gameObject.SetActive(false);
     }
 
@@ -46,18 +53,33 @@ public class InventoryScreen : MonoSingleton<InventoryScreen>
         scroller.Scale();
     }
 
-    private void Give(OnGive e)
+    protected void HandleDrag(InventoryElement e1, InventoryElement e2)
     {
-
+        Debug.Log(e1.itemName + "/" + e2.itemName);
     }
 
-    private void Clear(OnClearInventory e)
+    protected void OnEnable()
+    {
+        Dragger<InventoryElement>.Instance._draggableImg = draggerTransform;
+        Dragger<InventoryElement>.Instance.AddCallback(HandleDrag);
+    }
+
+    protected void Update()
+    {
+        Dragger<InventoryElement>.Instance.Drag();
+    }
+
+    protected void OnDisable()
+    {
+        Dragger<InventoryElement>.Instance.RemoveCallback(HandleDrag);
+    }
+
+    private void Give(OnGive e)
     {
 
     }
 
     private void OnDestroy() {
         Events.Instance.RemoveListener<OnGive>(Give);
-        Events.Instance.RemoveListener<OnClearInventory>(Clear);
     }
 }

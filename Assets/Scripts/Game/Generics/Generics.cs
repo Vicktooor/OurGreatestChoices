@@ -2,6 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public static class PropertyUtils
+{
+    public static bool HasProperty<T>(string propertyName) where T : DraggableComponent
+    {
+        return typeof(T).GetProperty(propertyName) != null;
+    }
+
+    public static object GetProperty<T>(T obj, string propertyName) where T : DraggableComponent
+    {
+        if (HasProperty<T>(propertyName)) return typeof(T).GetProperty(propertyName).GetValue(obj, null);
+        else return null;
+    }
+}
+
 public struct NamedObject<T> where T : UnityEngine.Object
 {
     public string name;

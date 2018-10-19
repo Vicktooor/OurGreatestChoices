@@ -47,7 +47,6 @@ namespace Assets.Scripts.Manager
             }
             _instance = this;
             Events.Instance.AddListener<OnBudgetLoaded>(OnBudgetLoaded);
-            Events.Instance.AddListener<OnBudgetBoosted>(OnBudgetBoost);
         }
 
         protected void OnBudgetLoaded(OnBudgetLoaded e)
@@ -115,36 +114,9 @@ namespace Assets.Scripts.Manager
             return linkedBudgets;
         }
 
-        private bool _updating = false;
-        private void OnBudgetBoost(OnBudgetBoosted e)
-        {
-            if (!boostedBudget.ContainsKey(e.name))
-            {
-                boostedBudget.Add(e.name, 0f);
-                StartCoroutine(EcoBoostCoroutine(e.name));
-            }
-        }
-
-        private IEnumerator EcoBoostCoroutine(string targetName)
-        {
-            while (boostedBudget[targetName] < WorldValues.BOOST_ECONOMIC_TIME)
-            {
-                boostedBudget[targetName] += Time.deltaTime;
-                yield return null;
-            }
-            boostedBudget.Remove(targetName);
-        }
-
-        public bool IsBoosted(string budgetName)
-        {
-            if (boostedBudget.ContainsKey(budgetName)) return true;
-            else return false;
-        }
-
         protected void OnDestroy()
         {
             Events.Instance.RemoveListener<OnBudgetLoaded>(OnBudgetLoaded);
-            Events.Instance.RemoveListener<OnBudgetBoosted>(OnBudgetBoost);
             _instance = null;
         }
 
