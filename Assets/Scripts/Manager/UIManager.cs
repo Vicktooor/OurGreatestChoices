@@ -34,8 +34,6 @@ namespace Assets.Script {
         public ObjectUIPerceptor inventoryTarget;
 
         [SerializeField]
-        GameObject NPCPanel;
-        [SerializeField]
         GameObject GlossaryPanel;
         [SerializeField]
         GameObject GlobalGaugesPanel;
@@ -56,8 +54,6 @@ namespace Assets.Script {
 
         #region Private Variable
         [Header("Notifications Buttons")]
-        [SerializeField]
-        Button inventoryButton;
 
         // Debug Input Feedback
         [SerializeField]
@@ -221,7 +217,6 @@ namespace Assets.Script {
             Events.Instance.AddListener<OnRemove>(UnPressClickableButtons);
             Events.Instance.AddListener<LerpEnd>(EnableSwitchButton);
             Events.Instance.AddListener<ZoomEndUI>(ChangeScene);
-            Events.Instance.AddListener<OnOpenNPCScreen>(OpenNPCScreen);
             Events.Instance.AddListener<OnPinchEnd>(OnClickOnSceneButton);
             Events.Instance.AddListener<OnUpdateInventory>(InventoryScreen.Instance.MajInventory);
             Events.Instance.AddListener<OnHold>(OnHoldMovement);
@@ -424,17 +419,6 @@ namespace Assets.Script {
 
         #endregion
 
-        #region NPC Screen
-
-        protected void OpenNPCScreen(OnOpenNPCScreen e) {
-            inventoryButton.gameObject.SetActive(false);
-            NPCPanel.GetComponent<NPCScreen>().clickedNPC = e.NPC;
-            NPCPanel.SetActive(true);
-            NPCPanel.transform.parent.gameObject.SetActive(true);         
-        }
-
-        #endregion
-
         #region Gauges
         void UpdateGauges(OnChangeGauges e)
         {
@@ -535,7 +519,6 @@ namespace Assets.Script {
             Events.Instance.RemoveListener<OnRemove>(UnPressClickableButtons);
             Events.Instance.RemoveListener<LerpEnd>(EnableSwitchButton);
             Events.Instance.RemoveListener<ZoomEndUI>(ChangeScene);
-            Events.Instance.RemoveListener<OnOpenNPCScreen>(OpenNPCScreen);
             Events.Instance.RemoveListener<OnPinchEnd>(OnClickOnSceneButton);
             Events.Instance.RemoveListener<OnUpdateInventory>(InventoryScreen.Instance.MajInventory);
             Events.Instance.RemoveListener<OnHold>(OnHoldMovement);

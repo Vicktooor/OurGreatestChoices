@@ -1,6 +1,4 @@
 ﻿using Assets.Scripts.Game;
-using Assets.Scripts.Manager;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -136,25 +134,6 @@ public class InteractableManager : MonoBehaviour {
         _state = STATE.action;
         Events.Instance.Raise(new OnAction());
     }
-
-    /*public void RecreatePrimaryPickUp(GameObject item, GameObject prefab, Cell cell) {
-        _prefab = prefab;
-        _parentCell = cell;
-        _position = item.transform.position;
-        //Destroy(item);
-        StartCoroutine(WaitBeforeRecreate());
-    }
-
-    IEnumerator WaitBeforeRecreate() {
-        yield return new WaitForSeconds(2f);
-        RaycastHit lHit;
-        if (Physics.Raycast(new Ray(_position, -_position), out lHit, 1f, LayerMask.GetMask(new string[1] { "Cell" }))) {
-            EarthManager.Instance.CreateProps(_prefab, lHit.point, _parentCell.GetComponent<Cell>());
-        }
-        _prefab = null;
-        _parentCell = null;
-        _position = Vector3.zero;
-    }*/
 
     private void OnDestroy() {
         _canTake = false;

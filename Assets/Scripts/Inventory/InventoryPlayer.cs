@@ -74,7 +74,6 @@ public class InventoryPlayer : MonoBehaviour
         _instance = this;
 
         Events.Instance.AddListener<OnTransformation>(Transformation);
-        Events.Instance.AddListener<OnGive>(Give);
 
         knowsItems = new List<Item>();
         nbItems = new Dictionary<string, int>();
@@ -144,24 +143,34 @@ public class InventoryPlayer : MonoBehaviour
         Events.Instance.Raise(new OnEndTransformation(e.index, e.item));
     }
 
-    void Give(OnGive e) {
-        string eName = itemsWornArray[e.index].name;
+    public void Give(int index) {
+        string eName = itemsWornArray[index].name;
         int nb = nbItems[eName] - 1;
         nbItems[eName] = nb;
         if (nb == 0)
         {
-            itemsWornArray.RemoveAt(e.index);
+            itemsWornArray.RemoveAt(index);
             nbItems[eName] = 0;
         }
+        Events.Instance.Raise(new OnUpdateInventory());
     }
 
-    public bool InventoryContain(string itemName)
+    public int GetItemIndex(string itemName)
     {
         for (int i = 0; i < itemsWornArray.Count; i++)
         {
-            if (itemsWornArray[i].name == itemName) return true;
+            if (itemsWornArray[i].name == itemName) return i;
         }
-        return false;
+        return -1;
+    }
+
+    public Item ContainItem(string itemName)
+    {
+        for (int i = 0; i < itemsWornArray.Count; i++)
+        {
+            if (itemsWornArray[i].name == itemName) return itemsWornArray[i];
+        }
+        return null;
     }
 
     public bool PlayerKnowRecipeFor(string itemName)
@@ -182,6 +191,5 @@ public class InventoryPlayer : MonoBehaviour
         itemsWornArray.Clear();
 
         Events.Instance.RemoveListener<OnTransformation>(Transformation);
-        Events.Instance.RemoveListener<OnGive>(Give);
     }
 }

@@ -663,7 +663,7 @@ public class Player : MonoBehaviour
             else if (lPnj && PlayerManager.instance.playerType == EPlayer.ECO)
             {
                 playerAsset.transform.rotation = Quaternion.LookRotation(lPnj.transform.position - transform.position, transform.up);
-                Events.Instance.Raise(new OnOpenNPCScreen(lPnj));
+                InventoryScreen.Instance.HandleActiveFromNPC(lPnj);
                 QuestManager.Instance.EcoTalkTo(lPnj.budgetComponent.name);
                 lPnj = null;
                 CancelMove();

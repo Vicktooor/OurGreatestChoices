@@ -557,7 +557,7 @@ namespace Assets.Scripts.Game
             return _groundMesh.centerPosition;
         }
 
-        public void DestroyProps(Props prop)
+        public void RemoveProps(Props prop)
         {
             if (!_props.Remove(prop))
             {

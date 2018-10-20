@@ -43,8 +43,8 @@ public class InteractablePNJ_CarsCompany : InteractablePNJ {
         }
     }
 
-    public override void TakeItem(OnGiveNPC e) {
-        base.TakeItem(e);
+    public override void ReceiveItem(OnGiveNPC e) {
+        base.ReceiveItem(e);
         if (e.targetNPC != this) return;
 
         if (item.itemsLinked[0] == null) return;

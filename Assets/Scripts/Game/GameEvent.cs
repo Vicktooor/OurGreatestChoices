@@ -227,15 +227,6 @@ public class OnMusicBeta : GameEvent { }
 
 public class OnUpdateInventory : GameEvent { }
 
-/*Interaction NPC */
-public class OnOpenNPCScreen : GameEvent {
-    public InteractablePNJ NPC;
-
-    public OnOpenNPCScreen(InteractablePNJ pNPC) {
-        NPC = pNPC;
-    }
-}
-
 public class OnEndTransformation : GameEvent
 {
     public int index;

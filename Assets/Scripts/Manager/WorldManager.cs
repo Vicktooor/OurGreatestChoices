@@ -1,15 +1,14 @@
-﻿using UnityEngine;
-using System;
-using Assets.Scripts.Game;
-using System.Collections.Generic;
+﻿using Assets.Scripts.Game;
 using Assets.Scripts.Game.Objects;
 using Assets.Scripts.Utils;
+using System;
 using System.Collections;
-using Assets.Script;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.Scripts.Manager
 {
-	public enum SpawnValue { UP, DOWN }
+    public enum SpawnValue { UP, DOWN }
 
 	/// <summary>
 	/// 

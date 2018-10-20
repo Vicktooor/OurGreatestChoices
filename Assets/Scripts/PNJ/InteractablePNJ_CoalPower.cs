@@ -32,12 +32,12 @@ public class InteractablePNJ_CoalPower : InteractablePNJ {
         CatchPickUpItemPosition();
     }
 
-    public override void TakeItem(OnGiveNPC e) {
-        base.TakeItem(e);
+    public override void ReceiveItem(OnGiveNPC e) {
+        base.ReceiveItem(e);
         if (e.targetNPC != this) return;
 
         if (e.item.name == item.itemsLinked[0].name) {
-            if (_haveBudget) UpdateProps();
+            if (_haveBudget) UpdateZone();
             else PointingBubble.instance.ChangeText(GetThanksLocalizedText(whithoutMoneyThanks, EThanksKey.NeedBudget));
             _haveWindTurbine = true;
         }
@@ -60,22 +60,16 @@ public class InteractablePNJ_CoalPower : InteractablePNJ {
         else return false;
     }
 
-    public override void OnUpdate(OnNewMonth e)
-    {
-        UpdateZone();
-        base.OnUpdate(e);
-    }
-
     void UpdateZone() {
         if (budgetComponent.budget >= budgetComponent.targetBudget) {
-            budgetComponent.SetBudgetStep(0);
             _haveBudget = true;
             if (_haveWindTurbine)
             {
+                budgetComponent.SetBudgetStep(0);
+                if (PointingBubble.instance.active) PointingBubble.instance.ChangeText(GetThanksLocalizedText(thanksTexts, EThanksKey.WindTurbine));
                 UIManager.instance.AddSDGNotification(new int[3] { 8, 13, 15 });
                 UpdateProps();
             }
-            if (PointingBubble.instance.active) PointingBubble.instance.ChangeText(GetThanksLocalizedText(thanksTexts, EThanksKey.WindTurbine));
             return;
         }
         else if (budgetComponent.budget <= budgetComponent.targetBudget) {
@@ -90,8 +84,7 @@ public class InteractablePNJ_CoalPower : InteractablePNJ {
 		Transform _transform = propLinked.transform;
         GameObject lGo = propLinked;
         propLinked = EarthManager.Instance.CreateSavedProps(evolutionProp, _transform.position, associateCell, _transform.rotation);
-        associateCell.DestroyProps(propLinked.GetComponent<Props>());
-        Destroy(lGo);      
+        Destroy(propLinked.GetComponent<Props>());      
 
         Events.Instance.Raise(new OnMusicBeta());
 

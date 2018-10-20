@@ -70,7 +70,12 @@ namespace Assets.Scripts.Game.UI
         {
             speakingPos = npc.transform.position;
             _speakingNPC = npc;
-            Point();
+            Point();           
+        }
+
+        public void ActiveTouchForClose()
+        {
+            StartCoroutine(TouchForClose());
         }
 
 		public void ChangeText(string newText)
@@ -201,7 +206,22 @@ namespace Assets.Scripts.Game.UI
 			}		
 		}
 
-		protected void SelectTopic(OnActiveSelectTopic e)
+        protected IEnumerator TouchForClose()
+        {
+            yield return null;
+            yield return null;
+
+            bool receiveTouch = false;
+            while (!receiveTouch)
+            {
+                if (Input.GetKeyDown(KeyCode.Mouse0)) receiveTouch = true;
+                if (Input.touchCount > 1) receiveTouch = true;
+                yield return null;
+            }
+            Show(false);
+        }
+
+        protected void SelectTopic(OnActiveSelectTopic e)
 		{
 			Events.Instance.RemoveListener<OnActiveSelectTopic>(SelectTopic);
 			selectedTopic = e.topicItem;

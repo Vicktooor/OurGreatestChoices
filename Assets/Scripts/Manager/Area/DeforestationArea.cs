@@ -2,7 +2,6 @@
 using Assets.Scripts.Game.Objects;
 using Assets.Scripts.Manager;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class DeforestationArea
 {

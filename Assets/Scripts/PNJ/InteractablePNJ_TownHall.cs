@@ -47,8 +47,8 @@ public class InteractablePNJ_TownHall : InteractablePNJ {
         metroLinked = lLinkDatabase.GetLinkObjects(buildingLink, typeof(MetroProp));
     }
 
-    public override void TakeItem(OnGiveNPC e) {
-        base.TakeItem(e);
+    public override void ReceiveItem(OnGiveNPC e) {
+        base.ReceiveItem(e);
         if (e.targetNPC != this) return;
         //If item given is Electricity
         if (item.itemsLinked[0] == null) return;

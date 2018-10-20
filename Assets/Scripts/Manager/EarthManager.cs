@@ -1,12 +1,11 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.Game;
+using Assets.Scripts.Game.Objects;
+using Assets.Scripts.Game.Save;
+using Assets.Scripts.Items;
+using Assets.Scripts.Utils;
 using System;
 using System.Collections.Generic;
-using Assets.Scripts.Game;
-using System.Collections;
-using Assets.Scripts.Utils;
-using Assets.Scripts.Items;
-using Assets.Scripts.Game.Save;
-using Assets.Scripts.Game.Objects;
+using UnityEngine;
 
 public enum EPlayer { NONE, ECO, GOV, NGO }
 

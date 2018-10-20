@@ -146,34 +146,5 @@ public class NPCScreen : MonoBehaviour {
             _transformationButton.sprite = _noneSprite;
             thumbnail.gameObject.SetActive(false);
         }
-    }
-
-    //UI Event
-    public void Give() {
-        /*if (clickedNPC.CanAccept(_currentGiveItem)) {
-            FBX_Give.instance.Play(new Vector3(_giveButton.transform.position.x, _giveButton.transform.position.y/2, _giveButton.transform.position.z));
-            PointingBubble.instance.Show(true);
-            PointingBubble.instance.SetPNJ(clickedNPC);
-            //if (clickedNPC) PointingBubble.instance.SetProperties(clickedNPC);
-            if (LocalizationManager.Instance.currentLangage == EnumClass.Language.en) PointingBubble.instance.ChangeText("thanks!");
-            else PointingBubble.instance.ChangeText("Merci!");
-
-            //Events.Instance.Raise(new OnGoodObject());
-            Events.Instance.Raise(new OnGive(_currentIndex));
-            Events.Instance.Raise(new OnGiveNPC(_currentGiveItem, clickedNPC));
-            
-            _giveButton.GetComponent<Image>().sprite = wrongButtonSprite;
-            _currentGiveItem = null;
-        }
-        else {
-            PointingBubble.instance.Show(true);
-            PointingBubble.instance.SetPNJ(clickedNPC);
-            //if (clickedNPC) PointingBubble.instance.SetProperties(clickedNPC);
-            if (LocalizationManager.Instance.currentLangage == EnumClass.Language.en) PointingBubble.instance.ChangeText("No thanks!");
-            else PointingBubble.instance.ChangeText("Non merci!");
-
-            _giveButton.GetComponent<Shake>().DoShake();
-            Events.Instance.Raise(new OnWrongObject());
-        }*/
-    }
+    }  
 }

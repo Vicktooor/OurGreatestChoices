@@ -1,6 +1,6 @@
 ﻿using Assets.Script;
+using Assets.Scripts.Game;
 using Assets.Scripts.Game.UI;
-using Assets.Scripts.Utils;
 using UnityEngine;
 
 public class ItemPickup : Interactable {
@@ -49,7 +49,7 @@ public class ItemPickup : Interactable {
     private void OnInventory()
     {
         InventoryPlayer.instance.Add(item);
-        if (associateCell) associateCell.DestroyProps(this);
+        if (associateCell) associateCell.RemoveProps(this);
         Destroy(gameObject);
     }
 }

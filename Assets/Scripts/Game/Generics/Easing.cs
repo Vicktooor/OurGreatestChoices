@@ -142,6 +142,11 @@
         return ((1f - blend) * funcN1(x, n1)) + (blend * funcN2(x, n2));
     }
 
+    public static float Mix(float resFunc1, float resFunc2, float blend, float x)
+    {
+        return ((1f - blend) * resFunc1) + (blend * resFunc2);
+    }
+
     /// <summary>
     /// To use with SmoothStart2 (exemple) & SmoothStop2 (exemple)
     /// </summary>
@@ -158,5 +163,10 @@
     public static float CrossFade(EaseFuncN<float, int, float> funcN1, int n1, EaseFuncN<float, int, float> funcN2, int n2, float x)
     {
         return ((1 - x) * funcN1(x, n1)) + (x * funcN2(x, n2));
+    }
+
+    public static float CrossFade(float resFunc1, float resFunc2, float blend, float x)
+    {
+        return ((1 - x) * resFunc1) + (x * resFunc2);
     }
 }

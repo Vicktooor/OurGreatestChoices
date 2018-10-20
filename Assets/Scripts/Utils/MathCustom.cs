@@ -218,9 +218,12 @@ public class MathCustom
             retval = start + diff;
         }
         else retval = start + (end - start) * value;
-
-        Debug.Log("Start: "  + start + "   End: " + end + "  Value: " + value + "  Half: " + half + "  Diff: " + diff + "  Retval: " + retval);
         return retval;
+    }
+
+    public static Vector3 LerpUnClampVector(Vector3 A, Vector3 B, float t)
+    {
+        return A + (B - A) * t;
     }
 
     /// <summary>

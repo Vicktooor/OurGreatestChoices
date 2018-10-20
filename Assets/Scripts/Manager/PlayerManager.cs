@@ -1,12 +1,9 @@
-﻿using UnityEngine;
+﻿using FMODUnity;
 using System;
-using System.Collections.Generic;
-using UnityEngine.Events;
-using System.Collections;
-using Assets.Scripts.Game;
-using FMODUnity;
+using UnityEngine;
 
-namespace Assets.Script {
+namespace Assets.Script
+{
 
     /// <summary>
     /// 

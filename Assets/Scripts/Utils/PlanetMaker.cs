@@ -289,7 +289,8 @@ namespace Assets.Scripts.Utils
                 {
 					_selectedProp = hit.transform.gameObject.GetComponent<Props>();
 					if (!_selectedProp) _selectedProp = hit.transform.gameObject.GetComponentInParent<Props>();
-					_selectedProp.associateCell.DestroyProps(_selectedProp);
+                    _selectedProp.associateCell.RemoveProps(_selectedProp);
+                    if (_selectedProps.Contains(_selectedProp)) _selectedProps.Remove(_selectedProp);
                     Destroy(_selectedProp.gameObject);
                 }
             }
@@ -374,7 +375,16 @@ namespace Assets.Scripts.Utils
 			}
         }
 
-		protected void EditDecal()
+        void OnApplicationFocus(bool hasFocus)
+        {
+            if (!hasFocus)
+            {
+                _selectedProp = null;
+                _selectedProps.Clear();
+            }
+        }
+
+        protected void EditDecal()
 		{
 			Ray ray = Camera.main.ViewportPointToRay(new Vector2(0.5f, 0.5f));
 			RaycastHit hit;
@@ -506,8 +516,7 @@ namespace Assets.Scripts.Utils
 				{
 					foreach (Props p in _selectedProps)
 					{
-						p.associateCell.DestroyProps(p);
-						Destroy(p.transform.gameObject);
+						Destroy(p.transform.gameObject.GetComponent<Props>());
 					}
 
 					_selectedProp = null;

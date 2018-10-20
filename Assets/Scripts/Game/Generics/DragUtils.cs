@@ -1,9 +1,8 @@
-﻿using UnityEngine;
-using UnityEditor;
-using UnityEngine.EventSystems;
+﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using System;
 
 public class DraggableComponent : MonoBehaviour { }
 
@@ -76,14 +75,40 @@ public class Dragger<T> : Singleton<Dragger<T>> where T : DraggableComponent
     #region  Callbacks
 
     private List<Action<T, T>> _callbacks = new List<Action<T, T>>();
-    private void ActiveCallbacks(T dragObj, T targetObj) { foreach (Action<T, T> callbacks in _callbacks) callbacks(dragObj, targetObj); }
+    private Dictionary<int, Action<T, T>> _callbacksObj = new Dictionary<int, Action<T, T>>();
+
     public void AddCallback(Action<T, T> cb)
     {
         if (!_callbacks.Contains(cb)) _callbacks.Add(cb);
     }
+
+    public void AddCallback(Action<T, T> cb, T targetObj)
+    {
+        if (targetObj == null) return;
+        int id = targetObj.GetInstanceID();
+        if (!_callbacksObj.ContainsKey(id)) _callbacksObj.Add(id, cb);
+    }
+
     public void RemoveCallback(Action<T, T> cb)
     {
         if (_callbacks.Contains(cb)) _callbacks.Remove(cb);
+    }
+
+    public void RemoveCallback(Action<T, T> cb, T targetObj)
+    {
+        if (targetObj == null) return;
+        int id = targetObj.GetInstanceID();
+        if (_callbacksObj.ContainsKey(id)) _callbacksObj.Remove(id);
+    }
+
+    private void ActiveCallbacks(T dragObj, T targetObj)
+    {
+        foreach (Action<T, T> callbacks in _callbacks) callbacks(dragObj, targetObj);
+        int targetID = targetObj.GetInstanceID();
+        foreach (KeyValuePair<int, Action<T, T>> callbacks in _callbacksObj)
+        {
+            if (callbacks.Key.Equals(targetID)) callbacks.Value(dragObj, targetObj);
+        }
     }
 
     #endregion

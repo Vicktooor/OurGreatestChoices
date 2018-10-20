@@ -1,7 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
-using Assets.Scripts.Game.Load;
-using System.Collections.Generic;
+﻿using Assets.Scripts.Game.Load;
+using UnityEngine;
 
 public class TestLoad : MonoBehaviour
 {

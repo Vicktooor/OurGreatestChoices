@@ -59,7 +59,7 @@ public class InteractablePNJ : Interactable
 		Events.Instance.AddListener<OnDialoguesLoaded>(LoadDialogues);
 		Events.Instance.AddListener<OnBudgetLoaded>(OnBudgetLoaded);
 		Events.Instance.AddListener<OnSelectTopic>(SelectTopic);
-        Events.Instance.AddListener<OnGiveNPC>(TakeItem);
+        Events.Instance.AddListener<OnGiveNPC>(ReceiveItem);
         Events.Instance.AddListener<OnNewMonth>(OnUpdate);
     }
 
@@ -79,26 +79,6 @@ public class InteractablePNJ : Interactable
     {
         return false;
     }
-
-    /*public override void Update() {
-        if (GameManager.Instance.LoadedScene == SceneString.ZoomView)  CheckDistance();
-    }*/
-    /*protected virtual void CheckDistance() {
-
-        GameObject lPlayer = PlayerManager.instance.player;
-
-        float distance = Vector3.Distance(lPlayer.transform.position, transform.position);
-        if (distance <= radius) {
-
-            //A METTRE DANS PNJ/PLAYER
-            if (InteractableManager.instance.isTransition) {
-				print(gameObject.name);
-                if (InteractableManager.instance.canTake(gameObject)) {
-                    Events.Instance.Raise(new OnClickInteractable(InteractableManager.instance.ACTION_TYPE));
-                }
-            }
-        }
-    }*/
 
     public void LoadDialogues(OnDialoguesLoaded e)
 	{
@@ -204,7 +184,7 @@ public class InteractablePNJ : Interactable
         return false;
     }
 
-    public virtual void TakeItem(OnGiveNPC e) {
+    public virtual void ReceiveItem(OnGiveNPC e) {
         if (e.targetNPC != this) return;
     }
 
@@ -281,7 +261,7 @@ public class InteractablePNJ : Interactable
         Events.Instance.RemoveListener<OnDialoguesLoaded>(LoadDialogues);
         Events.Instance.RemoveListener<OnBudgetLoaded>(OnBudgetLoaded);
         Events.Instance.RemoveListener<OnSelectTopic>(SelectTopic);
-        Events.Instance.RemoveListener<OnGiveNPC>(TakeItem);
+        Events.Instance.RemoveListener<OnGiveNPC>(ReceiveItem);
         base.OnDestroy();
     }
 }

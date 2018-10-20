@@ -37,7 +37,7 @@ namespace Assets.Scripts.Game
 			base.OnDestroy();
 			Events.Instance.RemoveListener<OnNewMonth>(OnNewMonthPassed);
 			Events.Instance.RemoveListener<OnNewYear>(OnNewYearPassed);
-			if (associateCell) associateCell.DestroyProps(this);
+			if (associateCell) associateCell.RemoveProps(this);
 		}
 		
         public void UpdateInternProps()

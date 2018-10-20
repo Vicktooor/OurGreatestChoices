@@ -171,7 +171,7 @@ public class QuestManager : MonoBehaviour
 
         if (_runningQuest == null || _runningQuest.validated) return;
 
-        bool hasItem = InventoryPlayer.instance.InventoryContain(_runningQuest.itemName);
+        bool hasItem = InventoryPlayer.instance.ContainItem(_runningQuest.itemName) != null;
 
         if (_runningQuest.step < 1 && !hasItem)
         {

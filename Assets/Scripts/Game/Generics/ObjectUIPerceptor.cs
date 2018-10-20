@@ -18,6 +18,9 @@ public class ObjectUIPerceptor : MonoBehaviour
 
     private IEnumerator Collect(Transform targetTransform, Action callback)
     {
+        Collider col = targetTransform.GetComponent<Collider>();
+        if (col != null) col.enabled = false;
+
         Vector3 worldPosition = _canvasContainer.transform.TransformPoint(_rectTransform.localPosition);
         Vector3 startPos = targetTransform.position;
         Vector3 up = _rectTransform.transform.up;
