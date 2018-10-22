@@ -61,7 +61,6 @@ namespace Assets.Scripts.Manager
 			StartDeforestationZone(_deforestionStartID2);
             StartPolutionWay(106, new List<CellState>() { CellState.SNOW });
             StartPolutionWay(66, new List<CellState>() { CellState.MOSS, CellState.GRASS });
-			//SetCulling(activeCulling);
 		}
 
 		public void SetCulling(bool toActive)

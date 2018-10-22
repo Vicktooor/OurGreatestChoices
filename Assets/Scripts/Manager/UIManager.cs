@@ -170,6 +170,8 @@ namespace Assets.Script {
         private SDGDatabase _sdgSpriteDatabase;
         public SDGNotification SDGNotification;
 
+        public BillboardNPCState PNJState;
+
         private static UIManager _instance;
 
         public static UIManager instance {

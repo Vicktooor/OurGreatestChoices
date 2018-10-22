@@ -23,3 +23,4 @@ MonoBehaviour:
   originalItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
   icon: {fileID: 21300000, guid: 049ea23be7bd1684d924fb97dfd2c3e0, type: 3}
   hiddenIcon: {fileID: 21300000, guid: a8c81bfc6441cde41becab39c9502aa9, type: 3}
+  glossaryDesc: '#Garden'

@@ -567,7 +567,7 @@ public class HoneycombPlanetSmooth : MonoBehaviour
 				if (tilePosition != jTileCenter)
 				{
 					float dist = Vector3.Distance(tilePosition, jTileCenter);
-					if (dist < neighborRefDistance * 1.55f)
+					if (dist < neighborRefDistance * 1.45f)
 					{
 						iCell.AddNeighbor(jCell);
 					}

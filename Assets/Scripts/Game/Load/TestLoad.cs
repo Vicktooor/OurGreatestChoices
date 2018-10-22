@@ -5,7 +5,8 @@ public class TestLoad : MonoBehaviour
 {
     public void Start()
     {
-        MainLoader<Sprite>.Instance.LoadAsync("Sprites/", "pinch");
-        TextManager.LoadTexts();
+        Debug.Log(Application.systemLanguage);
+        TextManager.LoadTraduction(Application.systemLanguage);
+        Debug.Log(TextManager.GetText("__MajorNam"));
     }
 }

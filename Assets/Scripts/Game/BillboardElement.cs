@@ -4,12 +4,12 @@ public class BillboardElement : MonoBehaviour
 {
     protected Vector3 _baseScale;
 
-    protected void Awake()
+    protected virtual void Awake()
     {
         _baseScale = transform.localScale;
     }
 
-    protected void Update()
+    protected virtual void Update()
     {
         transform.rotation = Camera.main.transform.rotation;
     }

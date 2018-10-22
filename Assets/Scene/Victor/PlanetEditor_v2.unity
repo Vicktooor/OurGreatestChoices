@@ -166,6 +166,7 @@ MonoBehaviour:
   _yearTime: 30
   canActive: 0
   deforestationTime: 0
+  polutionTime: 0
   skySpeed: 5
 --- !u!1 &139431594
 GameObject:
@@ -786,8 +787,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildForMobile: 0
-  showButtons: 0
-  _randomGroundColor: 1
+  showButtons: 1
+  _randomGroundColor: 0
   edit: 1
   _smoothNormalFactor: 0.25
   _groundEditState: 1
@@ -1153,7 +1154,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1192571764}
-  m_Mesh: {fileID: 4300000, guid: 0a8540939157ca24499118c9bf7078d7, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 5bfe3bba38b6bac448c8c907724dc32c, type: 3}
 --- !u!4 &1192571768
 Transform:
   m_ObjectHideFlags: 0
@@ -1180,7 +1181,7 @@ MeshCollider:
   m_Convex: 0
   m_InflateMesh: 0
   m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300000, guid: 0a8540939157ca24499118c9bf7078d7, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 5bfe3bba38b6bac448c8c907724dc32c, type: 3}
 --- !u!1 &1355635514
 GameObject:
   m_ObjectHideFlags: 0
@@ -1274,7 +1275,7 @@ GameObject:
   - component: {fileID: 2141180155}
   m_Layer: 0
   m_Name: PlanetGoldTest
-  m_TagString: Planet
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

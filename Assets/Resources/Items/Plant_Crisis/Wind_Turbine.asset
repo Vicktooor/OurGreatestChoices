@@ -23,3 +23,4 @@ MonoBehaviour:
   originalItem: {fileID: 11400000, guid: c14a38b954396814b8ab5cafb9dc2762, type: 2}
   icon: {fileID: 21300000, guid: 6d52a66d3c561974db6c7b1c5bfa132b, type: 3}
   hiddenIcon: {fileID: 21300000, guid: ee9ce2a384e99a9438fef37c869c023a, type: 3}
+  glossaryDesc: '#WindTurbine'

@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour
 		else _instance = this;
 
 		Screen.orientation = ScreenOrientation.Portrait;
+        TextManager.LoadTraduction(SystemLanguage.English);
 	}
 
 	protected void Start()

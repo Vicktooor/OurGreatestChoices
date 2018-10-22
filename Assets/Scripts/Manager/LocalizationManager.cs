@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class LocalizationManager : MonoBehaviour {
 
-    public EnumClass.Language currentLangage {
+    public SystemLanguage currentLangage {
         get { return _currentLangage; }
     }
-    private EnumClass.Language _currentLangage;
+    private SystemLanguage _currentLangage;
 
     #region Singleton
     protected static LocalizationManager _instance;
@@ -27,17 +27,19 @@ public class LocalizationManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        _currentLangage = EnumClass.Language.en;
+        _currentLangage = SystemLanguage.English;
 	}
 
     public void OnChangedLangageFr() {
-        _currentLangage = EnumClass.Language.fr;
+        _currentLangage = SystemLanguage.French;
+        TextManager.LoadTraduction(_currentLangage);
         GameManager.SetFR();
         Events.Instance.Raise(new OnChangeLanguageUI());
     }
 
     public void OnChangedLangageEn() {
-        _currentLangage = EnumClass.Language.en;
+        _currentLangage = SystemLanguage.English;
+        TextManager.LoadTraduction(_currentLangage);
         GameManager.SetEN();
         Events.Instance.Raise(new OnChangeLanguageUI());
     }

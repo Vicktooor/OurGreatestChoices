@@ -44,6 +44,8 @@ namespace Assets.Scripts.Manager
         public BillboardBubble bubblePrefab;
         [Header("Help Sprite prefab")]
         public BillboardHelp helpSpritePrefab;
+        [Header("PNJ State prefab")]
+        public BillboardNPCState PNJStatePrefab;
 
         public Dictionary<EPlayer, KeyValuePair<int, Vector3>> playerPosition = new Dictionary<EPlayer, KeyValuePair<int, Vector3>>();
 

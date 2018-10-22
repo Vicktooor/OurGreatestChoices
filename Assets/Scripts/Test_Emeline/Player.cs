@@ -1,6 +1,7 @@
 ﻿using Assets.Script;
 using Assets.Scripts.Game;
 using Assets.Scripts.Game.UI;
+using Assets.Scripts.Items;
 using Assets.Scripts.Manager;
 using Assets.Scripts.PNJ;
 using FMODUnity;
@@ -122,6 +123,7 @@ public class Player : MonoBehaviour
     #endregion
 
     private const float PLAYER_HEIGHT = 0.5f;
+    private const float NPC_HELP_DIST = 0.2f;
 
     //public Transform targetToMove; //A MODIFIER
 
@@ -403,15 +405,17 @@ public class Player : MonoBehaviour
         Reoriente();
 		DoEmitter();
 
-        UpdateCells();
+        UpdateCells(false);
     }
 
-    protected void UpdateCells()
+    protected void UpdateCells(bool targetNPC)
     {
         Vector3 playerPos = _transform.position;
         _associateCell.UpdateProps();
         _associateCell.ShowBubble(playerPos);
         _associateCell.ShowHelp(playerPos);
+        if (!targetNPC) ShowNPCState(playerPos);
+        else UIManager.instance.PNJState.Active(false);
 
         foreach (Cell c in _associateCell.Neighbors)
         {
@@ -422,7 +426,72 @@ public class Player : MonoBehaviour
         }
     }
 
-	protected void Rotate()
+    public void ShowNPCState(Vector3 playerPos)
+    {
+        List<InteractablePNJ> pnjs = _associateCell.GetProps<InteractablePNJ>();
+        InteractablePNJ tPnj = null;
+        InteractablePNJ testPnj = null;
+        float dist = 50f;
+        if (pnjs.Count > 0)
+        {
+            tPnj = pnjs[0];
+            dist = Mathf.Abs(Vector3.Distance(tPnj.transform.position, playerPos));
+            for (int i = 1; i < pnjs.Count; i++)
+            {
+                testPnj = pnjs[i];
+                float nDist = Vector3.Distance(testPnj.transform.position, playerPos);
+                if (nDist < dist && nDist <= NPC_HELP_DIST)
+                {
+                    tPnj = testPnj;
+                    dist = nDist;
+                }
+            }
+        }
+
+        foreach (Cell c in _associateCell.Neighbors)
+        {
+            List<InteractablePNJ> lpnjs = c.GetProps<InteractablePNJ>();
+            if (lpnjs.Count > 0)
+            {
+                for (int i = 0; i < lpnjs.Count; i++)
+                {
+                    testPnj = lpnjs[i];
+                    float nDist = Vector3.Distance(testPnj.transform.position, playerPos);
+                    if (nDist < dist && nDist <= NPC_HELP_DIST)
+                    {
+                        tPnj = testPnj;
+                        dist = nDist;
+                    }
+                }
+            }
+        }
+
+        if (tPnj != null)
+        {
+            if (tPnj.budgetComponent.name != string.Empty && tPnj.budgetComponent.targetBudget != 0)
+            {
+                if (PlayerManager.instance.playerType == EPlayer.GOV || PlayerManager.instance.playerType == EPlayer.ECO)
+                {
+                    UIManager.instance.PNJState.pnj = tPnj;
+                    UIManager.instance.PNJState.SetTarget(tPnj.transform);
+                    UIManager.instance.PNJState.SetVisibility(dist, NPC_HELP_DIST);
+                    UIManager.instance.PNJState.Active(true);
+                }
+            }
+            else
+            {
+                UIManager.instance.PNJState.Clear();
+                UIManager.instance.PNJState.Active(false);
+            }
+        }
+        else
+        {
+            UIManager.instance.PNJState.Clear();
+            UIManager.instance.PNJState.Active(false);
+        }
+    }
+
+    protected void Rotate()
 	{
 		Vector3 previousPos = transform.position;
 		Vector2 mousePos = ControllerInput.instance.touchCenterPosition;
@@ -557,11 +626,7 @@ public class Player : MonoBehaviour
 	{	
 		Vector3 previousPos = transform.position;
 		float stopDistance = 0.05f;
-        if (_targetInteractable)
-        {
-            if ((_targetInteractable as InteractablePNJ_WindTurbine) != null) stopDistance = 0.5f;
-            else stopDistance = 0.125f;
-        }
+        if (_targetInteractable) stopDistance = 0.125f;
         if(_targetItemPickUp) stopDistance = 0.05f;
 
         SetAnimation(true);
@@ -588,7 +653,7 @@ public class Player : MonoBehaviour
 
 				playerAsset.transform.rotation = Quaternion.Lerp(playerAsset.transform.rotation, _targetRotation, Time.deltaTime * 10);
 				transform.position = SnapToPlanet(transform.position);
-                UpdateCells();
+                UpdateCells(true);
             }
             else {
                 _isTapMoving = false;
@@ -610,7 +675,10 @@ public class Player : MonoBehaviour
         SetAnimation(false);
         _isTapMoving = false;
 
-        if (!_targetInteractable && !_targetItemPickUp) yield break;
+        if (!_targetInteractable && !_targetItemPickUp)
+        {
+            yield break;
+        }
 
         if (_targetItemPickUp) {
             if (PlayerManager.instance.playerType != EPlayer.ECO) {
@@ -651,7 +719,7 @@ public class Player : MonoBehaviour
                     if (genderComponent) Events.Instance.Raise(new OnNPCDialogueSFX(genderComponent.gender));
                 }
             }
-            else if (lPnj && lPnj.budgetComponent.name != string.Empty && lPnj.budgetComponent.budgetLinks.Length > 0 && PlayerManager.instance.playerType == EPlayer.GOV)
+            else if (lPnj && lPnj.budgetComponent.name != string.Empty && PlayerManager.instance.playerType == EPlayer.GOV)
             {
                 playerAsset.transform.rotation = Quaternion.LookRotation(lPnj.transform.position - transform.position, transform.up);
                 Events.Instance.Raise(new OnPopupBuilding(lPnj.budgetComponent, lPnj));

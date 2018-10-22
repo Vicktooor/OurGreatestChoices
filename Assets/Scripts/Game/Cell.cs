@@ -98,6 +98,7 @@ namespace Assets.Scripts.Game
 
         public bool walkable = true;
 
+        private BillboardNPCState _npcBillboardState;
         private BillboardBubble _citizenBubble;
         private BillboardHelp _pnjHelp;
 
@@ -634,7 +635,8 @@ namespace Assets.Scripts.Game
                 CitizenProp testCitizen;
 
                 float dist = Mathf.Abs(Vector3.Distance(tCitizen.transform.position, playerPos));
-                for (int i = 1; i < citizens.Count; i++)
+                int nb = citizens.Count;
+                for (int i = 1; i < nb; i++)
                 {
                     testCitizen = citizens[i];
                     float nDist = Vector3.Distance(testCitizen.transform.position, playerPos);
@@ -648,7 +650,8 @@ namespace Assets.Scripts.Game
                 if (dist < CitizenProp.talkDistance)
                 {
                     SimpleLocalisationText tmpText;
-                    for (int i = 0; i < tCitizen.dialogueText.Count; i++)
+                    int length = tCitizen.dialogueText.Count;
+                    for (int i = 0; i < length; i++)
                     {
                         tmpText = tCitizen.dialogueText[i];
                         if (tmpText.text != string.Empty && GameManager.LANGUAGE == tmpText.lang)
@@ -656,7 +659,7 @@ namespace Assets.Scripts.Game
                             _citizenBubble = Instantiate(EarthManager.Instance.bubblePrefab, tCitizen.transform.position + (tCitizen.transform.up.normalized) * 0.15f, Quaternion.identity) as BillboardBubble;
                             _citizenBubble.text.text = tmpText.text;
                             _citizenBubble.citizen = tCitizen;
-                            _citizenBubble.SetVisibility(dist);
+                            _citizenBubble.SetVisibility(dist, CitizenProp.talkDistance);
                         }                     
                     }               
                 }
@@ -664,7 +667,7 @@ namespace Assets.Scripts.Game
             else if (_citizenBubble != null)
             {
                 float dist = Mathf.Abs(Vector3.Distance(_citizenBubble.citizen.transform.position, playerPos));
-                if (dist < CitizenProp.talkDistance) _citizenBubble.SetVisibility(dist);
+                if (dist < CitizenProp.talkDistance) _citizenBubble.SetVisibility(dist, CitizenProp.talkDistance);
                 else
                 {
                     Destroy(_citizenBubble.gameObject);
@@ -696,7 +699,7 @@ namespace Assets.Scripts.Game
                 if (dist < InteractablePNJ.helpDistance)
                 {
                     if (PlayerManager.instance.playerType == EPlayer.GOV) {
-                        if (tPnj.budgetComponent.name == string.Empty || tPnj.budgetComponent.budgetLinks.Length == 0) return; 
+                        if (tPnj.budgetComponent.name == string.Empty || tPnj.budgetComponent.targetBudget <= 0) return;
                     }
 
                     _pnjHelp = Instantiate(EarthManager.Instance.helpSpritePrefab, tPnj.transform.position + (tPnj.transform.up.normalized) * 0.15f, Quaternion.identity) as BillboardHelp;

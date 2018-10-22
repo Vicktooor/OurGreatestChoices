@@ -287,6 +287,11 @@ public class InteractablePNJ_TownHall : InteractablePNJ {
         }
     }
 
+    public override bool HaveHisItem()
+    {
+        return HasMetro();
+    }
+
     public bool HasMetro()
     {
         if (_metroCreated) return true;
@@ -296,12 +301,6 @@ public class InteractablePNJ_TownHall : InteractablePNJ {
     public bool HasFruitSeed()
     {
         if (_haveFruitSeed) return true;
-        else return false;
-    }
-
-    public bool HasTracks()
-    {
-        if (_haveTracks) return true;
         else return false;
     }
 

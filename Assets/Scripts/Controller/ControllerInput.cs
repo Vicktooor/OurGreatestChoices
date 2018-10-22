@@ -200,7 +200,7 @@ public class ControllerInput : MonoBehaviour {
 		{
 			Vector2 playerPos = Camera.main.WorldToViewportPoint(player.transform.position);
 			playerPos = new Vector2(0, -playerPos.x);
-			return Vector2.Distance(_lastTouch.position, playerPos);
+			return Vector2.Distance(_touchCenterPosition, playerPos);
 		}
 		else return 0f;
 	}
@@ -400,7 +400,7 @@ public class ControllerInput : MonoBehaviour {
 				{
 					_touchInput = Input.GetTouch(0);
 					_touchPosition = new Vector2(_touchInput.position.x, _touchInput.position.y);
-				}            
+				}
             }
             else {
                 _mousePosition = Input.mousePosition;

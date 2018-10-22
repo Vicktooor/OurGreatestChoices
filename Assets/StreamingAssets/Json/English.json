@@ -1,0 +1,72 @@
+{
+    "objects": [
+        {
+            "key": "__MajorName",
+            "txt": "Major"
+        },
+        {
+            "key": "__MajorPresentation1",
+            "txt": "Hello"
+        },
+        {
+            "key": "__MajorPresentation2",
+            "txt": "What do you want ?"
+        },
+        {
+            "key": "__MajorEnd1",
+            "txt": "Fine"
+        },
+        {
+            "key": "__MajorEnd2",
+            "txt": "Bye"
+        },
+        {
+            "key": "__MajorThanks1",
+            "txt": "Thanks"
+        },
+        {
+            "key": "__MajorThanks2",
+            "txt": "Thanks 2"
+        },
+        {
+            "key": "#WindTurbine",
+            "txt": "wind"
+        },
+        {
+            "key": "#Tracks",
+            "txt": "trail"
+        },
+        {
+            "key": "#Carcass",
+            "txt": "carcass"
+        },
+        {
+            "key": "#Elec",
+            "txt": "elec"
+        },
+        {
+            "key": "#GreenElec",
+            "txt": "green elec"
+        },
+        {
+            "key": "#FruitSeed",
+            "txt": "seed"
+        },
+        {
+            "key": "#FruitMarket",
+            "txt": "fruit market"
+        },
+        {
+            "key": "#Garden",
+            "txt": "garden"
+        },
+        {
+            "key": "#Battery",
+            "txt": "bat"
+        },
+        {
+            "key": "#GreenBattery",
+            "txt": "green bat"
+        }
+    ]
+}

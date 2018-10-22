@@ -159,7 +159,7 @@ namespace Assets.Scripts.Planet
 				edges.Add(selectedEdge);
 				SetUV();
 
-                JsonManager.SaveRoad(roadInfo);
+                JsonManager.SaveAsJson<RoadInfo>(roadInfo, roadInfo.name);
                 roadInfo.name = string.Empty;
                 roadInfo.tracks = new List<Vector3>();
 			}

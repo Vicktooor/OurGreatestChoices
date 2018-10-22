@@ -92,28 +92,6 @@ namespace Assets.Scripts.Manager
             return null;
         }
 
-        public Dictionary<BudgetComponent, GameObject> GetBudgetBuildingsProp(string bName)
-        {
-            Dictionary<BudgetComponent, GameObject> linkedBudgets = new Dictionary<BudgetComponent, GameObject>();
-
-            BudgetComponent bc = budgetComponents.Find(e => e.name == bName);
-            InteractablePNJ pnj = InteractablePNJ.PNJs.Find(e => e.budgetComponent.name == bName);
-            if (bc != null && pnj != null)
-            {
-                if (pnj.propLinked) linkedBudgets.Add(bc, pnj.propLinked);
-                else linkedBudgets.Add(bc, pnj.gameObject);
-                for (int i = 0; i < pnj.budgetComponent.budgetLinks.Length; i++)
-                {
-                    string lName = pnj.budgetComponent.budgetLinks[i];
-                    BudgetComponent lBc = budgetComponents.Find(e => e.name == lName);
-                    InteractablePNJ lPnj = InteractablePNJ.PNJs.Find(e => e.budgetComponent.name == lName);
-                    if (lPnj.propLinked) linkedBudgets.Add(lBc, lPnj.propLinked);
-                    else linkedBudgets.Add(lBc, lPnj.gameObject);
-                }
-            }
-            return linkedBudgets;
-        }
-
         protected void OnDestroy()
         {
             Events.Instance.RemoveListener<OnBudgetLoaded>(OnBudgetLoaded);

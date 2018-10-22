@@ -22,4 +22,6 @@ public class Item : ScriptableObject {
     //For Glossary Overview
     public Sprite icon;
     public Sprite hiddenIcon;
+
+    public string glossaryDesc;
 }

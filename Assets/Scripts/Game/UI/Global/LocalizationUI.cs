@@ -25,10 +25,10 @@ public class LocalizationUI : MonoBehaviour {
 	
 	void UpdateLanguage(OnChangeLanguageUI e) {
         switch (LocalizationManager.Instance.currentLangage) {
-            case EnumClass.Language.en:
+            case SystemLanguage.English:
                 _text.SetText(enText);
                 break;
-            case EnumClass.Language.fr:
+            case SystemLanguage.French:
                 _text.SetText(frText);
                 break;
         }

@@ -23,7 +23,7 @@ public class GameTexts : UnityEngine.Object
     private Dictionary<string, string> _locaTexts;
     public Dictionary<string, string> LocaTexts { get { return _locaTexts; } }
 
-    public void FinishLoad()
+    public void Generate()
     {
         _locaTexts = new Dictionary<string, string>();
         foreach (LocalisedText t in Texts.objects)
@@ -35,13 +35,36 @@ public class GameTexts : UnityEngine.Object
 
 public static class TextManager
 {
-    public static GameTexts FR = new GameTexts();
-    public static GameTexts EN = new GameTexts();
+    private static SystemLanguage _language = SystemLanguage.English;
+    public static SystemLanguage LANG { get { return _language; } } 
+    private static Dictionary<SystemLanguage, GameTexts> _texts = new Dictionary<SystemLanguage, GameTexts>();
 
-    public static void LoadTexts()
+    public static void LoadTraduction(SystemLanguage language)
     {
-        FR.Texts = JsonManager.FromJson<TradWrapper>("Json/EN.json", RuntimePlatform.WindowsPlayer);
-        FR.FinishLoad();
-        Debug.Log(FR.LocaTexts["__MajorName"]);
+        if (_texts.ContainsKey(language)) return; 
+        _language = language;
+        GameTexts newText = new GameTexts();
+        newText.Texts = JsonManager.FromJson<TradWrapper>("Json/" + language + ".json", RuntimePlatform.WindowsPlayer);
+        if (newText.Texts != null)
+        {
+            newText.Generate();
+            if (_texts.ContainsKey(language)) _texts[language] = newText;
+            else _texts.Add(language, newText);
+        }
+    }
+
+    public static string GetText(string key)
+    {
+        if (!_texts.ContainsKey(_language))
+        {
+            Debug.LogError(_language + ".json not found");
+            return null;
+        }
+        else if (!_texts[_language].LocaTexts.ContainsKey(key))
+        {
+            Debug.LogError(_language + "[" + key + "] not found");
+            return null;
+        }
+        return _texts[_language].LocaTexts[key];
     }
 }

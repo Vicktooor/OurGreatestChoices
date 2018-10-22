@@ -8,18 +8,18 @@ public class BillboardBubble : BillboardElement
     [HideInInspector]
     public CitizenProp citizen;
 
-    public void SetVisibility(float dist)
+    public void SetVisibility(float dist, float refDist)
     {
         float k;
-        float minDist = CitizenProp.talkDistance / 2f;
+        float minDist = refDist / 2f;
         if (dist <= minDist)
         {
             transform.localScale = new Vector3(_baseScale.x, _baseScale.y, _baseScale.z);
         }
         else
         {
-            float refDist = CitizenProp.talkDistance - minDist;
-            k = Mathf.Clamp01(Mathf.Abs(1f - refDist / (dist - minDist)));
+            float lDist = refDist - minDist;
+            k = Mathf.Clamp01(Mathf.Abs(1f - lDist / (dist - minDist)));
             transform.localScale = new Vector3(_baseScale.x * k, _baseScale.y * k, _baseScale.z * k);
         }
     }

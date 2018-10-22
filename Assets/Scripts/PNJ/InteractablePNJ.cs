@@ -28,7 +28,6 @@ public class InteractablePNJ : Interactable
         typeof(InteractablePNJ_CERN ),
         typeof(InteractablePNJ_CoalPower),
         typeof(InteractablePNJ_WaterDiversion),
-        typeof(InteractablePNJ_WindTurbine),
         typeof(InteractablePNJ_TownHall),
     };
 

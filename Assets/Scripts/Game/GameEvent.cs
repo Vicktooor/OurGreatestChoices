@@ -502,6 +502,8 @@ public class OnShowPin : GameEvent
 
 public class OnSaveRoads : GameEvent { }
 
+public class OnUpdateNPCInfo : GameEvent { }
+
 public class Events
 {
 	static Events instanceInternal = null;

@@ -26,6 +26,4 @@ public class EnumClass : MonoBehaviour {
 
     //Enum for notifications
     public enum NotificationsType { sdg, inventory, glossary};
-
-    public enum Language { en, fr }
 }

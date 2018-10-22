@@ -11,6 +11,7 @@ public class InteractablePNJ_CarsCompany : InteractablePNJ {
     bool _haveGreenBattery = false;
     public bool HaveBudget { get { return budgetComponent.budget >= budgetComponent.targetBudget; } }
     bool _isCompanyActivated = false;
+    bool _hasCarcass = false;
 
     bool _normalVehicle = false;
     bool _greenVehicle = false;
@@ -62,7 +63,6 @@ public class InteractablePNJ_CarsCompany : InteractablePNJ {
             }
             else if (!HaveBudget) PointingBubble.instance.ChangeText(GetThanksLocalizedText(whithoutMoneyThanks, EThanksKey.NeedBudget));
         }
-
         //If item given is Green Battery
         else if (e.item.name == item.itemsLinked[1].name) {
             _haveGreenBattery = true;
@@ -77,7 +77,8 @@ public class InteractablePNJ_CarsCompany : InteractablePNJ {
 
         //If item given is Vehicle Carcass
         else if (e.item.name == item.itemsLinked[2].name) {
-            if (!_isCompanyActivated) ActivateCarsCompany();
+            _hasCarcass = true;
+            if (_hasCarcass && HaveBudget) ActivateCarsCompany();
             PointingBubble.instance.ChangeText(GetThanksLocalizedText(thanksTexts, EThanksKey.Carcass));
         }
 
@@ -108,8 +109,8 @@ public class InteractablePNJ_CarsCompany : InteractablePNJ {
 
     public override bool HaveHisItem()
     {
-        if (_isCompanyActivated) return true;
-        else return false;
+        if (_hasCarcass) return true;
+        return false;
     }
 
     public override void OnReceiveBudget(OnReceiveBudget e) {

@@ -56,13 +56,16 @@ public class InventoryScreen : MonoSingleton<InventoryScreen>
 
     public void OpenTransform()
     {
+        UIManager.instance.PNJState.Active(false);
         NPCpanel.gameObject.SetActive(true);
         bagButton.SetActive(false);
+        UIManager.instance.PNJState.Active(false);
         ControllerInput.OpenScreens.Add(transform);
     }
 
     public void OpenInventory()
     {
+        UIManager.instance.PNJState.Active(false);
         NPCpanel.gameObject.SetActive(false);
         bagButton.SetActive(false);
         ControllerInput.OpenScreens.Add(transform);
@@ -75,6 +78,14 @@ public class InventoryScreen : MonoSingleton<InventoryScreen>
 
     public void CloseUI()
     {
+        InteractablePNJ pnj = GetNPC();
+        if (pnj)
+        {
+            UIManager.instance.PNJState.pnj = pnj;
+            UIManager.instance.PNJState.SetTarget(pnj.transform);
+            UIManager.instance.PNJState.SetVisibility(0f, 1f);
+            UIManager.instance.PNJState.Active(true);
+        }       
         StopDrag();
         giveTarget.gameObject.SetActive(false);
         NPCpanel.gameObject.SetActive(false);
@@ -177,7 +188,7 @@ public class InventoryScreen : MonoSingleton<InventoryScreen>
             FBX_Give.instance.Play(new Vector3(draggerTransform.transform.position.x, draggerTransform.transform.position.y, draggerTransform.transform.position.z));
             PointingBubble.instance.Show(true);
             PointingBubble.instance.SetPNJ(_nearestNPC);
-            if (LocalizationManager.Instance.currentLangage == EnumClass.Language.en) PointingBubble.instance.ChangeText("Thanks!");
+            if (LocalizationManager.Instance.currentLangage == SystemLanguage.English) PointingBubble.instance.ChangeText("Thanks!");
             else PointingBubble.instance.ChangeText("Merci !");
 
             int itemIndex = InventoryPlayer.instance.GetItemIndex(item.name);
@@ -185,12 +196,17 @@ public class InventoryScreen : MonoSingleton<InventoryScreen>
             Events.Instance.Raise(new OnGive(itemIndex));
             Events.Instance.Raise(new OnGiveNPC(item, _nearestNPC));
             PointingBubble.instance.ActiveTouchForClose();
+
+            UIManager.instance.PNJState.pnj = npc;
+            UIManager.instance.PNJState.SetTarget(npc.transform);
+            UIManager.instance.PNJState.SetVisibility(0f, 1f);  
+            UIManager.instance.PNJState.Active(true);
         }
         else
         {
             PointingBubble.instance.Show(true);
             PointingBubble.instance.SetPNJ(_nearestNPC);
-            if (LocalizationManager.Instance.currentLangage == EnumClass.Language.en) PointingBubble.instance.ChangeText("No thanks!");
+            if (LocalizationManager.Instance.currentLangage == SystemLanguage.French) PointingBubble.instance.ChangeText("No thanks!");
             else PointingBubble.instance.ChangeText("Non merci !");
             Events.Instance.Raise(new OnWrongObject());
             PointingBubble.instance.ActiveTouchForClose();

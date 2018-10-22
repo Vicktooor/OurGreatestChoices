@@ -52,6 +52,7 @@ namespace Assets.Scripts.Manager
         public string[] budgetLinks;
 
         private int budgetState = 0;
+        public int BudgetState { get { return budgetState; } }
         private bool working = true;
         public bool Working { get { return working; } }
 
@@ -76,6 +77,7 @@ namespace Assets.Scripts.Manager
                 budget += WorldValues.TRANSFERT_VALUE;
                 SetWorking();
                 Events.Instance.Raise(new OnReceiveBudget().Init(this));
+                Events.Instance.Raise(new OnUpdateNPCInfo());
             }
         }
 
@@ -88,6 +90,7 @@ namespace Assets.Scripts.Manager
                 budget -= WorldValues.TRANSFERT_VALUE;
                 SetWorking();
                 Events.Instance.Raise(new OnGiveBudget().Init(this));
+                Events.Instance.Raise(new OnUpdateNPCInfo());
             }
         }
 

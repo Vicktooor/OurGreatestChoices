@@ -23,3 +23,4 @@ MonoBehaviour:
   originalItem: {fileID: 11400000, guid: 6376ca4e0f85f3f45bd047e6ef8cfe11, type: 2}
   icon: {fileID: 21300000, guid: d75f981844ec9d741afbec1663d2e714, type: 3}
   hiddenIcon: {fileID: 21300000, guid: 213957fd0ba706f49b8827a2652d88ae, type: 3}
+  glossaryDesc: '#GreenBattery'

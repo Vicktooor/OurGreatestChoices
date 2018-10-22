@@ -40,15 +40,12 @@ public static class JsonManager
         else return null;
     }
 
-    public static void SaveRoad(RoadInfo road)
+    public static void SaveAsJson<T>(T targetClass, string fileName) where T : class
     {
-        string newJson = JsonUtility.ToJson(road);
-        using (FileStream fs = new FileStream(_computerPath + "Json/Roads/" + ((road.name != "") ? road.name + ".json" : "toRename.json"), FileMode.Create))
+        string newJson = JsonUtility.ToJson(targetClass);
+        using (FileStream fs = new FileStream(_computerPath + "Json/Roads/" + ((fileName != "") ? fileName + ".json" : "NewJSON.json"), FileMode.Create))
         {
-            using (StreamWriter writer = new StreamWriter(fs))
-            {
-                writer.Write(newJson);
-            }
+            using (StreamWriter writer = new StreamWriter(fs)) writer.Write(newJson);
         }
     }
 }

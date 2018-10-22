@@ -23,3 +23,4 @@ MonoBehaviour:
   originalItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
   icon: {fileID: 21300000, guid: 2656f78e76eedeb46931b6489b451e73, type: 3}
   hiddenIcon: {fileID: 21300000, guid: 36fbdebb36ff2bf429f954c0b63e8ea0, type: 3}
+  glossaryDesc: '#FruitSeed'

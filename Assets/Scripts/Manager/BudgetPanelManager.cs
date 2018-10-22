@@ -94,7 +94,8 @@ namespace Assets.Scripts.Manager
 		{
 			if (_toggle)
 			{
-				gameObject.SetActive(false);
+                UIManager.instance.PNJState.Active(true);
+                gameObject.SetActive(false);
 				_toggle = false;
 			}
 			else
@@ -106,6 +107,7 @@ namespace Assets.Scripts.Manager
 
 		protected void Open(OnPopupBuilding e)
 		{
+            if (e.buildingbudget.targetBudget == 0) return;
             _npc = e.npc;
 			buildingBudget = e.buildingbudget;
             UIName.text = buildingBudget.name;      
