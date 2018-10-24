@@ -13,15 +13,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EditorBanks:
   - {fileID: 114375704294990728}
-  - {fileID: 114021359040136286}
-  - {fileID: 114395112749931080}
-  - {fileID: 114562027319718472}
-  - {fileID: 114617529104184078}
-  - {fileID: 114352391770777468}
-  - {fileID: 114964814271346556}
-  - {fileID: 114625821494765388}
-  - {fileID: 114574148400910198}
-  - {fileID: 114837905113066260}
+  - {fileID: 114152531626120934}
+  - {fileID: 114654858122070912}
+  - {fileID: 114609060323430676}
+  - {fileID: 114186517535115500}
+  - {fileID: 114059853775379230}
+  - {fileID: 114110690123689608}
+  - {fileID: 114526466501216418}
+  - {fileID: 114458301107934302}
+  - {fileID: 114091829405400348}
   EditorEvents:
   - {fileID: 114490331643344886}
   - {fileID: 114429469641904478}
@@ -86,9 +86,9 @@ MonoBehaviour:
   - {fileID: 114616207420802194}
   - {fileID: 114106534334918884}
   - {fileID: 114270134629542688}
-  MasterBankRef: {fileID: 114617529104184078}
+  MasterBankRef: {fileID: 114186517535115500}
   StringsBankRef: {fileID: 114375704294990728}
-  stringsBankWriteTime: 636609855653622893
+  stringsBankWriteTime: 636757443805330608
   cacheVersion: 2
 --- !u!114 &114008284371490428
 MonoBehaviour:
@@ -162,7 +162,7 @@ MonoBehaviour:
     Value: 2090144
   - Name: Mobile
     Value: 916928
-  Exists: 1
+  Exists: 0
 --- !u!114 &114025554601628508
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,7 +177,7 @@ MonoBehaviour:
   Path: event:/Sfx/3D/SFX_cern
   guid: a4d5f344aad7db4091ff45f8f474d95a
   Banks:
-  - {fileID: 114562027319718472}
+  - {fileID: 114609060323430676}
   IsStream: 1
   Is3D: 1
   IsOneShot: 0
@@ -198,7 +198,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/UI/SFX_swipe
   guid: 0a5711052db0bd49b13be5d20d550887
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -408,7 +408,7 @@ MonoBehaviour:
   Path: event:/Amb/Town/AMB_City_01
   guid: d5a5b0245196654791c991610edee98b
   Banks:
-  - {fileID: 114352391770777468}
+  - {fileID: 114059853775379230}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -436,6 +436,26 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
+--- !u!114 &114059853775379230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: C:\Users\Magali\Desktop\OurGreatestChoices\Assets\Fmod\Desktop\Planete.bank
+  lastModified: 636757443822532743
+  LoadResult: 0
+  FileSizes:
+  - Name: Desktop
+    Value: 24253536
+  - Name: Mobile
+    Value: 12016640
+  Exists: 1
 --- !u!114 &114061076108714010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -450,7 +470,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/UI/SFX_alarmjauge
   guid: 31d61ba033a5e64991f436cb085caef1
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -514,7 +534,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/UI/SFX_dropressrource
   guid: 71b97f759f437c498102b6fc1657dbd8
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -577,7 +597,7 @@ MonoBehaviour:
   Path: event:/Sfx/3D/SFX_maritime
   guid: 664b3268c216ef48aeaf6e02ad2b4e0a
   Banks:
-  - {fileID: 114562027319718472}
+  - {fileID: 114609060323430676}
   IsStream: 1
   Is3D: 1
   IsOneShot: 0
@@ -619,7 +639,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/UI/SFX_new_object
   guid: 89fa8d99c58a5c4a8cdccaad2894f0db
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -668,6 +688,26 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
+--- !u!114 &114091829405400348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: C:\Users\Magali\Desktop\OurGreatestChoices\Assets\Fmod\Desktop\UI.bank
+  lastModified: 636757443805640817
+  LoadResult: 0
+  FileSizes:
+  - Name: Desktop
+    Value: 297152
+  - Name: Mobile
+    Value: 151552
+  Exists: 1
 --- !u!114 &114095027633682216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -724,7 +764,7 @@ MonoBehaviour:
   Path: event:/Sfx/3D/SFX_compagnie
   guid: 48bb39d6c4e83b4cb7f9968b3eb5cc7c
   Banks:
-  - {fileID: 114562027319718472}
+  - {fileID: 114609060323430676}
   IsStream: 1
   Is3D: 1
   IsOneShot: 0
@@ -787,13 +827,33 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/UI/SFX_wrong_object
   guid: db0142cebdcb244dbf66c24f73021c13
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
   Parameters: []
   MinDistance: 0
   MaxDistance: 0
+--- !u!114 &114110690123689608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: C:\Users\Magali\Desktop\OurGreatestChoices\Assets\Fmod\Desktop\NPC.bank
+  lastModified: 636757443805460694
+  LoadResult: 0
+  FileSizes:
+  - Name: Desktop
+    Value: 236000
+  - Name: Mobile
+    Value: 132128
+  Exists: 1
 --- !u!114 &114112713630589092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -829,7 +889,7 @@ MonoBehaviour:
   Path: event:/Amb/Coast/AMB_Coast_01
   guid: 55073acf59d44145b8a128d0ce6f45ce
   Banks:
-  - {fileID: 114352391770777468}
+  - {fileID: 114059853775379230}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -850,12 +910,12 @@ MonoBehaviour:
   Path: event:/Amb/Forest/Amb_Forest_01
   guid: df129968cf12f74094cefa3cbca4562f
   Banks:
-  - {fileID: 114352391770777468}
+  - {fileID: 114059853775379230}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
   Parameters:
-  - {fileID: 114380224321130478}
+  - {fileID: 114256507027503664}
   MinDistance: 0
   MaxDistance: 0
 --- !u!114 &114117914250160110
@@ -872,7 +932,7 @@ MonoBehaviour:
   Path: event:/Sfx/3D/SFX_wind_power
   guid: bd38b292f686c74ea4618c3fc534d360
   Banks:
-  - {fileID: 114562027319718472}
+  - {fileID: 114609060323430676}
   IsStream: 1
   Is3D: 1
   IsOneShot: 0
@@ -935,7 +995,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/UI/SFX_click
   guid: e0649b3ccba2e040bfbf054b33307064
   Banks:
-  - {fileID: 114617529104184078}
+  - {fileID: 114186517535115500}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -1018,6 +1078,26 @@ MonoBehaviour:
   - Name: Mobile
     Value: 86592
   Exists: 0
+--- !u!114 &114152531626120934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: C:\Users\Magali\Desktop\OurGreatestChoices\Assets\Fmod\Desktop\Menu.bank
+  lastModified: 636757443805991058
+  LoadResult: 0
+  FileSizes:
+  - Name: Desktop
+    Value: 2090144
+  - Name: Mobile
+    Value: 916928
+  Exists: 1
 --- !u!114 &114155567351178024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1066,12 +1146,12 @@ MonoBehaviour:
   Path: event:/Music/Mus_game
   guid: de7323cd13dd8742a77fe44ead13c4f5
   Banks:
-  - {fileID: 114625821494765388}
+  - {fileID: 114526466501216418}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
   Parameters:
-  - {fileID: 114445487613958544}
+  - {fileID: 114544968759699478}
   MinDistance: 0
   MaxDistance: 0
 --- !u!114 &114172101687852078
@@ -1088,7 +1168,7 @@ MonoBehaviour:
   Path: event:/Sfx/3D/SFX_coal_wind_power
   guid: 775e1f776c04f34c8b8527b17d9da84e
   Banks:
-  - {fileID: 114562027319718472}
+  - {fileID: 114609060323430676}
   IsStream: 1
   Is3D: 1
   IsOneShot: 0
@@ -1170,6 +1250,26 @@ MonoBehaviour:
   - {fileID: 114567544631758098}
   MinDistance: 0
   MaxDistance: 0
+--- !u!114 &114186517535115500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: C:\Users\Magali\Desktop\OurGreatestChoices\Assets\Fmod\Desktop\Master Bank.bank
+  lastModified: 636757443805460694
+  LoadResult: 0
+  FileSizes:
+  - Name: Desktop
+    Value: 269056
+  - Name: Mobile
+    Value: 145696
+  Exists: 1
 --- !u!114 &114187293927233798
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1205,12 +1305,12 @@ MonoBehaviour:
   Path: event:/Sfx/3D/SFX_electric_car
   guid: 5a26bd1ad95f63428cebaf43d55d4ca5
   Banks:
-  - {fileID: 114562027319718472}
+  - {fileID: 114609060323430676}
   IsStream: 1
   Is3D: 1
   IsOneShot: 0
   Parameters:
-  - {fileID: 114942623620812748}
+  - {fileID: 114958228186891044}
   MinDistance: 0.3
   MaxDistance: 0.6
 --- !u!114 &114191388672862210
@@ -1248,7 +1348,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/UI/SFX_employ
   guid: a26abf673837d642afbcf838209bcedb
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -1302,7 +1402,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/UI/SFX_apparitionnuage
   guid: fee77b1503504a418c12c1013bb94584
   Banks:
-  - {fileID: 114617529104184078}
+  - {fileID: 114186517535115500}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -1395,7 +1495,7 @@ MonoBehaviour:
   Path: event:/Sfx/NPC/SFX_npc_man
   guid: 27ecb42bccb99e49a5fcdd2cf2b3d617
   Banks:
-  - {fileID: 114964814271346556}
+  - {fileID: 114110690123689608}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -1437,7 +1537,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/FEEDBACK/SFX_take_money
   guid: c3cf5bce858ac04997bb7061f214c3c0
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -1458,7 +1558,7 @@ MonoBehaviour:
   Path: event:/Music/Music_triste
   guid: 79dce8edb0520b48b076083c3eed2410
   Banks:
-  - {fileID: 114625821494765388}
+  - {fileID: 114526466501216418}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -1528,6 +1628,21 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
+--- !u!114 &114256507027503664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Foret
+  Min: 0
+  Max: 10
+  Default: 0
 --- !u!114 &114261042288208616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1599,7 +1714,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/UI/SFX_transform_reward
   guid: fe795e4b18e1f74daa2198d96b51e7c7
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -1719,7 +1834,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/UI/SFX_disparitionnuage
   guid: 52abc1726a331947a43ec95c0c24743b
   Banks:
-  - {fileID: 114617529104184078}
+  - {fileID: 114186517535115500}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -1761,7 +1876,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/UI/SFX_pulse
   guid: da75da31d1ec5b43984d0b334a2cc4b8
   Banks:
-  - {fileID: 114395112749931080}
+  - {fileID: 114654858122070912}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -1855,7 +1970,7 @@ MonoBehaviour:
   Path: event:/Sfx/3D/SFX_townhall
   guid: b93711adb6d7ef4482e57f47f0116ca0
   Banks:
-  - {fileID: 114562027319718472}
+  - {fileID: 114609060323430676}
   IsStream: 1
   Is3D: 1
   IsOneShot: 0
@@ -1897,7 +2012,7 @@ MonoBehaviour:
   Path: event:/Music/Mus_menu
   guid: e9e2ff531a5caf4084c3005184635e48
   Banks:
-  - {fileID: 114021359040136286}
+  - {fileID: 114152531626120934}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -1979,7 +2094,7 @@ MonoBehaviour:
     Value: 24253536
   - Name: Mobile
     Value: 12016640
-  Exists: 1
+  Exists: 0
 --- !u!114 &114362728248078030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2049,7 +2164,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Path: Assets\Fmod\Desktop\Master Bank.strings.bank
-  lastModified: 636609855653622893
+  lastModified: 636757443805330608
   LoadResult: 0
   FileSizes:
   - Name: Desktop
@@ -2142,7 +2257,7 @@ MonoBehaviour:
     Value: 50816
   - Name: Mobile
     Value: 28640
-  Exists: 1
+  Exists: 0
 --- !u!114 &114400269770512980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2229,7 +2344,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/FEEDBACK/SFX_obj_give
   guid: 7b90582f0058404d9bfb975fdd4d92d7
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -2345,7 +2460,7 @@ MonoBehaviour:
   Path: event:/Sfx/3D/SFX_school
   guid: 46762404b173244f926cc18d87f5941d
   Banks:
-  - {fileID: 114562027319718472}
+  - {fileID: 114609060323430676}
   IsStream: 1
   Is3D: 1
   IsOneShot: 0
@@ -2408,7 +2523,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/UI/SFX_character_moving
   guid: 7a3c1b01c21fa6459bc26392000cb4b8
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -2480,14 +2595,34 @@ MonoBehaviour:
   Path: event:/Sfx/3D/SFX_gasoline_car
   guid: 882c79cde1c64449b7a94821949fb421
   Banks:
-  - {fileID: 114562027319718472}
+  - {fileID: 114609060323430676}
   IsStream: 1
   Is3D: 1
   IsOneShot: 0
   Parameters:
-  - {fileID: 114374581203262272}
+  - {fileID: 114914336187990926}
   MinDistance: 0.3
   MaxDistance: 0.6
+--- !u!114 &114458301107934302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: C:\Users\Magali\Desktop\OurGreatestChoices\Assets\Fmod\Desktop\PC.bank
+  lastModified: 636757443805610789
+  LoadResult: 0
+  FileSizes:
+  - Name: Desktop
+    Value: 357536
+  - Name: Mobile
+    Value: 239264
+  Exists: 1
 --- !u!114 &114458396901606218
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2638,7 +2773,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/UI/SFX_pickupressource
   guid: dfefba5ea143944d8be0eb1ab90edd88
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -2698,7 +2833,7 @@ MonoBehaviour:
   Path: event:/Sfx/3D/SFX_mine
   guid: 1dc0ea5f10b7d444a5fecf069dbdb303
   Banks:
-  - {fileID: 114562027319718472}
+  - {fileID: 114609060323430676}
   IsStream: 1
   Is3D: 1
   IsOneShot: 0
@@ -2781,7 +2916,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/FEEDBACK/SFX_win
   guid: 5b9888706b9f4e42a0addfefe4d1ddfa
   Banks:
-  - {fileID: 114617529104184078}
+  - {fileID: 114186517535115500}
   IsStream: 1
   Is3D: 0
   IsOneShot: 1
@@ -2874,6 +3009,26 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
+--- !u!114 &114526466501216418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: C:\Users\Magali\Desktop\OurGreatestChoices\Assets\Fmod\Desktop\Music.bank
+  lastModified: 636757443819110421
+  LoadResult: 0
+  FileSizes:
+  - Name: Desktop
+    Value: 21809152
+  - Name: Mobile
+    Value: 9490752
+  Exists: 1
 --- !u!114 &114532091393916826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2950,7 +3105,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/FEEDBACK/SFX_obj_transform
   guid: c865f5ac5357484baeac1621896c4755
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -2971,7 +3126,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/FEEDBACK/SFX_obj_drop
   guid: 59c551f29d6cf44b9ae2e6d882fe97dc
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -3052,6 +3207,21 @@ MonoBehaviour:
   Min: 0
   Max: 2
   Default: 0
+--- !u!114 &114544968759699478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: music
+  Min: 0
+  Max: 30
+  Default: 0
 --- !u!114 &114552430724232512
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3066,7 +3236,7 @@ MonoBehaviour:
   Path: event:/Music/Music_normal
   guid: 057fddc230727f438239e34ee6fe8cc2
   Banks:
-  - {fileID: 114625821494765388}
+  - {fileID: 114526466501216418}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -3134,7 +3304,7 @@ MonoBehaviour:
     Value: 19662784
   - Name: Mobile
     Value: 10036768
-  Exists: 1
+  Exists: 0
 --- !u!114 &114567544631758098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3211,7 +3381,7 @@ MonoBehaviour:
     Value: 357536
   - Name: Mobile
     Value: 239264
-  Exists: 1
+  Exists: 0
 --- !u!114 &114578709646496414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3325,7 +3495,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/FEEDBACK/SFX_obj_pickup
   guid: 112371c5be119345ab73f11d00e03733
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -3347,6 +3517,26 @@ MonoBehaviour:
   Min: 0
   Max: 3
   Default: 0
+--- !u!114 &114609060323430676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: C:\Users\Magali\Desktop\OurGreatestChoices\Assets\Fmod\Desktop\Zoom.bank
+  lastModified: 636757443812915951
+  LoadResult: 0
+  FileSizes:
+  - Name: Desktop
+    Value: 19662784
+  - Name: Mobile
+    Value: 10036768
+  Exists: 1
 --- !u!114 &114613390382537314
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3361,7 +3551,7 @@ MonoBehaviour:
   Path: event:/Sfx/3D/SFX_oilrig
   guid: 7c6eab0dc353d3478780cb91c41f4cee
   Banks:
-  - {fileID: 114562027319718472}
+  - {fileID: 114609060323430676}
   IsStream: 1
   Is3D: 1
   IsOneShot: 0
@@ -3400,7 +3590,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/UI/SFX_click_transform
   guid: cbb52c2f97a75b4f93217f7151cebd8b
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -3427,7 +3617,7 @@ MonoBehaviour:
     Value: 269056
   - Name: Mobile
     Value: 145696
-  Exists: 1
+  Exists: 0
 --- !u!114 &114624417663346822
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3462,7 +3652,7 @@ MonoBehaviour:
     Value: 21809152
   - Name: Mobile
     Value: 9490752
-  Exists: 1
+  Exists: 0
 --- !u!114 &114636894285563104
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3492,7 +3682,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/UI/SFX_clickplanet
   guid: befd7b86560bd04b9e37fd2c53c8ba36
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -3543,13 +3733,33 @@ MonoBehaviour:
   Path: "snapshot:/Vue_zoom\xE9"
   guid: ffcab1612c1f7e459858789d55c14eb1
   Banks:
-  - {fileID: 114617529104184078}
+  - {fileID: 114186517535115500}
   IsStream: 0
   Is3D: 0
   IsOneShot: 0
   Parameters: []
   MinDistance: 0
   MaxDistance: 0
+--- !u!114 &114654858122070912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: C:\Users\Magali\Desktop\OurGreatestChoices\Assets\Fmod\Desktop\FTUE.bank
+  lastModified: 636757443805290740
+  LoadResult: 0
+  FileSizes:
+  - Name: Desktop
+    Value: 50816
+  - Name: Mobile
+    Value: 28640
+  Exists: 1
 --- !u!114 &114660778674886416
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3704,7 +3914,7 @@ MonoBehaviour:
   Path: event:/Sfx/NPC/SFX_npc_woman
   guid: 4a163df0cef4374d813383336d5674cd
   Banks:
-  - {fileID: 114964814271346556}
+  - {fileID: 114110690123689608}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -3725,7 +3935,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/UI/SFX_good_object
   guid: 6cc3f0caa79fab4880f3f685b8fadd19
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -3807,7 +4017,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/UI/SFX_ringtone
   guid: cc96824cf58cbc40ba94e38c58d80d1e
   Banks:
-  - {fileID: 114395112749931080}
+  - {fileID: 114654858122070912}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -3905,13 +4115,28 @@ MonoBehaviour:
   Path: event:/Amb/Field/AMB_Field_01
   guid: 5eefb51f599dcf47aece9b21ae33f46b
   Banks:
-  - {fileID: 114352391770777468}
+  - {fileID: 114059853775379230}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
   Parameters: []
   MinDistance: 0
   MaxDistance: 0
+--- !u!114 &114736108434247702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: personnage
+  Min: 0
+  Max: 3
+  Default: 0
 --- !u!114 &114751819399203370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3926,7 +4151,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/FEEDBACK/SFX_gameover
   guid: 0d885b794781e44fafa11d5a8359a26c
   Banks:
-  - {fileID: 114617529104184078}
+  - {fileID: 114186517535115500}
   IsStream: 1
   Is3D: 0
   IsOneShot: 1
@@ -3968,13 +4193,13 @@ MonoBehaviour:
   Path: event:/Sfx/PC/Footsteps/SFX_PC_Footstep
   guid: 8d6c168aab71b94285815d1b23c3efdc
   Banks:
-  - {fileID: 114574148400910198}
+  - {fileID: 114458301107934302}
   IsStream: 0
   Is3D: 0
   IsOneShot: 0
   Parameters:
-  - {fileID: 114636894285563104}
-  - {fileID: 114789100668923018}
+  - {fileID: 114773357164790178}
+  - {fileID: 114736108434247702}
   MinDistance: 0
   MaxDistance: 0
 --- !u!114 &114759255126904736
@@ -4123,13 +4348,28 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/UI/SFX_clickglossary
   guid: dc7cffe31eecb44c8700b90b05117f1b
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
   Parameters: []
   MinDistance: 0
   MaxDistance: 0
+--- !u!114 &114773357164790178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Sol
+  Min: 0
+  Max: 100
+  Default: 0
 --- !u!114 &114776548704760400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4144,7 +4384,7 @@ MonoBehaviour:
   Path: event:/Music/Music_joyeux
   guid: 63fdadc446243f43b72d73a5714a3cb2
   Banks:
-  - {fileID: 114625821494765388}
+  - {fileID: 114526466501216418}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -4165,7 +4405,7 @@ MonoBehaviour:
   Path: event:/Sfx/3D/SFX_coal_power
   guid: ac0e2344b282744a9b02546ad6c3234f
   Banks:
-  - {fileID: 114562027319718472}
+  - {fileID: 114609060323430676}
   IsStream: 1
   Is3D: 1
   IsOneShot: 0
@@ -4186,7 +4426,7 @@ MonoBehaviour:
   Path: event:/Amb/Mountain/Amb_Mountain
   guid: 98a74387129530448f6c446030cd364e
   Banks:
-  - {fileID: 114352391770777468}
+  - {fileID: 114059853775379230}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -4264,7 +4504,7 @@ MonoBehaviour:
   Path: event:/Amb/Desert/Amb_desert
   guid: bffa3c6a86041546a2fdb02f662737b2
   Banks:
-  - {fileID: 114352391770777468}
+  - {fileID: 114059853775379230}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -4348,7 +4588,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/FEEDBACK/SFX_give_money
   guid: 5eab7fdc95df4846a3e1fee94895c895
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -4389,7 +4629,7 @@ MonoBehaviour:
   Path: event:/Sfx/3D/SFX_train
   guid: d0a53d03ca5da340b32f323ec837dce1
   Banks:
-  - {fileID: 114562027319718472}
+  - {fileID: 114609060323430676}
   IsStream: 1
   Is3D: 1
   IsOneShot: 0
@@ -4425,7 +4665,7 @@ MonoBehaviour:
   Path: event:/Amb/Planete/Amb_vueplanete
   guid: 8d5b1629e32d824792d1c47390a7a4f4
   Banks:
-  - {fileID: 114352391770777468}
+  - {fileID: 114059853775379230}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
@@ -4492,7 +4732,7 @@ MonoBehaviour:
     Value: 297152
   - Name: Mobile
     Value: 151552
-  Exists: 1
+  Exists: 0
 --- !u!114 &114842814710165794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4522,7 +4762,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/UI/SFX_transition
   guid: 633809ed0dcd18488c059a3fe8320fd3
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -4564,7 +4804,7 @@ MonoBehaviour:
   Path: event:/Sfx/3D/SFX_subway
   guid: d7ea8d5185eec34290fdc0e87cfb71a3
   Banks:
-  - {fileID: 114562027319718472}
+  - {fileID: 114609060323430676}
   IsStream: 1
   Is3D: 1
   IsOneShot: 0
@@ -4600,7 +4840,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/UI/SFX_transform_reward_new
   guid: 04a9658156743248a1e0f492d9a5f497
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -4663,7 +4903,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/UI/SFX_swap_pc
   guid: b7fa0e4a50d30743b3e1110cf5de2a2f
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -4782,7 +5022,7 @@ MonoBehaviour:
   Path: "snapshot:/Vue_d\xE9zoom\xE9"
   guid: 0216aca26633184d9071e43b57ac2c87
   Banks:
-  - {fileID: 114617529104184078}
+  - {fileID: 114186517535115500}
   IsStream: 0
   Is3D: 0
   IsOneShot: 0
@@ -4902,7 +5142,7 @@ MonoBehaviour:
   Path: event:/Sfx/3D/SFX_gasstation
   guid: 7614d49bf6fc83439ca3b1eea021cd6d
   Banks:
-  - {fileID: 114562027319718472}
+  - {fileID: 114609060323430676}
   IsStream: 1
   Is3D: 1
   IsOneShot: 0
@@ -4987,6 +5227,21 @@ MonoBehaviour:
   Min: 0
   Max: 100
   Default: 0
+--- !u!114 &114914336187990926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: outro
+  Min: 0
+  Max: 2
+  Default: 0
 --- !u!114 &114930292721823106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5022,7 +5277,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/UI/SFX_popup
   guid: 438daef564beeb469afdc2202fee5bf7
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -5043,7 +5298,7 @@ MonoBehaviour:
   Path: event:/Sfx/UI & FEEDBACK/FEEDBACK/SFX_obj_fusion
   guid: 1d4b8ad19d5cb64eabed47b3b4bccd5b
   Banks:
-  - {fileID: 114837905113066260}
+  - {fileID: 114091829405400348}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
@@ -5164,6 +5419,21 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 0
   MaxDistance: 0
+--- !u!114 &114958228186891044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: outro
+  Min: 0
+  Max: 2
+  Default: 0
 --- !u!114 &114960304487860588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5204,7 +5474,7 @@ MonoBehaviour:
     Value: 236000
   - Name: Mobile
     Value: 132128
-  Exists: 1
+  Exists: 0
 --- !u!114 &114969526792337500
 MonoBehaviour:
   m_ObjectHideFlags: 0

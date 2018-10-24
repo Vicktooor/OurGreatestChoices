@@ -900,6 +900,7 @@ MonoBehaviour:
     type: 2}
   bubblePrefab: {fileID: 0}
   helpSpritePrefab: {fileID: 0}
+  PNJStatePrefab: {fileID: 0}
 --- !u!114 &995803007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1154,7 +1155,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1192571764}
-  m_Mesh: {fileID: 4300000, guid: 5bfe3bba38b6bac448c8c907724dc32c, type: 3}
+  m_Mesh: {fileID: 4300000, guid: baf88d97def08e549bf749a6728be26b, type: 3}
 --- !u!4 &1192571768
 Transform:
   m_ObjectHideFlags: 0
