@@ -1,0 +1,383 @@
+{
+    "objects": [
+        {
+            "key": "None",
+            "value": {
+                "forest": {
+                    "val": 0,
+                    "multiplicator": 0
+                },
+                "npc": {
+                    "val": 0,
+                    "multiplicator": 0
+                },
+                "economy": {
+                    "val": 0,
+                    "multiplicator": 0
+                },
+                "cleanliness": {
+                    "val": 0,
+                    "multiplicator": 0
+                }
+            }
+        },
+        {
+            "key": "CERN",
+            "value": {
+                "forest": {
+                    "val": 0,
+                    "multiplicator": 0
+                },
+                "npc": {
+                    "val": -0.1,
+                    "multiplicator": 0
+                },
+                "economy": {
+                    "val": 0.1,
+                    "multiplicator": 0.05
+                },
+                "cleanliness": {
+                    "val": 0,
+                    "multiplicator": 0.01
+                }
+            }
+        },
+        {
+            "key": "BasicTownHall",
+            "value": {
+                "forest": {
+                    "val": 0,
+                    "multiplicator": 0
+                },
+                "npc": {
+                    "val": -0.1,
+                    "multiplicator": 0
+                },
+                "economy": {
+                    "val": 0.1,
+                    "multiplicator": 0.05
+                },
+                "cleanliness": {
+                    "val": 0,
+                    "multiplicator": 0.05
+                }
+            }
+        },
+        {
+            "key": "BankruptedTownHall",
+            "value": {
+                "forest": {
+                    "val": 0,
+                    "multiplicator": 0
+                },
+                "cleanliness": {
+                    "val": -0.5,
+                    "multiplicator": 0.03
+                },
+                "npc": {
+                    "val": -1.5,
+                    "multiplicator": 0.1
+                },
+                "economy": {
+                    "val": 0,
+                    "multiplicator": 0
+                }
+            }
+        },
+        {
+            "key": "FruitMarketTownHall",
+            "value": {
+                "forest": {
+                    "val": 0.05,
+                    "multiplicator": 0
+                },
+                "cleanliness": {
+                    "val": 0.1,
+                    "multiplicator": 0.01
+                },
+                "npc": {
+                    "val": 0.3,
+                    "multiplicator": 0.03
+                },
+                "economy": {
+                    "val": 0,
+                    "multiplicator": 0
+                }
+            }
+        },
+        {
+            "key": "WoodyTownHall",
+            "value": {
+                "forest": {
+                    "val": 0.15,
+                    "multiplicator": 0
+                },
+                "cleanliness": {
+                    "val": 0.1,
+                    "multiplicator": 0.01
+                },
+                "npc": {
+                    "val": 0.1,
+                    "multiplicator": 0.01
+                },
+                "economy": {
+                    "val": 0,
+                    "multiplicator": 0
+                }
+            }
+        },
+        {
+            "key": "VegetableTownHall",
+            "value": {
+                "forest": {
+                    "val": 0,
+                    "multiplicator": 0
+                },
+                "cleanliness": {
+                    "val": 0.3,
+                    "multiplicator": 0.03
+                },
+                "npc": {
+                    "val": 0,
+                    "multiplicator": 0
+                },
+                "economy": {
+                    "val": 0,
+                    "multiplicator": 0.03
+                }
+            }
+        },
+        {
+            "key": "ElecTownHallV1",
+            "value": {
+                "forest": {
+                    "val": 0,
+                    "multiplicator": 0
+                },
+                "cleanliness": {
+                    "val": 0.1,
+                    "multiplicator": 0.01
+                },
+                "npc": {
+                    "val": 0,
+                    "multiplicator": 0
+                },
+                "economy": {
+                    "val": 0.2,
+                    "multiplicator": 0
+                }
+            }
+        },
+        {
+            "key": "ElecTownHallV2",
+            "value": {
+                "forest": {
+                    "val": 0,
+                    "multiplicator": 0
+                },
+                "cleanliness": {
+                    "val": 0.2,
+                    "multiplicator": 0.02
+                },
+                "npc": {
+                    "val": 0,
+                    "multiplicator": 0
+                },
+                "economy": {
+                    "val": 0.3,
+                    "multiplicator": 0
+                }
+            }
+        },
+        {
+            "key": "School",
+            "value": {
+                "forest": {
+                    "val": 0,
+                    "multiplicator": 0
+                },
+                "cleanliness": {
+                    "val": 0.2,
+                    "multiplicator": 0
+                },
+                "npc": {
+                    "val": 0.2,
+                    "multiplicator": 0
+                },
+                "economy": {
+                    "val": 0.1,
+                    "multiplicator": 0
+                }
+            }
+        },
+        {
+            "key": "Metro",
+            "value": {
+                "forest": {
+                    "val": 0,
+                    "multiplicator": 0
+                },
+                "cleanliness": {
+                    "val": 0.5,
+                    "multiplicator": 0
+                },
+                "npc": {
+                    "val": -0.1,
+                    "multiplicator": 0
+                },
+                "economy": {
+                    "val": 0.1,
+                    "multiplicator": 0
+                }
+            }
+        },
+        {
+            "key": "CarsCompany",
+            "value": {
+                "forest": {
+                    "val": 0,
+                    "multiplicator": 0
+                },
+                "cleanliness": {
+                    "val": 0.3,
+                    "multiplicator": -0.15
+                },
+                "npc": {
+                    "val": 0.1,
+                    "multiplicator": 0
+                },
+                "economy": {
+                    "val": 0,
+                    "multiplicator": 0.05
+                }
+            }
+        },
+        {
+            "key": "ElecCarsCompanyV1",
+            "value": {
+                "forest": {
+                    "val": 0,
+                    "multiplicator": 0
+                },
+                "cleanliness": {
+                    "val": 0.3,
+                    "multiplicator": -0.05
+                },
+                "npc": {
+                    "val": 0.2,
+                    "multiplicator": 0
+                },
+                "economy": {
+                    "val": 0,
+                    "multiplicator": 0.01
+                }
+            }
+        },
+        {
+            "key": "ElecCarsCompanyV2",
+            "value": {
+                "forest": {
+                    "val": 0,
+                    "multiplicator": 0
+                },
+                "cleanliness": {
+                    "val": 0.5,
+                    "multiplicator": 0
+                },
+                "npc": {
+                    "val": 0.2,
+                    "multiplicator": 0
+                },
+                "economy": {
+                    "val": 0,
+                    "multiplicator": 0.05
+                }
+            }
+        },
+        {
+            "key": "CoalPowerPlant",
+            "value": {
+                "forest": {
+                    "val": 0.3,
+                    "multiplicator": -0.3
+                },
+                "cleanliness": {
+                    "val": 0.3,
+                    "multiplicator": -0.1
+                },
+                "npc": {
+                    "val": -0.2,
+                    "multiplicator": -0.17
+                },
+                "economy": {
+                    "val": 0,
+                    "multiplicator": 0.05
+                }
+            }
+        },
+        {
+            "key": "RenewableCoalPowerPlant",
+            "value": {
+                "forest": {
+                    "val": 0.7,
+                    "multiplicator": 0
+                },
+                "cleanliness": {
+                    "val": 0.5,
+                    "multiplicator": 0
+                },
+                "npc": {
+                    "val": -0.1,
+                    "multiplicator": 0
+                },
+                "economy": {
+                    "val": -0.1,
+                    "multiplicator": 0
+                }
+            }
+        },
+        {
+            "key": "MaritimeAssociation",
+            "value": {
+                "forest": {
+                    "val": 0,
+                    "multiplicator": 0
+                },
+                "cleanliness": {
+                    "val": 0,
+                    "multiplicator": 0.15
+                },
+                "npc": {
+                    "val": 0,
+                    "multiplicator": 0.1
+                },
+                "economy": {
+                    "val": 0,
+                    "multiplicator": 0
+                }
+            }
+
+        },
+        {
+            "key": "OilPlant",
+            "value": {
+                "forest": {
+                    "val": 0,
+                    "multiplicator": 0
+                },
+                "cleanliness": {
+                    "val": -0.3,
+                    "multiplicator": 0
+                },
+                "npc": {
+                    "val": 0,
+                    "multiplicator": 0
+                },
+                "economy": {
+                    "val": 0.1,
+                    "multiplicator": 0
+                }
+            }
+        }
+    ]
+}

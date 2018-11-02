@@ -3,7 +3,6 @@ using Assets.Scripts.Game;
 using Assets.Scripts.Game.UI;
 using Assets.Scripts.Items;
 using Assets.Scripts.Manager;
-using Assets.Scripts.PNJ;
 using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,9 +32,6 @@ public class Player : MonoBehaviour
 	#region Public Variable
 	// GameObject of the Planet
 	public GameObject planet;
-
-    //Datas of the player
-    public InteractablePlayer playerDatas;
 
     // Anchor for the Collision
     public Transform raycastAnchor;
@@ -123,7 +119,7 @@ public class Player : MonoBehaviour
     #endregion
 
     private const float PLAYER_HEIGHT = 0.5f;
-    private const float NPC_HELP_DIST = 0.2f;
+    public static float NPC_HELP_DIST = 0.2f;
 
     //public Transform targetToMove; //A MODIFIER
 
@@ -264,31 +260,26 @@ public class Player : MonoBehaviour
 	}
 	#endregion
 
-	protected void Start() {
+	protected void Awake() {
         var angles = transform.eulerAngles;
         x = angles.y;
         z = angles.x;
 
         _fmodEmitter = GetComponent<StudioEventEmitter>();
         _fmodListener = GetComponent<StudioListener>();
-
-        if (GameManager.Instance && PlayerManager.instance && _fmodListener != null) {
-            if (PlayerManager.instance.player == gameObject) EnabledListener(true);
-            else EnabledListener(false);
-        }
-
+        _transform = transform;
         if (_transform.GetComponentInChildren<Animator>() != null) _animator = _transform.GetComponentInChildren<Animator>();
     }
 
 	protected void Update()
 	{
         if (GameManager.Instance.LoadedScene == SceneString.MapView) return;
-		if (!PlayerManager.instance.player) return;
-        if (PlayerManager.instance.player == gameObject) OnCell();
+		if (!PlayerManager.Instance.player) return;
+        if (PlayerManager.Instance.player == gameObject) OnCell();
 
-		if (PlayerManager.instance.player.GetComponent<Player>().playerType != playerType) return;
+		if (PlayerManager.Instance.player.GetComponent<Player>().playerType != playerType) return;
 
-        Physics.gravity = PlayerManager.instance.player.transform.position.normalized * -9.81f;
+        Physics.gravity = PlayerManager.Instance.player.transform.position.normalized * -9.81f;
 
         if (moveHold)
         {
@@ -310,9 +301,9 @@ public class Player : MonoBehaviour
 		if (_transform.hasChanged)
 		{
 			if (!GameManager.Instance) return;	
-			if (EarthManager.Instance.playerPosition.ContainsKey(playerType))
+			if (EarthManager.Instance.playerPositions.ContainsKey(playerType))
 			{
-				EarthManager.Instance.playerPosition[playerType] = new KeyValuePair<int, Vector3>(_associateCell.ID, _transform.position);
+				EarthManager.Instance.playerPositions[playerType] = new KeyValuePair<int, Vector3>(_associateCell.ID, _transform.position);
 			}
 		}
 	}
@@ -414,7 +405,7 @@ public class Player : MonoBehaviour
         _associateCell.UpdateProps();
         _associateCell.ShowBubble(playerPos);
         _associateCell.ShowHelp(playerPos);
-        if (!targetNPC) ShowNPCState(playerPos);
+        if (!targetNPC) ShowNPCState();
         else UIManager.instance.PNJState.Active(false);
 
         foreach (Cell c in _associateCell.Neighbors)
@@ -426,8 +417,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void ShowNPCState(Vector3 playerPos)
+    public void ShowNPCState()
     {
+        Vector3 pos = _transform.position;
         List<InteractablePNJ> pnjs = _associateCell.GetProps<InteractablePNJ>();
         InteractablePNJ tPnj = null;
         InteractablePNJ testPnj = null;
@@ -435,11 +427,11 @@ public class Player : MonoBehaviour
         if (pnjs.Count > 0)
         {
             tPnj = pnjs[0];
-            dist = Mathf.Abs(Vector3.Distance(tPnj.transform.position, playerPos));
+            dist = Mathf.Abs(Vector3.Distance(tPnj.transform.position, pos));
             for (int i = 1; i < pnjs.Count; i++)
             {
                 testPnj = pnjs[i];
-                float nDist = Vector3.Distance(testPnj.transform.position, playerPos);
+                float nDist = Vector3.Distance(testPnj.transform.position, pos);
                 if (nDist < dist && nDist <= NPC_HELP_DIST)
                 {
                     tPnj = testPnj;
@@ -456,7 +448,7 @@ public class Player : MonoBehaviour
                 for (int i = 0; i < lpnjs.Count; i++)
                 {
                     testPnj = lpnjs[i];
-                    float nDist = Vector3.Distance(testPnj.transform.position, playerPos);
+                    float nDist = Vector3.Distance(testPnj.transform.position, pos);
                     if (nDist < dist && nDist <= NPC_HELP_DIST)
                     {
                         tPnj = testPnj;
@@ -468,9 +460,9 @@ public class Player : MonoBehaviour
 
         if (tPnj != null)
         {
-            if (tPnj.budgetComponent.name != string.Empty && tPnj.budgetComponent.targetBudget != 0)
+            if (tPnj.budgetComponent.type != EBudgetType.None && tPnj.budgetComponent.type != EBudgetType.CERN)
             {
-                if (PlayerManager.instance.playerType == EPlayer.GOV || PlayerManager.instance.playerType == EPlayer.ECO)
+                if (PlayerManager.Instance.playerType == EPlayer.GOV || PlayerManager.Instance.playerType == EPlayer.ECO)
                 {
                     UIManager.instance.PNJState.pnj = tPnj;
                     UIManager.instance.PNJState.SetTarget(tPnj.transform);
@@ -681,7 +673,7 @@ public class Player : MonoBehaviour
         }
 
         if (_targetItemPickUp) {
-            if (PlayerManager.instance.playerType != EPlayer.ECO) {
+            if (PlayerManager.Instance.playerType != EPlayer.ECO) {
                 CancelMove();
                 yield break;
             }
@@ -691,48 +683,47 @@ public class Player : MonoBehaviour
             yield break;
         }
 
-        if (InteractablePNJ.SPEAKABLE_TYPES.Contains(_targetInteractable.GetType()) && Vector3.Distance(transform.position, targetPos) <= stopDistance * 3f)
+        if (Vector3.Distance(transform.position, targetPos) <= stopDistance * 3f)
         {
             InteractablePNJ lPnj = _targetInteractable as InteractablePNJ;
             NPCGender genderComponent = lPnj.GetComponent<NPCGender>();
 
-            if (PlayerManager.instance.playerType == EPlayer.NGO)
+            if (PlayerManager.Instance.playerType == EPlayer.NGO)
             {
-                if (lPnj.presentationTexts.Count == 0)
-                {
-                    lPnj = null;
-                    CancelMove();
-                }
-                else
+                if (lPnj && lPnj.CanTalkTo(EPlayer.NGO))
                 {
                     playerAsset.transform.rotation = Quaternion.LookRotation(lPnj.transform.position - transform.position, transform.up);
                     PointingBubble.instance.Show(true);
                     PointingBubble.instance.SetProperties(lPnj);
-                    foreach (SimpleLocalisationText item in lPnj.presentationTexts)
-                    {
-                        if (item.lang == GameManager.LANGUAGE) PointingBubble.instance.ChangeText(item.text);
-                    }
-                    QuestManager.Instance.NGOTalkTo(lPnj.budgetComponent.name);
+                    QuestManager.Instance.NGOTalkTo(lPnj.IDname);
                     lPnj = null;
                     CancelMove();
-                    
+
                     if (genderComponent) Events.Instance.Raise(new OnNPCDialogueSFX(genderComponent.gender));
+                } 
+                else
+                {
+                    lPnj = null;
+                    CancelMove();
                 }
             }
-            else if (lPnj && lPnj.budgetComponent.name != string.Empty && PlayerManager.instance.playerType == EPlayer.GOV)
+            else if (lPnj && PlayerManager.Instance.playerType == EPlayer.GOV)
             {
                 playerAsset.transform.rotation = Quaternion.LookRotation(lPnj.transform.position - transform.position, transform.up);
-                Events.Instance.Raise(new OnPopupBuilding(lPnj.budgetComponent, lPnj));
+                if (lPnj.CanTalkTo(EPlayer.GOV)) Events.Instance.Raise(new OnPopupBuilding(lPnj.budgetComponent, lPnj));
                 lPnj = null;
                 CancelMove();
 
                 if (genderComponent) Events.Instance.Raise(new OnNPCDialogueSFX(genderComponent.gender));
             }
-            else if (lPnj && PlayerManager.instance.playerType == EPlayer.ECO)
+            else if (lPnj && PlayerManager.Instance.playerType == EPlayer.ECO)
             {
                 playerAsset.transform.rotation = Quaternion.LookRotation(lPnj.transform.position - transform.position, transform.up);
-                InventoryScreen.Instance.HandleActiveFromNPC(lPnj);
-                QuestManager.Instance.EcoTalkTo(lPnj.budgetComponent.name);
+                if (lPnj.CanTalkTo(EPlayer.ECO))
+                {
+                    InventoryScreen.Instance.HandleActiveFromNPC(lPnj);
+                    QuestManager.Instance.EcoTalkTo(lPnj.budgetComponent.type);
+                }
                 lPnj = null;
                 CancelMove();
 

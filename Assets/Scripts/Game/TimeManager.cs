@@ -1,16 +1,27 @@
 ﻿using UnityEngine;
 using System;
 using Assets.Scripts.Game.UI.Ftue;
+using Assets.Scripts.Game.Save;
+
+[Serializable]
+public struct TimeSave
+{
+    public int actualYear;
+    public int actualMonth;
+    public int actualWeek;
+    public float yearTime;
+    public float monthTime;
+    public float weekTime;
+}
 
 namespace Assets.Scripts.Game
 {
-
 	/// <summary>
 	/// 
 	/// </summary>
-	public class TimeManager : MonoBehaviour
+	public class TimeManager : MonoSingleton<TimeManager>
 	{
-		protected static int INITIAL_YEAR = 2018;
+		public static int INITIAL_YEAR = 2018;
 		protected float _currentYearTime;
 		protected float _currentMonthTime;
 		protected float _currentWeekTime;
@@ -22,10 +33,12 @@ namespace Assets.Scripts.Game
 		public float YearTime { get { return _yearTime; } }
 
 		protected int _actualYear;
+        public int ActualYear { get { return _actualYear; } }
 		protected int _actualMonth;
-		protected int _actualWeek;
+        public int ActualMonth { get { return _actualMonth; } }
+        protected int _actualWeek;
 
-		protected float _monthTime;
+        protected float _monthTime;
 		public float MonthTime { get { return _monthTime; } }
 
 		protected float _weekTime;
@@ -38,33 +51,12 @@ namespace Assets.Scripts.Game
 
         public bool canActive = false;
 
-        public float deforestationTime;
-        public float polutionTime;
-
         public float skySpeed = 5f;
         private float SkyboxSpeed { get { return Mathf.Clamp(skySpeed, 0.1f, 10f); } }
 
-        #region Instance
-        private static TimeManager _instance;
-
-		/// <summary>
-		/// instance unique de la classe     
-		/// </summary>
-		public static TimeManager instance
+		override protected void Awake()
 		{
-			get
-			{
-				return _instance;
-			}
-		}
-		#endregion
-
-		protected void Awake()
-		{
-			if (_instance != null)
-			{
-				throw new Exception("Tentative de création d'une autre instance de TimeManager alors que c'est un singleton.");
-			}
+            base.Awake();
 			_instance = this;
 			_monthTime = YearTime / 12f;
 			_weekTime = YearTime / 51f;
@@ -77,8 +69,6 @@ namespace Assets.Scripts.Game
 			_currentYearTime = 0;
 			_currentMonthTime = 0;
 			_currentWeekTime = 0;
-			_currentDeforestationTime = 0;
-            _currentPolutionTime = 0;
             _actualYear = 0;
 			_actualMonth = 0;
 			_actualWeek = 0;
@@ -118,7 +108,9 @@ namespace Assets.Scripts.Game
 				_currentMonthTime = 0;
 				++_actualMonth;
 				Events.Instance.Raise(new OnNewMonth(_actualMonth));
-			}
+                Events.Instance.Raise(new OnUpdateForest());
+                Events.Instance.Raise(new OnUpdateGround());
+            }
 
 			if (_currentYearTime >= _yearTime)
 			{
@@ -126,25 +118,6 @@ namespace Assets.Scripts.Game
 				++_actualYear;
 				Events.Instance.Raise(new OnNewYear(_actualYear + INITIAL_YEAR));
 			}
-            UpdateAreas();
-        }
-
-        protected void UpdateAreas()
-        {
-            _currentDeforestationTime += Time.deltaTime;
-            _currentPolutionTime += Time.deltaTime;
-
-            if (_currentDeforestationTime >= deforestationTime)
-            {
-                _currentDeforestationTime = 0;
-                Events.Instance.Raise(new OnUpdateForest());
-            }
-
-            if (_currentPolutionTime >= polutionTime)
-            {
-                _currentPolutionTime = 0;
-                Events.Instance.Raise(new OnUpdateGround());
-            }
         }
 
         public void Active()
@@ -161,6 +134,28 @@ namespace Assets.Scripts.Game
         {
             RestartTime();
             canActive = false;
+        }
+
+        public void LoadSave()
+        {
+            _currentWeekTime = PlanetSave.GameStateSave.SavedTime.weekTime;
+            _currentMonthTime = PlanetSave.GameStateSave.SavedTime.monthTime;
+            _currentYearTime = PlanetSave.GameStateSave.SavedTime.yearTime;
+            _actualWeek = PlanetSave.GameStateSave.SavedTime.actualWeek;
+            _actualMonth = PlanetSave.GameStateSave.SavedTime.actualMonth;
+            _actualYear = PlanetSave.GameStateSave.SavedTime.actualYear;
+        }
+
+        public TimeSave GenerateSave()
+        {
+            TimeSave newSave = new TimeSave();
+            newSave.actualWeek = _actualWeek;
+            newSave.actualMonth = _actualMonth;
+            newSave.actualYear = _actualYear;
+            newSave.weekTime = _currentWeekTime;
+            newSave.monthTime = _currentMonthTime;
+            newSave.yearTime = _currentYearTime;
+            return newSave;
         }
 
 		protected void OnDestroy()

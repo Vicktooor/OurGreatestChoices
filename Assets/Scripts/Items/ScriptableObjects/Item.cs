@@ -2,13 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum EItemType
+{
+    None,
+    Iron,
+    Fruit,
+    Electricity,
+    GreenElectricity,
+    Battery,
+    GreenBattery,
+    FruitSeed,
+    FruitMarket,
+    Carcass,
+    Tracks,
+    WindTurbine,
+    Garden,
+    ElectricEnergy,
+    GreenElectricEnergy,
+}
+
 [CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Item")]
 public class Item : ScriptableObject {
 
-    new public string name = "New Item";
+    public EItemType itemType;
     public GameObject prefab = null; //A METTRE DANS PICK UP
 
-    public List<Item> itemsLinked;
     public EPlayer type;
     public bool isPrimary = false;
     
@@ -16,8 +34,6 @@ public class Item : ScriptableObject {
     public Item EcoItem;
     public Item GouvItem;
     public int nbForCraft;
-
-    public Item originalItem;
 
     //For Glossary Overview
     public Sprite icon;

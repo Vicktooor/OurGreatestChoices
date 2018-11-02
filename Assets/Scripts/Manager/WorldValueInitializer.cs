@@ -1,12 +1,13 @@
 ﻿using Assets.Scripts.Game;
+using Assets.Scripts.Game.Save;
 using UnityEngine;
 
-public class WorldValueInitializer : MonoBehaviour
+public class WorldValueInitializer : MonoSingleton<WorldValueInitializer>
 {
     [Header("Economic values")]
     public float boostTargetValue = 2f;
     public float transfertValue = 0.1f;
-    public float moneyMultiplicator = 2500f;
+    public int moneyMultiplicator = 2000;
 
     [Header("World values")]
     public float forestState;
@@ -20,7 +21,7 @@ public class WorldValueInitializer : MonoBehaviour
     public float actualNpcMood;
     public float actualEconomy;
 
-    protected void Awake()
+    public void Init()
     {
         WorldValues.BOOST_TARGET_VALUE = boostTargetValue;
         WorldValues.TRANSFERT_VALUE = transfertValue;
@@ -31,10 +32,21 @@ public class WorldValueInitializer : MonoBehaviour
         WorldValues.I_STATE_NPC = npcMood;
         WorldValues.I_STATE_ECONOMY = economy;
 
-        WorldValues.STATE_FOREST = forestState;
-        WorldValues.STATE_CLEANLINESS = planetCleanliness;
-        WorldValues.STATE_NPC = npcMood;
-        WorldValues.STATE_ECONOMY = economy;
+        if (GameManager.PARTY_TYPE == EPartyType.SAVE)
+        {
+            WorldValues.STATE_FOREST = PlanetSave.GameStateSave.WorldSave.forestState;
+            WorldValues.STATE_CLEANLINESS = PlanetSave.GameStateSave.WorldSave.cleanliness;
+            WorldValues.STATE_NPC = PlanetSave.GameStateSave.WorldSave.npcState;
+            WorldValues.STATE_ECONOMY = PlanetSave.GameStateSave.WorldSave.economyState;
+        }
+        else
+        {
+            WorldValues.STATE_FOREST = forestState;
+            WorldValues.STATE_CLEANLINESS = planetCleanliness;
+            WorldValues.STATE_NPC = npcMood;
+            WorldValues.STATE_ECONOMY = economy;
+        }
+        Events.Instance.Raise(new OnChangeGauges());
     }
 
     protected void Update()

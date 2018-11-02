@@ -1,0 +1,94 @@
+{
+    "objects": [
+        {
+            "key": "MajorForest",
+            "value": {
+                "introText": "MajorForest_In",
+                "outroText": "MajorForest_Ou",
+                "topicIDs": [ 0, 1 ],
+                "thanks": [
+                    {
+                        "itemType": "Electricity",
+                        "haveBudgetText": "MajorHaveMoneyWithoutItem_Elec",
+                        "haveItemText": "MajorHaveItemWithoutMoney_Elec",
+                        "fullThanks": "MajorFullThanks_Elec"
+                    },
+                    {
+                        "itemType": "GreenElectricity",
+                        "haveBudgetText": "MajorHaveMoneyWithoutItem_GreenElec",
+                        "haveItemText": "MajorHaveItemWithoutMoney_GreenElec",
+                        "fullThanks": "MajorFullThanks_GreenElec"
+                    },
+                    {
+                        "itemType": "Tracks",
+                        "haveBudgetText": "MajorHaveMoneyWithoutItem_Tracks",
+                        "haveItemText": "MajorHaveItemWithoutMoney_Tracks",
+                        "fullThanks": "MajorFullThanks_Tracks"
+                    },
+                    {
+                        "itemType": "Garden",
+                        "haveBudgetText": "MajorHaveMoneyWithoutItem_Garden",
+                        "haveItemText": "MajorHaveItemWithoutMoney_Garden",
+                        "fullThanks": "MajorFullThanks_Garden"
+                    },
+                    {
+                        "itemType": "FruitMarket",
+                        "haveBudgetText": "MajorHaveMoneyWithoutItem_FruitMarket",
+                        "haveItemText": "MajorHaveItemWithoutMoney_FruitMarket",
+                        "fullThanks": "MajorFullThanks_FruitMarket"
+                    },
+                    {
+                        "itemType": "FruitSeed",
+                        "haveBudgetText": "MajorHaveMoneyWithoutItem_FruitSeed",
+                        "haveItemText": "MajorHaveItemWithoutMoney_FruitSeed",
+                        "fullThanks": "MajorFullThanks_FruitSeed"
+                    }
+                ]
+            }
+        },
+        {
+            "key": "CarsCompanyForest",
+            "value": {
+                "introText": "CarsCompany_In",
+                "outroText": "CarsCompany_Ou",
+                "topicIDs": [ 1, 2 ],
+                "thanks": [
+                    {
+                        "itemType": "Battery",
+                        "haveBudgetText": "CarCompanyHaveMoneyWithoutItem_Battery",
+                        "haveItemText": "CarCompanyHaveItemWithoutMoney_Battery",
+                        "fullThanks": "CarCompanyFullThanks_Battery"
+                    },
+                    {
+                        "itemType": "GreenBattery",
+                        "haveBudgetText": "CarCompanyHaveMoneyWithoutItem_GreenBattery",
+                        "haveItemText": "CarCompanyHaveItemWithoutMoney_GreenBattery",
+                        "fullThanks": "CarCompanyFullThanks_GreenBattery"
+                    },
+                    {
+                        "itemType": "Carcass",
+                        "haveBudgetText": "CarCompanyHaveMoneyWithoutItem_Carcass",
+                        "haveItemText": "CarCompanyHaveItemWithoutMoney_Carcass",
+                        "fullThanks": "CarCompanyFullThanks_Carcass"
+                    }
+                ]
+            }
+        },
+        {
+            "key": "CoalPowerForest",
+            "value": {
+                "introText": "CoalPower_In",
+                "outroText": "CoalPower_Ou",
+                "topicIDs": [ 0, 2 ],
+                "thanks": [
+                    {
+                        "itemType": "WindTurbine",
+                        "haveBudgetText": "CoalHaveMoneyWithoutItem_WindTurbine",
+                        "haveItemText": "CoalHaveItemWithoutMoney_WindTurbine",
+                        "fullThanks": "CoalFullThanks_WindTurbine"
+                    }
+                ]
+            }
+        }
+    ]
+}

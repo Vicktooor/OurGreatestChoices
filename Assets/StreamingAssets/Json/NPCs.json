@@ -1,33 +1,123 @@
 {
-    "NPCs": [
+    "objects": [
         {
-            "name": "__MajorName",
-            "presentationTexts": [
-                "__MajorPresentation1",
-                "__MajorPresentation2"
-            ],
-            "leavingTexts": [
-                "__MajorEnd1",
-                "__MajorEnd2"
-            ],
-            "thanksTexts": [
-                {
-                    "item": "tracks",
-                    "texts": [
-                        "__MajorThanks1",
-                        "__MajorThanks2"
-                    ]
-                },
-                {
-                    "item": "FruitSeed",
-                    "texts": [
-                        "__MajorThanks1",
-                        "__MajorThanks2"
-                    ]
-                }
-            ],
-            "associatedIcon": "Logo_TownHall",
-            "budgetComponentName": "TownHall"
+            "ID": "MajorForest",
+            "impactType": "BasicTownHall",
+            "NPCText": "MajorForest"
+        },
+        {
+            "ID": "MajorDesert",
+            "impactType": "BasicTownHall",
+            "NPCText": "MajorForest"
+        },
+        {
+            "ID": "MajorMountain",
+            "impactType": "BasicTownHall",
+            "NPCText": "MajorForest"
+        },
+
+
+        {
+            "ID": "CarsCompanyForest",
+            "impactType": "CarsCompany",
+            "NPCText": "CarsCompanyForest"
+        },
+        {
+            "ID": "CarsCompanyDesert",
+            "impactType": "CarsCompany",
+            "NPCText": "CarsCompanyForest"
+        },
+        {
+            "ID": "CarsCompanyMountain",
+            "impactType": "CarsCompany",
+            "NPCText": "CarsCompanyForest"
+        },
+
+
+        {
+            "ID": "SchoolForest",
+            "impactType": "School",
+            "NPCText": ""
+        },
+        {
+            "ID": "SchoolDesert",
+            "impactType": "School",
+            "NPCText": ""
+        },
+        {
+            "ID": "SchoolMountain",
+            "impactType": "School",
+            "NPCText": ""
+        },
+
+
+        {
+            "ID": "CoalForest",
+            "impactType": "CoalPowerPlant",
+            "NPCText": "CoalPowerForest"
+        },
+        {
+            "ID": "CoalDesert",
+            "impactType": "CoalPowerPlant",
+            "NPCText": "CoalPowerForest"
+        },
+        {
+            "ID": "CoalMountain",
+            "impactType": "CoalPowerPlant",
+            "NPCText": "CoalPowerForest"
+        },
+
+
+        {
+            "ID": "IronMineForest",
+            "impactType": "None",
+            "NPCText": ""
+        },
+        {
+            "ID": "IronMineDesert",
+            "impactType": "None",
+            "NPCText": ""
+        },
+
+
+        {
+            "ID": "Deforestation",
+            "impactType": "None",
+            "NPCText": ""
+        },
+
+
+        {
+            "ID": "OilPlantForest",
+            "impactType": "OilPlant",
+            "NPCText": ""
+        },
+        {
+            "ID": "OilPlantDesert",
+            "impactType": "OilPlant",
+            "NPCText": ""
+        },
+        {
+            "ID": "OilPlantMountain",
+            "impactType": "OilPlant",
+            "NPCText": ""
+        },
+
+
+        {
+            "ID": "MaritimeForest",
+            "impactType": "MaritimeAssociation",
+            "NPCText": ""
+        },
+        {
+            "ID": "MaritimeDesert",
+            "impactType": "MaritimeAssociation",
+            "NPCText": ""
+        },
+        {
+            "ID": "MaritimeDesert",
+            "impactType": "MaritimeAssociation",
+            "NPCText": ""
         }
     ]
 }

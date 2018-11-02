@@ -12,7 +12,7 @@ public class GameEvent { }
 public class PlayerEvent : GameEvent {
 	public EPlayer playerType;
 	public PlayerEvent() {
-		if (PlayerManager.instance.player != null) playerType = PlayerManager.instance.player.GetComponent<Player>().playerType;
+		if (PlayerManager.Instance.player != null) playerType = PlayerManager.Instance.player.GetComponent<Player>().playerType;
 		else playerType = EPlayer.NONE;
 	}
 }
@@ -25,12 +25,8 @@ public class OnValidFtueStep : GameEvent { }
 #endregion
 
 #region Dialogue Event
-public class OnDialoguesLoaded : GameEvent { }
-public class OnBudgetLoaded : GameEvent { }
 public class OnDialogueInfo : GameEvent { }
 public class OnTalkToNPC : GameEvent { }
-public class OnPointGovTarget : GameEvent { }
-public class OnClickSelectTopicGov : GameEvent { }
 public class OnClickSelectTopicContractor : GameEvent {
 	public ContractorTopic contractorTarget;
 	public OnClickSelectTopicContractor(ContractorTopic pCont)
@@ -38,19 +34,13 @@ public class OnClickSelectTopicContractor : GameEvent {
 		contractorTarget = pCont;
 	}
 }
-public class OnSelectTopic : GameEvent {
+public class OnActiveSelectTopic : GameEvent {
 	public NotepadTopic topicItem;
-	public InteractablePNJ selectedNpc;
-	public OnSelectTopic(NotepadTopic cItem, InteractablePNJ pNpc)
+    public int notepadIndex;
+	public OnActiveSelectTopic(NotepadTopic cItem, int index)
 	{
 		topicItem = cItem;
-		selectedNpc = pNpc;
-	}
-}public class OnActiveSelectTopic : GameEvent {
-	public NotepadTopic topicItem;
-	public OnActiveSelectTopic(NotepadTopic cItem)
-	{
-		topicItem = cItem;
+        notepadIndex = index;
 	}
 }
 public class OnStartSpeakingNPC : GameEvent { }
@@ -158,34 +148,7 @@ public class OnMoss : GameEvent { }
 public class OnMountain : GameEvent { }
 public class OnDesert : GameEvent { }
 
-/* Camera Componenet */
-public class LerpEnd : GameEvent { }
-public class ZoomEnd : GameEvent { }
-public class ZoomEndUI : GameEvent { }
-
-/* Panel Transition */
-public class PanelLerpEnd : GameEvent { }
-
-public class OnPinchEnd : GameEvent { }
-public class OnPinch : GameEvent
-{
-	public float value;
-	public OnPinch(float cValue)
-	{
-		value = cValue;
-	}
-}
-
 public class OnChangeQuality : GameEvent { }
-
-public class OnPinchBudget : GameEvent
-{
-	public float value;
-	public OnPinchBudget(float cValue)
-	{
-		value = cValue;
-	}
-}
 
 /*Interactable Manager */
 public class OnInteraction : GameEvent { }
@@ -218,13 +181,6 @@ public class OnNPCDialogueSFX : GameEvent {
     }
 }
 
-/* Transition SFX */
-public class CloudIn : GameEvent { }
-public class CloudOut : GameEvent { }
-
-/*Music Event*/
-public class OnMusicBeta : GameEvent { }
-
 public class OnUpdateInventory : GameEvent { }
 
 public class OnEndTransformation : GameEvent
@@ -242,10 +198,12 @@ public class OnEndTransformation : GameEvent
 public class OnTransformation : GameEvent {
     public int index;
     public Item item;
+    public string nameNPC;
 
-    public OnTransformation(int pIndex, Item pItem) {
+    public OnTransformation(int pIndex, Item pItem, string pName) {
         index = pIndex;
         item = pItem;
+        nameNPC = pName;
     }
 }
 
@@ -254,16 +212,6 @@ public class OnGive : GameEvent {
 
     public OnGive(int pIndex) {
         index = pIndex;
-    }
-}
-
-public class OnGiveNPC : GameEvent {
-    public Item item;
-    public InteractablePNJ targetNPC;
-
-    public OnGiveNPC(Item pItem, InteractablePNJ npc) {
-        item = pItem;
-        targetNPC = npc;
     }
 }
 
@@ -283,24 +231,6 @@ public class OnPopupObjects : GameEvent {
 
     public OnPopupObjects(GameObject pNPC) {
         npc = pNPC;
-    }
-}
-
-public class OnNotifications : GameEvent {
-    public EnumClass.NotificationsType notificationType;
-    public bool isDisplay;
-
-    public OnNotifications(EnumClass.NotificationsType pType, bool pDisplay) {
-        notificationType = pType;
-        isDisplay = pDisplay;   
-    }
-}
-
-public class OnUpdateObject : GameEvent {
-    public ItemPickUp itemWorn;
-
-    public OnUpdateObject(ItemPickUp pItemWorn) {
-        itemWorn = pItemWorn;
     }
 }
 
@@ -357,30 +287,6 @@ public class OnPopupDialogue : GameEvent {
         textString = pString;
     }
 }
-public class OutPopupDialogue : GameEvent { }
-
-#region Budget events
-public class BudgetEvent : GameEvent
-{
-    public BudgetComponent comp;
-    public BudgetEvent Init(BudgetComponent icomp)
-    {
-        comp = icomp;
-        return this;
-    }
-}
-public class OnReceiveBudget : BudgetEvent { }
-public class OnGiveBudget : BudgetEvent { }
-#endregion
-
-public class OnFocusButton : GameEvent { }
-public class OnSwitchScene : GameEvent {
-	public SceneString previousScene;
-	public OnSwitchScene(SceneString cScene)
-	{
-		previousScene = cScene;
-	}
-}
 
 public class OnEditionMouseScroll : GameEvent {
 	public float value;
@@ -427,26 +333,20 @@ public class OnPlayerInitFinish : GameEvent { }
 
 public class OnApplyCullingDistance : GameEvent { }
 
-/* camera transition */
-public class OnZoomFinish : GameEvent {
-	public ECameraTargetType view;
-	public OnZoomFinish(ECameraTargetType cView)
-	{
-		view = cView;
-	}
-}
 
-public class OnPanelBudget : GameEvent
+/* Pinch */
+public class OnEndSwitchedPlayer : GameEvent { }
+public class OnPinchEnd : GameEvent { }
+public class OnPinch : GameEvent
 {
-	public BudgetComponent budget;
-	public OnPanelBudget(BudgetComponent bComp)
-	{
-		budget = bComp;
-	}
+    public float value;
+    public OnPinch(float cValue)
+    {
+        value = cValue;
+    }
 }
 
-public class OnWaterPolutionChange : GameEvent { }
-
+/* Chargement de scene */
 public class OnSceneLoaded : GameEvent {
 	public SceneString scene;
 	public OnSceneLoaded(SceneString cScene)
@@ -454,20 +354,18 @@ public class OnSceneLoaded : GameEvent {
 		scene = cScene;
 	}
 }
-
-public class OnMidTransition : GameEvent { }
+public class OnSwitchScene : GameEvent
+{
+    public ECameraTargetType mode;
+    public OnSwitchScene(ECameraTargetType pmode)
+    {
+        mode = pmode;
+    }
+}
+public class CloudIn : GameEvent { }
+public class CloudOut : GameEvent { }
 
 public class OnOpenPanel : GameEvent { }
-public class OnBudgetEndTransition : GameEvent { }
-public class OnBudgetTransition : GameEvent
-{
-	public BudgetComponent budget;
-	public OnBudgetTransition(BudgetComponent bComp)
-	{
-		budget = bComp;
-	}
-}
-
 public class OnUpdateMainMenu : GameEvent { }
 public class OnChangeLanguageUI : GameEvent { }
 public class OnGoToMenu : GameEvent { }

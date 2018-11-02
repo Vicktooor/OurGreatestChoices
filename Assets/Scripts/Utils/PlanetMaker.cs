@@ -6,6 +6,7 @@ using Assets.Scripts.DecalSystem;
 using Assets.Scripts.Planet;
 using Assets.Scripts.Manager;
 using Assets.Scripts.Save;
+using Assets.Scripts.Game.Save;
 
 // AUTHOR - Victor
 
@@ -37,8 +38,6 @@ namespace Assets.Scripts.Utils
         }
 		#endregion
 
-		[Header("FALSE for edition - TRUE for build")]
-		public bool buildForMobile = false;
 		public bool showButtons = false;
 
 		#region Edition properties
@@ -409,10 +408,10 @@ namespace Assets.Scripts.Utils
 			if (Input.GetMouseButtonDown(0) && Physics.Raycast(ray, out hit, 100.0f, LayerMask.GetMask(new string[1] { "Cell" })))
 			{
 				PlayerEditorPos[] playersVisu = GetComponentsInChildren<PlayerEditorPos>();
-				if (!EarthManager.Instance.playerPosition.ContainsKey(selectedPlayer))
+				if (!EarthManager.Instance.playerPositions.ContainsKey(selectedPlayer))
 				{
 					KeyValuePair<int, Vector3> posInfo = new KeyValuePair<int, Vector3>(hit.transform.GetComponent<Cell>().ID, hit.point);
-					EarthManager.Instance.playerPosition.Add(selectedPlayer, posInfo);
+					EarthManager.Instance.playerPositions.Add(selectedPlayer, posInfo);
 					foreach (PlayerEditorPos pv in playersVisu)
 					{
 						if (pv.associedPlayer == selectedPlayer) pv.gameObject.transform.position = hit.point;
@@ -421,7 +420,7 @@ namespace Assets.Scripts.Utils
 				else
 				{
 					KeyValuePair<int, Vector3> posInfo = new KeyValuePair<int, Vector3>(hit.transform.GetComponent<Cell>().ID, hit.point);
-					EarthManager.Instance.playerPosition[selectedPlayer] = posInfo;
+					EarthManager.Instance.playerPositions[selectedPlayer] = posInfo;
 					foreach (PlayerEditorPos pv in playersVisu)
 					{
 						if (pv.associedPlayer == selectedPlayer) pv.gameObject.transform.position = hit.point;
@@ -470,12 +469,13 @@ namespace Assets.Scripts.Utils
         {
 			if (!showButtons) return;
 
-            if (GUI.Button(new Rect(10, 10, 50, 25), "Save")) EarthManager.Instance.SavePlanet();
-            if (GUI.Button(new Rect(10, 45, 120, 25), "Save Player")) EarthManager.Instance.SavePlayer();
+            if (GUI.Button(new Rect(10, 10, 50, 25), "Save")) PlanetSave.SaveCells(EarthManager.Instance.Cells, EarthManager.Instance.planetName);
+            if (GUI.Button(new Rect(10, 45, 120, 25), "Save Player")) PlanetSave.SavePlayer(EarthManager.Instance.planetName);
 			if (GUI.Button(new Rect(70, 10, 50, 25), "Light")) RecalulateNormals();
 			if (GUI.Button(new Rect(130, 10, 50, 25), "UVs")) EarthManager.Instance.RecalculateUVMap();
-			if (GUI.Button(new Rect(300, 10, 120, 25), "Save dialogues")) EarthManager.Instance.SaveDialogues();
-			if (GUI.Button(new Rect(430, 10, 120, 25), "Save Budget")) EarthManager.Instance.SaveBudget();
+            if (GUI.Button(new Rect(300, 10, 120, 25), "Save Pnjs")) PlanetSave.SavePnjs(EarthManager.Instance.planetName);
+            if (GUI.Button(new Rect(430, 10, 120, 25), "Save Citizens")) PlanetSave.SaveCitizens(EarthManager.Instance.planetName);
+            if (GUI.Button(new Rect(430, 70, 50, 25), "Load")) EarthManager.Instance.CreateOnlyPlanet();
 
 			float y = 100;
             if (_selectedCells.Count > 0)

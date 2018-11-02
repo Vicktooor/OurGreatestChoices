@@ -11,18 +11,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07259032130286f479e079872e0f957a, type: 3}
   m_Name: GreenEnergyElectricForest
   m_EditorClassIdentifier: 
-  topicTitles:
-  - lang: 10
-    text: Info sur l'energie
-  - lang: 14
-    text: Energie renouvelable
-  texts:
-  - lang: 14
-    texts:
-    - L'usine t'en fournira
-  - lang: 10
-    texts:
-    - L'usine t'en fournira
+  id: 12
+  text:
+    playerText: 
+    NPCText: 
+    getInfo: 1
+    nextTexts: []
   icon: {fileID: 21300000, guid: 69777005b970bf142a0b65b877fab99e, type: 3}
   arrowIcon: {fileID: 21300000, guid: f76f69cc84c7c65498a0128691e608a4, type: 3}
   targetWorldPos: {x: 0.9116488, y: -0.7861355, z: -1.615687}

@@ -11,22 +11,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a1b0fc28f6fe604d85c897f5e1d4f5e, type: 3}
   m_Name: GreenBattery_information
   m_EditorClassIdentifier: 
-  topicTitles:
-  - lang: 14
-    text: Batterie Renouvelable
-  - lang: 10
-    text: Green Battery
-  targetItem: {fileID: 11400000, guid: 55671b850176eb34f8f15cfee0282f00, type: 2}
+  id: 9
   texts:
-  - lang: 10
-    texts:
-    - Oil rigs tend to cause oil spills and are a real threat to the environment.
-    - If we could stop using oil altogether, we could close down those rigs...
-    - Why not try another energy source for our cars? Like something easier to recycle?
-  - lang: 14
-    texts:
-    - "Les plateformes p\xE9troli\xE8res sont souvent responsables de mar\xE9es noires..."
-    - "Remplacer nos vieilles voitures \xE0 essence pourrait fermer ces plateformes..."
-    - "Pourquoi pas avec une autre source d'\xE9nergie que le p\xE9trole, meilleure
-      pour l'environnement ?"
+    playerText: 
+    NPCText: 
+    getInfo: 1
+    nextTexts: []
+  targetItem: {fileID: 11400000, guid: 55671b850176eb34f8f15cfee0282f00, type: 2}
   icon: {fileID: 21300000, guid: d75f981844ec9d741afbec1663d2e714, type: 3}

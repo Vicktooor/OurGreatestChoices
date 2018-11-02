@@ -34,10 +34,10 @@ public class NPCScreen : MonoBehaviour {
         InventoryStrip.SetActive(false);
         thumbnail.gameObject.SetActive(true);
 
-        if (InventoryPlayer.instance.itemsWornArray.Count > 0)
+        if (InventoryPlayer.Instance.itemsWornArray.Count > 0)
         {
             scroller.Place(0);
-            Set(InventoryPlayer.instance.itemsWornArray[scroller.CurrentIndex]);
+            Set(InventoryPlayer.Instance.itemsWornArray[scroller.CurrentIndex]);
         }
         else
         {
@@ -61,7 +61,6 @@ public class NPCScreen : MonoBehaviour {
         InventoryStrip.SetActive(true);
         NPCPanel.SetActive(false);
 
-        Events.Instance.Raise(new OnClickInteractable(InteractableManager.instance.FINISH_TYPE));
         Events.Instance.Raise(new OnEndSpeakingNPC());
         PointingBubble.instance.Show(false);
 
@@ -72,7 +71,7 @@ public class NPCScreen : MonoBehaviour {
         _sourceItem = pItem;
         thumbnail.gameObject.SetActive(true);
         if (clickedNPC.item.type == EPlayer.NGO) {
-            if (InventoryPlayer.instance.knowsItems.Contains(pItem.NGOItem)) _transformationButton.sprite = pItem.NGOItem.icon;
+            if (InventoryPlayer.Instance.knowsItems.Contains(pItem.NGOItem)) _transformationButton.sprite = pItem.NGOItem.icon;
             else
             {
                 if (pItem.NGOItem == null)
@@ -85,7 +84,7 @@ public class NPCScreen : MonoBehaviour {
             _resultItem = pItem.NGOItem;
         }
         if (clickedNPC.item.type == EPlayer.ECO) {
-            if (InventoryPlayer.instance.knowsItems.Contains(pItem.EcoItem)) _transformationButton.sprite = pItem.EcoItem.icon;
+            if (InventoryPlayer.Instance.knowsItems.Contains(pItem.EcoItem)) _transformationButton.sprite = pItem.EcoItem.icon;
             else
             {
                 if (pItem.EcoItem == null)
@@ -98,7 +97,7 @@ public class NPCScreen : MonoBehaviour {
             _resultItem = pItem.EcoItem;
         }
         if (clickedNPC.item.type == EPlayer.GOV) {
-            if (InventoryPlayer.instance.knowsItems.Contains(pItem.GouvItem)) _transformationButton.sprite = pItem.GouvItem.icon;
+            if (InventoryPlayer.Instance.knowsItems.Contains(pItem.GouvItem)) _transformationButton.sprite = pItem.GouvItem.icon;
             else
             {
                 if (pItem.GouvItem == null)
@@ -115,18 +114,18 @@ public class NPCScreen : MonoBehaviour {
 
     private void SetByIndex()
     {
-        Set(InventoryPlayer.instance.itemsWornArray[scroller.CurrentIndex]);
+        Set(InventoryPlayer.Instance.itemsWornArray[scroller.CurrentIndex]);
     }
 
     public void OnTransformation() {
-        int leftNB = InventoryPlayer.instance.nbItems[_sourceItem.name];
+        int leftNB = InventoryPlayer.Instance.nbItems[_sourceItem.itemType];
         if (leftNB >= _resultItem.nbForCraft)
         {
             leftNB -= _resultItem.nbForCraft;
-            InventoryPlayer.instance.nbItems[_sourceItem.name] = leftNB;
+            InventoryPlayer.Instance.nbItems[_sourceItem.itemType] = leftNB;
             thumbnail.Set(_sourceItem, _resultItem);
             Events.Instance.AddListener<OnEndTransformation>(OnEndTransformation);
-            Events.Instance.Raise(new OnTransformation(scroller.CurrentIndex, _resultItem));
+            Events.Instance.Raise(new OnTransformation(scroller.CurrentIndex, _resultItem, clickedNPC.IDname));
             FBX_Transform.instance.Play(_transformationButton.transform.position);
             Events.Instance.Raise(new OnClickTransform());
         }
@@ -135,11 +134,11 @@ public class NPCScreen : MonoBehaviour {
     private void OnEndTransformation(OnEndTransformation e)
     {
         Events.Instance.RemoveListener<OnEndTransformation>(OnEndTransformation);
-        if (InventoryPlayer.instance.itemsWornArray.Count > 0)
+        if (InventoryPlayer.Instance.itemsWornArray.Count > 0)
         {
             InventoryScreen.Instance.MajInventory(null);
-            if (scroller.CurrentIndex >= InventoryPlayer.instance.itemsWornArray.Count) scroller.Move(1);
-            else Set(InventoryPlayer.instance.itemsWornArray[scroller.CurrentIndex]);
+            if (scroller.CurrentIndex >= InventoryPlayer.Instance.itemsWornArray.Count) scroller.Move(1);
+            else Set(InventoryPlayer.Instance.itemsWornArray[scroller.CurrentIndex]);
         }
         else
         {

@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Assets.Scripts.Manager;
-using Assets.Scripts.Game.Load;
 using UnityEngine.UI;
+using Assets.Scripts.Items;
+using Assets.Script;
 
 public class BillboardNPCState : BillboardElement
 {
@@ -19,7 +20,11 @@ public class BillboardNPCState : BillboardElement
 
     private void CatchUpdate(OnUpdateNPCInfo e)
     {
-        if (pnj) UpdateInfo();
+        if (pnj != null)
+        {
+            SetVisibility(Vector3.Distance(PlayerManager.Instance.player.transform.position, pnj.Position),  Player.NPC_HELP_DIST);
+            UpdateInfo();
+        }
     }
 
     public void SetVisibility(float dist, float refDist)
@@ -54,12 +59,12 @@ public class BillboardNPCState : BillboardElement
             _itemMark.texture = MainLoader<Sprite>.Instance.GetResource("Check_On").texture;
         }
         else _itemMark.texture = MainLoader<Sprite>.Instance.GetResource("Check_Off").texture;
-        if (comp.budget >= comp.targetBudget)
+        /*if (comp.budget >= comp.targetBudget)
         {
             happinessPoint++;
             _budgetMark.texture = MainLoader<Sprite>.Instance.GetResource("Check_On").texture;
         }
-        else _budgetMark.texture = MainLoader<Sprite>.Instance.GetResource("Check_Off").texture;
+        else _budgetMark.texture = MainLoader<Sprite>.Instance.GetResource("Check_Off").texture;*/
         _smileyRenderer.texture = MainLoader<Sprite>.Instance.GetResource("happyness" + happinessPoint).texture;
     }
 

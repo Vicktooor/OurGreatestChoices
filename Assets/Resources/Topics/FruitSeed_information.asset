@@ -11,19 +11,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a1b0fc28f6fe604d85c897f5e1d4f5e, type: 3}
   m_Name: FruitSeed_information
   m_EditorClassIdentifier: 
-  topicTitles:
-  - lang: 14
-    text: Graines
-  - lang: 10
-    text: Fruit Seed
-  targetItem: {fileID: 11400000, guid: d2d1e6762cdc52d40aa8c6b5adc326a3, type: 2}
+  id: 8
   texts:
-  - lang: 10
-    texts:
-    - We would really like to take the children on a field trip around town, someday.
-    - As of now, we can't find a parkland that would suit our needs...
-  - lang: 14
-    texts:
-    - On aimerait beaucoup organiser une sortie en ville, pour les enfants.
-    - "Mais impossible de trouver un espace vert suffisament accueillant dans la r\xE9gion..."
+    playerText: 
+    NPCText: 
+    getInfo: 1
+    nextTexts: []
+  targetItem: {fileID: 11400000, guid: d2d1e6762cdc52d40aa8c6b5adc326a3, type: 2}
   icon: {fileID: 21300000, guid: 2656f78e76eedeb46931b6489b451e73, type: 3}

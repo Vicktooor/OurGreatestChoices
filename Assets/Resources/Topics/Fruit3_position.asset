@@ -11,7 +11,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07259032130286f479e079872e0f957a, type: 3}
   m_Name: Fruit3_position
   m_EditorClassIdentifier: 
-  topicTitles: []
-  texts: []
+  id: 6
+  text:
+    playerText: 
+    NPCText: 
+    getInfo: 1
+    nextTexts: []
   icon: {fileID: 21300000, guid: 2f6d9be8e20c2284fba98728c0250afb, type: 3}
+  arrowIcon: {fileID: 0}
   targetWorldPos: {x: 0, y: 0, z: 0}

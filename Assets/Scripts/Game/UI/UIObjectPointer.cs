@@ -77,7 +77,7 @@ namespace Assets.Scripts.Game.UI
 				else Point(Camera.main.WorldToScreenPoint(worldTarget));
 			}
 
-            GameObject playerTransform = PlayerManager.instance.player;
+            Player playerTransform = PlayerManager.Instance.player;
             if (playerTransform != null && autoDestroy)
             {
                 if (Vector3.Distance(worldTarget, playerTransform.transform.position) <= INTERACT_DISTANCE)

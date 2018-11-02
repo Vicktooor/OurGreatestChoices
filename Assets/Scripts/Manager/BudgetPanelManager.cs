@@ -67,26 +67,34 @@ namespace Assets.Scripts.Manager
 
         protected void EndTween(OnEndTween e)
         {
-            if (buildingBudget.name != string.Empty) Set();
+            if (buildingBudget.initialBudget > 0) Set();
             else Close();
         }
 
         private void Set()
         {
             buildingIcon.texture = _npc.pictoHead.texture;
-            buildingMoney.text = (buildingBudget.budget * WorldValues.PLAYER_MONEY_MULTIPLICATOR) + "/" + (buildingBudget.targetBudget * WorldValues.PLAYER_MONEY_MULTIPLICATOR);
-            stockMoney.text = (InventoryPlayer.instance.moneyStock * WorldValues.PLAYER_MONEY_MULTIPLICATOR) + "/" + (InventoryPlayer.instance.maxStock * WorldValues.PLAYER_MONEY_MULTIPLICATOR);
+            buildingMoney.text = (buildingBudget.budget * WorldValues.PLAYER_MONEY_MULTIPLICATOR).ToString("#") + "/ -";
+            stockMoney.text = (InventoryPlayer.Instance.moneyStock * WorldValues.PLAYER_MONEY_MULTIPLICATOR).ToString("#") + "/" + (InventoryPlayer.Instance.maxStock * WorldValues.PLAYER_MONEY_MULTIPLICATOR);
         }
 
         public void ClickGive()
         {
-            buildingBudget.GiveBudget();
+            if (buildingBudget.GiveBudget())
+            {
+                _npc.ReceiveBudget();
+                Events.Instance.Raise(new OnUpdateNPCInfo());
+            }
             Set();
         }
 
         public void ClickTake()
         {
-            buildingBudget.TakeBudget();
+            if (buildingBudget.TakeBudget())
+            {
+                _npc.SendBudget();
+                Events.Instance.Raise(new OnUpdateNPCInfo());
+            }
             Set();
         }
 
@@ -94,7 +102,7 @@ namespace Assets.Scripts.Manager
 		{
 			if (_toggle)
 			{
-                UIManager.instance.PNJState.Active(true);
+                PlayerManager.Instance.player.ShowNPCState();
                 gameObject.SetActive(false);
 				_toggle = false;
 			}
@@ -107,10 +115,9 @@ namespace Assets.Scripts.Manager
 
 		protected void Open(OnPopupBuilding e)
 		{
-            if (e.buildingbudget.targetBudget == 0) return;
             _npc = e.npc;
 			buildingBudget = e.buildingbudget;
-            UIName.text = buildingBudget.name;      
+            UIName.text = TextManager.GetText(_npc.IDname);      
 			Toggle();
 		}
 

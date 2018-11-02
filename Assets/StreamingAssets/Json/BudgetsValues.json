@@ -1,0 +1,143 @@
+{
+    "objects": [
+        {
+            "key": "None",
+            "value": {
+                "initialBudget": 0,
+                "workingLimitBudget": 0,
+                "targetBudget": -1,
+                "productBenefit": false
+            }
+        },
+
+        {
+            "key": "CERN",
+            "value": {
+                "initialBudget": 7,
+                "workingLimitBudget": 0,
+                "targetBudget": 0,
+                "productBenefit": false
+            }
+        },
+
+        {
+            "key": "BasicTownHall",
+            "value": {
+                "initialBudget": 3,
+                "workingLimitBudget": 2,
+                "targetBudget": 2,
+                "productBenefit": false
+            }
+        },
+
+        {
+            "key": "FruitMarketTownHall",
+            "value": {
+                "initialBudget": 3,
+                "workingLimitBudget": 2,
+                "targetBudget": 4,
+                "productBenefit": false
+            }
+        },
+
+        {
+            "key": "WoodyTownHall",
+            "value": {
+                "initialBudget": 3,
+                "workingLimitBudget": 2,
+                "targetBudget": 4,
+                "productBenefit": false
+            }
+        },
+
+        {
+            "key": "VegetableTownHall",
+            "value": {
+                "initialBudget": 3,
+                "workingLimitBudget": 2,
+                "targetBudget": 4,
+                "productBenefit": false
+            }
+        },
+
+        {
+            "key": "ElecTownHallV1",
+            "value": {
+                "initialBudget": 7,
+                "workingLimitBudget": 2,
+                "targetBudget": 5,
+                "productBenefit": false
+            }
+        },
+
+        {
+            "key": "ElecTownHallV2",
+            "value": {
+                "initialBudget": 7,
+                "workingLimitBudget": 2,
+                "targetBudget": 6,
+                "productBenefit": false
+            }
+        },
+
+        {
+            "key": "CarsCompany",
+            "value": {
+                "initialBudget": 5,
+                "workingLimitBudget": 4,
+                "targetBudget": 4,
+                "productBenefit": true
+            }
+        },
+
+        {
+            "key": "ElecCarsCompanyV1",
+            "value": {
+                "initialBudget": 5,
+                "workingLimitBudget": 4,
+                "targetBudget": 5,
+                "productBenefit": true
+            }
+        },
+
+        {
+            "key": "ElecCarsCompanyV2",
+            "value": {
+                "initialBudget": 5,
+                "workingLimitBudget": 4,
+                "targetBudget": 8,
+                "productBenefit": true
+            }
+        },
+
+        {
+            "key": "CoalPowerPlant",
+            "value": {
+                "initialBudget": 2,
+                "workingLimitBudget": 1,
+                "targetBudget": 1,
+                "productBenefit": true
+            }
+        },
+
+        {
+            "key": "RenewableCoalPowerPlant",
+            "value": {
+                "initialBudget": 2,
+                "workingLimitBudget": 1,
+                "targetBudget": 4,
+                "productBenefit": true
+            }
+        },
+
+        {
+            "key": "MaritimeAssociation",
+            "value": {
+                "initialBudget": 1,
+                "workingLimitBudget": 0,
+                "targetBudget": -1,
+                "productBenefit": false
+            }
+        }
+    ]
+}

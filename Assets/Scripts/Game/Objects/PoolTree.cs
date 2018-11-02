@@ -10,7 +10,7 @@ namespace Assets.Scripts.Game.Objects
     /// </summary>
     public class PoolTree : Props
     {
-        public static ObjectArray<Cell> ForestCells = new ObjectArray<Cell>();
+        public static List<Cell> ForestCells = new List<Cell>();
 
         public bool cutModel;
         public GameObject opositeAsset;
@@ -33,7 +33,7 @@ namespace Assets.Scripts.Game.Objects
             }
         }
 
-        protected void Start()
+        override public void Init()
         {
             if (opositeAsset != null)
             {
@@ -85,7 +85,7 @@ namespace Assets.Scripts.Game.Objects
             }
         }
 
-        public override void Display(OnZoomFinish e)
+        public override void Display(OnSwitchScene e)
         {
         }
     }

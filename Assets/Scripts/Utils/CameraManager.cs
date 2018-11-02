@@ -110,16 +110,14 @@ namespace Assets.Scripts.Utils
 		protected void OnEnable()
 		{
 			Events.Instance.AddListener<OnPinch>(Pinch);
-			Events.Instance.AddListener<ZoomEnd>(HandleZoomEnd);
 		}
 
 		protected void OnDisable()
 		{
 			Events.Instance.RemoveListener<OnPinch>(Pinch);
-            Events.Instance.RemoveListener<ZoomEnd>(HandleZoomEnd);
         }
 
-        protected void HandleZoomEnd(ZoomEnd e)
+        public void HandleZoomEnd()
         {
             _endCalled = false;
             _mapViewDistance = 10f;

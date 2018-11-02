@@ -11,24 +11,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a1b0fc28f6fe604d85c897f5e1d4f5e, type: 3}
   m_Name: Electricity_information
   m_EditorClassIdentifier: 
-  topicTitles:
-  - lang: 10
-    text: Electricity
-  - lang: 14
-    text: Production d'Energie
-  targetItem: {fileID: 11400000, guid: 090c1381c0ed40c45a4f9cedd5b9cba7, type: 2}
+  id: 1
   texts:
-  - lang: 10
-    texts:
-    - The CERN's research is mainly aimed towards better energy usage for everyone.
-    - But even such research needs its fair share of energy... It's a vicious cycle.
-    - Nothing stops us from refining raw energy for better control over it, though.
-  - lang: 14
-    texts:
-    - "Les recherches du CERN ont surtout un impact sur les avanc\xE9es \xE9nerg\xE9tiques
-      de l'humanit\xE9."
-    - "Mais m\xEAme des recherches sur l'\xE9nergie, \xE7a co\xFBte de l'\xE9nergie...
-      C'est un cercle vicieux."
-    - "Rien ne nous emp\xEAche d'en raffiner pour mieux la ma\xEEtriser ; au contraire,
-      m\xEAme."
+    playerText: ElecInfo0
+    NPCText: ElecAnswer0
+    getInfo: 1
+    nextTexts:
+    - playerText: ElecInfo1.0
+      NPCText: ElecAnswer1.0
+      getInfo: 1
+      nextTexts: []
+    - playerText: ElecInfo1.1
+      NPCText: ElecAnswer1.1
+      getInfo: 0
+      nextTexts: []
+  targetItem: {fileID: 11400000, guid: 090c1381c0ed40c45a4f9cedd5b9cba7, type: 2}
   icon: {fileID: 21300000, guid: bf756632782e8b048ab948cff53dd3bf, type: 3}

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections;
-using Assets.Scripts.PNJ;
 using Assets.Scripts.Game.Save;
 
 public enum FtueInputs { NONE, TOUCH, PINCH }
@@ -12,7 +11,7 @@ namespace Assets.Scripts.Game.UI.Ftue
 	[Serializable]
 	public class FtueComponent
 	{
-		public SimpleLocalisationText[] text;
+		public string text;
         public UIFtueImageContainer titleImage;
         public UIFtueImageContainer headImage;
         public UIFtueImageContainer ftueSprite;
@@ -80,9 +79,11 @@ namespace Assets.Scripts.Game.UI.Ftue
 
 		public void Launch()
 		{
-            active = true;
             if (GameManager.PARTY_TYPE == EPartyType.NEW)
             {
+                Clear();
+                return;
+                active = true;
                 currentStepIndex = startStep;
                 currentStep = steps[startStep];
 
@@ -136,8 +137,16 @@ namespace Assets.Scripts.Game.UI.Ftue
             tapSprite.gameObject.SetActive(false);
             pinchSprite.gameObject.SetActive(false);
             ftueText.gameObject.SetActive(false);
-            TimeManager.instance.canActive = true;
-            if (GameManager.PARTY_TYPE == EPartyType.NEW) PlanetSave.SaveParty();
+            if (GameManager.PARTY_TYPE == EPartyType.NEW)
+            {
+                TimeManager.Instance.Active();
+                PlanetSave.SaveParty();
+            }
+            else
+            {
+                TimeManager.Instance.LoadSave();
+                TimeManager.Instance.Active();
+            }
         }
 
         public void Display(bool state)
@@ -169,14 +178,7 @@ namespace Assets.Scripts.Game.UI.Ftue
             activeInput = currentStep.input;
             if (currentStep.text != null)
             {
-                for (int i = 0; i < currentStep.text.Length; i++)
-                {
-                    if (currentStep.text[i].lang == GameManager.LANGUAGE)
-                    {
-                        StartCoroutine(DisplayFtueStep(currentStep.text[i].text));
-                        break;
-                    }
-                }
+                StartCoroutine(DisplayFtueStep(currentStep.text));
             }
             
 
@@ -184,15 +186,15 @@ namespace Assets.Scripts.Game.UI.Ftue
             {
                 pinchSprite.gameObject.SetActive(true);
                 pinchSprite.GetComponent<Animator>().SetBool("pinch", true);
-                Events.Instance.AddListener<PanelLerpEnd>(ReceivePinch);
+                Events.Instance.AddListener<OnPinchEnd>(ReceivePinch);
                 Events.Instance.AddListener<OnEndFtuePinch>(ReceivePinch);
                 Events.Instance.AddListener<OnInputFtuePinch>(DisablePinchSprite);
             }
         }
 
-        protected void ReceivePinch(PanelLerpEnd e)
+        protected void ReceivePinch(OnPinchEnd e)
 		{           
-            Events.Instance.RemoveListener<PanelLerpEnd>(ReceivePinch);
+            Events.Instance.RemoveListener<OnPinchEnd>(ReceivePinch);
 			ValidStep();
 		}
 

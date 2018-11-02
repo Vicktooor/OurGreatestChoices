@@ -41,11 +41,9 @@ namespace Assets.Scripts.Game
 		protected virtual void Awake()
 		{
 			FindRenderers();
-			Culling<BaseObject>.Instance.Add(this);
-
 			_personnalCollider = GetCollider();
 
-			Events.Instance.AddListener<OnZoomFinish>(Display);
+			Events.Instance.AddListener<OnSwitchScene>(Display);
 			Events.Instance.AddListener<OnNewMonth>(OnNewMonthPassed);
 			Events.Instance.AddListener<OnNewYear>(OnNewYearPassed);
 		}
@@ -73,7 +71,7 @@ namespace Assets.Scripts.Game
 
 		protected virtual void OnNewYearPassed(OnNewYear e) { }
 
-		public virtual void Display(OnZoomFinish e)
+		public virtual void Display(OnSwitchScene e)
 		{
 			if (displayView == ECameraTargetType.NONE) return;
 			if (displayView == ECameraTargetType.BOTH)
@@ -85,7 +83,7 @@ namespace Assets.Scripts.Game
 				}
 				return;
 			}
-			if (e.view == displayView) gameObject.SetActive(true);
+			if (e.mode == displayView) gameObject.SetActive(true);
 			else gameObject.SetActive(false);	
 		}
 		
@@ -110,10 +108,9 @@ namespace Assets.Scripts.Game
 
         protected virtual void OnDestroy()
 		{
-            Culling<BaseObject>.Instance.Remove(this);
 			Events.Instance.RemoveListener<OnNewMonth>(OnNewMonthPassed);
 			Events.Instance.RemoveListener<OnNewYear>(OnNewYearPassed);
-			Events.Instance.RemoveListener<OnZoomFinish>(Display);
+			Events.Instance.RemoveListener<OnSwitchScene>(Display);
 		}
 	}
 }

@@ -381,7 +381,6 @@ GameObject:
   - component: {fileID: 580464263}
   - component: {fileID: 580464264}
   - component: {fileID: 580464265}
-  - component: {fileID: 580464260}
   - component: {fileID: 580464266}
   m_Layer: 11
   m_Name: Player1Container
@@ -390,27 +389,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &580464260
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 580464259}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ada12a2f16bf6e54998200f48047cc17, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  displayView: 1
-  offsetY: 0
-  associateCell: {fileID: 0}
-  buildingLink:
-    type: 0
-    id: 0
-  propLinked: {fileID: 0}
-  radius: 0.1
-  item: {fileID: 0}
-  _meshRenderer: {fileID: 0}
 --- !u!4 &580464261
 Transform:
   m_ObjectHideFlags: 0
@@ -443,7 +421,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   planet: {fileID: 0}
-  playerDatas: {fileID: 0}
   raycastAnchor: {fileID: 1749734417}
   distanceCollision: 0.1
   speedVertical: 0.12
@@ -678,7 +655,6 @@ GameObject:
   - component: {fileID: 867257131}
   - component: {fileID: 867257130}
   - component: {fileID: 867257134}
-  - component: {fileID: 867257129}
   - component: {fileID: 867257135}
   m_Layer: 11
   m_Name: Player2Container
@@ -687,27 +663,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &867257129
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 867257128}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ada12a2f16bf6e54998200f48047cc17, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  displayView: 1
-  offsetY: 0
-  associateCell: {fileID: 0}
-  buildingLink:
-    type: 0
-    id: 0
-  propLinked: {fileID: 0}
-  radius: 0.1
-  item: {fileID: 0}
-  _meshRenderer: {fileID: 0}
 --- !u!114 &867257130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -746,7 +701,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   planet: {fileID: 0}
-  playerDatas: {fileID: 0}
   raycastAnchor: {fileID: 778481011}
   distanceCollision: 0.1
   speedVertical: 0.12
@@ -819,7 +773,6 @@ GameObject:
   - component: {fileID: 1160407700}
   - component: {fileID: 1160407699}
   - component: {fileID: 1160407703}
-  - component: {fileID: 1160407698}
   - component: {fileID: 1160407704}
   m_Layer: 11
   m_Name: Player3Container
@@ -828,27 +781,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1160407698
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1160407697}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ada12a2f16bf6e54998200f48047cc17, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  displayView: 1
-  offsetY: 0
-  associateCell: {fileID: 0}
-  buildingLink:
-    type: 0
-    id: 0
-  propLinked: {fileID: 0}
-  radius: 0.1
-  item: {fileID: 0}
-  _meshRenderer: {fileID: 0}
 --- !u!114 &1160407699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -887,7 +819,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   planet: {fileID: 0}
-  playerDatas: {fileID: 0}
   raycastAnchor: {fileID: 11038657}
   distanceCollision: 0.1
   speedVertical: 0.12

@@ -12,7 +12,6 @@ public class ContinueButton : MonoBehaviour
 
     public void HandleLoadedParty(PartyLoaded e)
     {
-        gameObject.SetActive(e.loaded);
         GetComponent<Button>().interactable = e.loaded;
     }
 

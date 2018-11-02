@@ -1,5 +1,4 @@
 ﻿using Assets.Scripts.Game.NGO;
-using Assets.Scripts.PNJ;
 using System;
 using System.Collections;
 using TMPro;
@@ -20,10 +19,10 @@ namespace Assets.Scripts.Game.UI
 		[SerializeField]
 		protected TextMeshProUGUI textMesh;
 		protected InteractablePNJ _speakingNPC;
-		protected int dialogueStep;
 
 		protected bool topicSelected;
 		protected NotepadTopic selectedTopic;
+        private int dialogueStep;
 
 		public void Awake()
 		{
@@ -55,22 +54,29 @@ namespace Assets.Scripts.Game.UI
 			Point();
 		}
 
+        public void LinkTopic(NotepadTopic topic)
+        {
+            selectedTopic = topic;
+        }
+
 		public void SetProperties(InteractablePNJ npc)
-		{       
+		{
+            dialogueStep = 0;
             Events.Instance.Raise(new OnStartSpeakingNPC());
-			dialogueStep = 0;
 			topicSelected = false;
 			speakingPos = npc.transform.position;
 			_speakingNPC = npc;
 			Point();
+            ChangeText(TextManager.GetText(InteractablePNJ.DialoguesDatabase[npc.IDname].introText));
             StartCoroutine(WaitForTouch());
 		}
 
-        public void SetPNJ(InteractablePNJ npc)
+        public void PNJThanks(InteractablePNJ npc, string textKey)
         {
             speakingPos = npc.transform.position;
             _speakingNPC = npc;
-            Point();           
+            ChangeText(TextManager.GetText(textKey));
+            Point();
         }
 
         public void ActiveTouchForClose()
@@ -99,89 +105,14 @@ namespace Assets.Scripts.Game.UI
 			pointertransform.localRotation = Quaternion.Euler(0f, 0f, angle);
 		}
 
-		protected void NextDialogueStep()
+		public void NextDialogueStep(bool toClose = false)
 		{
-			dialogueStep++;
-
-			string textToUse = GetNextNpcText();
-			if (textToUse == string.Empty)
-			{
-				if (selectedTopic.topicType == typeof(GovernmentTopic))
-				{
-					if (!InventoryPlayer.instance.knowsItems.Contains(_speakingNPC.govTopics[selectedTopic.index].targetItem))
-                    {
-                        InventoryPlayer.instance.knowsItems.Add(_speakingNPC.govTopics[selectedTopic.index].targetItem);
-                        Events.Instance.Raise(new OnShowPin(EPin.Glossary, true));
-                    }
-				}
-
-				selectedTopic = null;
-				_speakingNPC = null;
-				dialogueStep = 0;
-				speakingPos = Vector3.zero;
-				Events.Instance.Raise(new OnEndSpeakingNPC());
-				Show(false);
-			}
-			else
-			{
-				ChangeText(textToUse);
-				StartCoroutine(WaitForTouch());
-			}		
-		}
-
-		protected string GetNextNpcText()
-		{
-			if (dialogueStep > 0)
-			{
-				if (selectedTopic.topicType == typeof(GovernmentTopic)) return GetGovText();
-				else return GetContText();
-			}
-			return string.Empty;
-		}
-
-		protected string GetGovText()
-		{
-			foreach (LocaNPCDialogue item in _speakingNPC.govTopics[selectedTopic.index].texts)
-			{
-				if (item.lang == GameManager.LANGUAGE)
-				{
-					if (dialogueStep - 1 == item.texts.Count) return GetLastText();
-					else if (dialogueStep - 1 > item.texts.Count) return string.Empty;
-					return item.texts[dialogueStep - 1];
-				}
-			}
-
-			return string.Empty;
-		}
-
-		protected string GetContText()
-		{
-			foreach (LocaNPCDialogue item in _speakingNPC.contTopics[selectedTopic.index].texts)
-			{
-				if (item.lang == GameManager.LANGUAGE)
-				{
-					if (dialogueStep - 1 == item.texts.Count) return GetLastText();
-					else if (dialogueStep - 1 > item.texts.Count) return string.Empty;
-					return item.texts[dialogueStep - 1];
-				}
-			}
-			return string.Empty;
-		}
-
-		protected string GetLastText()
-		{
-			foreach (SimpleLocalisationText preText in _speakingNPC.leavingTexts)
-			{
-				if (preText.lang == GameManager.LANGUAGE)
-				{
-					Events.Instance.Raise(new OnPointGovTarget());
-					return preText.text;
-				}
-			}
-            return string.Empty;
+            dialogueStep++;
+            ChangeText(selectedTopic.npcAnswer);
+            StartCoroutine(WaitForTouch(toClose));
         }
 
-		protected IEnumerator WaitForTouch()
+        protected IEnumerator WaitForTouch(bool toClose = false)
 		{
 			yield return null;
 			yield return null;
@@ -200,11 +131,16 @@ namespace Assets.Scripts.Game.UI
 				Events.Instance.Raise(new OnTalkToNPC());
 				Events.Instance.AddListener<OnActiveSelectTopic>(SelectTopic);
 			}
-			else
-			{
-				NextDialogueStep();
-			}		
-		}
+
+            if (toClose)
+            {
+                selectedTopic = null;
+                _speakingNPC = null;
+                speakingPos = Vector3.zero;
+                Events.Instance.Raise(new OnEndSpeakingNPC());
+                Show(false);
+            }
+        }
 
         protected IEnumerator TouchForClose()
         {
@@ -224,21 +160,6 @@ namespace Assets.Scripts.Game.UI
         protected void SelectTopic(OnActiveSelectTopic e)
 		{
 			Events.Instance.RemoveListener<OnActiveSelectTopic>(SelectTopic);
-			selectedTopic = e.topicItem;
-			NextDialogueStep();
-		}
-
-		protected IEnumerator WaitForSelectTopic()
-		{
-			yield return null;
-			yield return null;
-	
-			while (!topicSelected)
-			{
-				yield return null;
-			}
-
-			NextDialogueStep();
 		}
 
         private static PointingBubble _instance;

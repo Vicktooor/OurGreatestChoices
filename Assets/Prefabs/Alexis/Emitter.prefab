@@ -19,7 +19,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4538881955856740}
-  - component: {fileID: 114262141123905522}
   - component: {fileID: 114040714182390290}
   m_Layer: 0
   m_Name: EventEmitterClickSwapPC
@@ -36,7 +35,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4906911464988380}
-  - component: {fileID: 114780784899912922}
   - component: {fileID: 114611375929823974}
   m_Layer: 0
   m_Name: EventEmitterClickPlanet
@@ -53,7 +51,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4832425388834920}
-  - component: {fileID: 114686385129153806}
   - component: {fileID: 114338972871572724}
   m_Layer: 0
   m_Name: EventEmitterClick
@@ -70,7 +67,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4578595510454098}
-  - component: {fileID: 114115192983091736}
   - component: {fileID: 114741900704795718}
   m_Layer: 0
   m_Name: EventEmitterDropRessource
@@ -87,7 +83,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4979459343369796}
-  - component: {fileID: 114700250523087656}
   - component: {fileID: 114751974098730862}
   m_Layer: 0
   m_Name: EventEmitterCloudOut
@@ -120,7 +115,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4812462683276102}
-  - component: {fileID: 114885694881100586}
   - component: {fileID: 114929130739863090}
   m_Layer: 0
   m_Name: EventEmitterMusic
@@ -137,10 +131,26 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4354490112071070}
-  - component: {fileID: 114411650598261752}
   - component: {fileID: 114120315554682494}
   m_Layer: 0
   m_Name: EventEmitterMusicMenu
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1728312977517752
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4109990234117538}
+  - component: {fileID: 114892611899688858}
+  - component: {fileID: 114346401253066178}
+  m_Layer: 0
+  m_Name: EventSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -154,7 +164,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4661609981438722}
-  - component: {fileID: 114129434099873298}
   - component: {fileID: 114176172627481754}
   m_Layer: 0
   m_Name: EventEmitterPickupRessource
@@ -171,7 +180,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4883865119617544}
-  - component: {fileID: 114487364787431500}
   - component: {fileID: 114002778083621286}
   m_Layer: 0
   m_Name: EventEmitterCloudIn
@@ -188,7 +196,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4130584047100612}
-  - component: {fileID: 114624720708680480}
   - component: {fileID: 114998372188262884}
   m_Layer: 0
   m_Name: EventEmitterClickGlossary
@@ -197,6 +204,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!4 &4109990234117538
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1728312977517752}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4193244894452660}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4130584047100612
 Transform:
   m_ObjectHideFlags: 1
@@ -208,7 +228,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4193244894452660}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4193244894452660
 Transform:
@@ -220,6 +240,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 4109990234117538}
   - {fileID: 4812462683276102}
   - {fileID: 4354490112071070}
   - {fileID: 4832425388834920}
@@ -244,7 +265,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4193244894452660}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4538881955856740
 Transform:
@@ -257,7 +278,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4193244894452660}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4578595510454098
 Transform:
@@ -270,7 +291,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4193244894452660}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4661609981438722
 Transform:
@@ -283,7 +304,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4193244894452660}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4812462683276102
 Transform:
@@ -296,7 +317,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4193244894452660}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4832425388834920
 Transform:
@@ -309,7 +330,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4193244894452660}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4883865119617544
 Transform:
@@ -322,7 +343,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4193244894452660}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4906911464988380
 Transform:
@@ -335,7 +356,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4193244894452660}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4979459343369796
 Transform:
@@ -348,7 +369,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4193244894452660}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &114002778083621286
 MonoBehaviour:
@@ -405,17 +426,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87f6d1b09814c76488ba43dab68fcea7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114115192983091736
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1492965341603248}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87f6d1b09814c76488ba43dab68fcea7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114120315554682494
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -438,17 +448,6 @@ MonoBehaviour:
   OverrideAttenuation: 0
   OverrideMinDistance: 0
   OverrideMaxDistance: 0
---- !u!114 &114129434099873298
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1849623185845160}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87f6d1b09814c76488ba43dab68fcea7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114176172627481754
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -471,17 +470,6 @@ MonoBehaviour:
   OverrideAttenuation: 0
   OverrideMinDistance: 0
   OverrideMaxDistance: 0
---- !u!114 &114262141123905522
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1131749633165932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87f6d1b09814c76488ba43dab68fcea7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114338972871572724
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -504,28 +492,24 @@ MonoBehaviour:
   OverrideAttenuation: 0
   OverrideMinDistance: 0
   OverrideMaxDistance: 0
---- !u!114 &114411650598261752
+--- !u!114 &114346401253066178
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1725438930615428}
+  m_GameObject: {fileID: 1728312977517752}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87f6d1b09814c76488ba43dab68fcea7, type: 3}
+  m_Script: {fileID: 1077351063, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114487364787431500
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1916198169913180}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87f6d1b09814c76488ba43dab68fcea7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+  m_ForceModuleActive: 0
 --- !u!114 &114611375929823974
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -548,39 +532,6 @@ MonoBehaviour:
   OverrideAttenuation: 0
   OverrideMinDistance: 0
   OverrideMaxDistance: 0
---- !u!114 &114624720708680480
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1936361217706628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87f6d1b09814c76488ba43dab68fcea7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &114686385129153806
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1439618736398410}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87f6d1b09814c76488ba43dab68fcea7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &114700250523087656
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1546947671852096}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87f6d1b09814c76488ba43dab68fcea7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114741900704795718
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -625,28 +576,20 @@ MonoBehaviour:
   OverrideAttenuation: 0
   OverrideMinDistance: 0
   OverrideMaxDistance: 0
---- !u!114 &114780784899912922
+--- !u!114 &114892611899688858
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1270318961730916}
+  m_GameObject: {fileID: 1728312977517752}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87f6d1b09814c76488ba43dab68fcea7, type: 3}
+  m_Script: {fileID: -619905303, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114885694881100586
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1698636189812678}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87f6d1b09814c76488ba43dab68fcea7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 5
 --- !u!114 &114929130739863090
 MonoBehaviour:
   m_ObjectHideFlags: 1

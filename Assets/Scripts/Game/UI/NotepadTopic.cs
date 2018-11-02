@@ -1,4 +1,5 @@
-﻿using FMODUnity;
+﻿using Assets.Scripts.Game.NGO;
+using FMODUnity;
 using System;
 using TMPro;
 using UnityEngine;
@@ -7,16 +8,19 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.Game.UI
 {
-
 	/// <summary>
 	/// 
 	/// </summary>
 	public class NotepadTopic : MonoBehaviour, IPointerClickHandler
 	{
 		[HideInInspector]
-		public int index;
-		[HideInInspector]
 		public Type topicType;
+        public int index;
+
+        public ContractorTopic contractorTopic;
+        public GovernmentTopic govTopic;
+
+        public string npcAnswer;
 
 		protected TextMeshProUGUI textMesh;
 		protected RawImage icon;
@@ -36,9 +40,8 @@ namespace Assets.Scripts.Game.UI
 		{
 			if (clickEnable)
 			{
-				Events.Instance.Raise(new OnActiveSelectTopic(this));
+				Events.Instance.Raise(new OnActiveSelectTopic(this, index));
                 _emitterClick.Play();
-
             }
 		}
 
@@ -51,5 +54,12 @@ namespace Assets.Scripts.Game.UI
 		{
 			textMesh.text = txt;
 		}
+
+        public void Clear()
+        {
+            npcAnswer = string.Empty;
+            contractorTopic = null;
+            govTopic = null;
+        }
 	}
 }

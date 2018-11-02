@@ -95,16 +95,16 @@ public class InventoryScreen : MonoSingleton<InventoryScreen>
 
     public void MajInventory(OnUpdateInventory e)
     {
-        List<Item> items = InventoryPlayer.instance.itemsWornArray;
+        List<Item> items = InventoryPlayer.Instance.itemsWornArray;
         int length = items.Count;
         Item item;
         for (int i = length - 1; i >= 0; i--)
         {
             item = items[i];
-            InventoryElement ie = scrollElement.Find(el => el.itemName == item.name);
-            if (ie != null && InventoryPlayer.instance.nbItems[item.name] <= 0)
+            InventoryElement ie = scrollElement.Find(el => el.itemType == item.itemType);
+            if (ie != null && InventoryPlayer.Instance.nbItems[item.itemType] <= 0)
             {
-                InventoryPlayer.instance.itemsWornArray.Remove(item);
+                InventoryPlayer.Instance.itemsWornArray.Remove(item);
                 scrollElement.Remove(ie);
                 scroller.Remove(ie);
             }
@@ -114,7 +114,7 @@ public class InventoryScreen : MonoSingleton<InventoryScreen>
                 else
                 {
                     InventoryElement newE = scroller.Add<InventoryElement>(elementModel);
-                    newE.itemName = item.name;
+                    newE.itemType = item.itemType;
                     newE.Init();
                     scrollElement.Add(newE);
                 }
@@ -125,7 +125,7 @@ public class InventoryScreen : MonoSingleton<InventoryScreen>
 
     protected void HandleGive(InventoryElement e1, InventoryElement e2)
     {
-        Give(InventoryPlayer.instance.ContainItem(e1.itemName), _nearestNPC);
+        Give(InventoryPlayer.Instance.ContainItem(e1.itemType), _nearestNPC);
     }
 
     private bool _dragActive = false;
@@ -157,7 +157,7 @@ public class InventoryScreen : MonoSingleton<InventoryScreen>
     protected InteractablePNJ GetNPC()
     {
         InteractablePNJ npc = null;
-        Vector3 playerPos = PlayerManager.instance.player.transform.position;
+        Vector3 playerPos = PlayerManager.Instance.player.transform.position;
         float minDist = 0.15f;
         float dist = 0f;
         int nb = InteractablePNJ.PNJs.Count;
@@ -187,15 +187,13 @@ public class InventoryScreen : MonoSingleton<InventoryScreen>
         {
             FBX_Give.instance.Play(new Vector3(draggerTransform.transform.position.x, draggerTransform.transform.position.y, draggerTransform.transform.position.z));
             PointingBubble.instance.Show(true);
-            PointingBubble.instance.SetPNJ(_nearestNPC);
-            if (LocalizationManager.Instance.currentLangage == SystemLanguage.English) PointingBubble.instance.ChangeText("Thanks!");
-            else PointingBubble.instance.ChangeText("Merci !");
 
-            int itemIndex = InventoryPlayer.instance.GetItemIndex(item.name);
-            InventoryPlayer.instance.Give(itemIndex);
+            int itemIndex = InventoryPlayer.Instance.GetItemIndex(item.itemType);
+            InventoryPlayer.Instance.Give(itemIndex);
             Events.Instance.Raise(new OnGive(itemIndex));
-            Events.Instance.Raise(new OnGiveNPC(item, _nearestNPC));
             PointingBubble.instance.ActiveTouchForClose();
+
+            npc.ReceiveItem(item.itemType);
 
             UIManager.instance.PNJState.pnj = npc;
             UIManager.instance.PNJState.SetTarget(npc.transform);
@@ -205,9 +203,6 @@ public class InventoryScreen : MonoSingleton<InventoryScreen>
         else
         {
             PointingBubble.instance.Show(true);
-            PointingBubble.instance.SetPNJ(_nearestNPC);
-            if (LocalizationManager.Instance.currentLangage == SystemLanguage.French) PointingBubble.instance.ChangeText("No thanks!");
-            else PointingBubble.instance.ChangeText("Non merci !");
             Events.Instance.Raise(new OnWrongObject());
             PointingBubble.instance.ActiveTouchForClose();
         }

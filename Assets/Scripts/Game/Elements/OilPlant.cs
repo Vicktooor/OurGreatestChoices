@@ -12,16 +12,6 @@ namespace Assets.Scripts.Game.Elements
 	/// </summary>
 	public class OilPlant : Building
 	{
-		protected void Start()
-		{
-			StartCoroutine(StartCoroutine());
-		}
 
-		IEnumerator StartCoroutine()
-		{
-			yield return new WaitForEndOfFrame();
-			yield return new WaitForEndOfFrame();
-			WorldManager.instance.StartPolutionWay(associateCell.ID, new List<CellState>() { CellState.SEA });
-		}
 	}
 }

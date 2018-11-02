@@ -18,7 +18,7 @@ public struct DontDestoyStruct
 
 public class DontDestroyElement : MonoBehaviour {
 
-    private ObjectArray<GameObject> _gos = new ObjectArray<GameObject>();
+    private List<GameObject> _gos = new List<GameObject>();
     private Dictionary<GameObject, DontDestoyStruct> _states = new Dictionary<GameObject, DontDestoyStruct>();
 
     private void Awake() {
@@ -28,7 +28,7 @@ public class DontDestroyElement : MonoBehaviour {
 
     private void Start()
     {
-        _gos = new ObjectArray<GameObject>();
+        _gos = new List<GameObject>();
 
         _states.Add(gameObject, new DontDestoyStruct(gameObject.activeSelf, gameObject.transform.position, gameObject.transform.rotation));
         _gos.Add(gameObject);
@@ -57,12 +57,12 @@ public class DontDestroyElement : MonoBehaviour {
 
     private void Reset()
     {
-        foreach (NamedObject<GameObject> go in _gos.Objs)
+        foreach (GameObject go in _gos)
         {
-            if (go.obj.GetComponent<DynamicUI>() != null) continue;
-            go.obj.SetActive(_states[go.obj].state);
-            go.obj.transform.position = _states[go.obj].position;
-            go.obj.transform.rotation = _states[go.obj].rotation;
+            if (go.GetComponent<DynamicUI>() != null) continue;
+            go.SetActive(_states[go].state);
+            go.transform.position = _states[go].position;
+            go.transform.rotation = _states[go].rotation;
         }
     }
 

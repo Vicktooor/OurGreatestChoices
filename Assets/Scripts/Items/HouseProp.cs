@@ -21,17 +21,12 @@ namespace Assets.Scripts.Items
         GameObject RoofGardenState;
 
 
-        //Variables to check the current state
-        private EnumClass.Trees treeState;
-        private EnumClass.Clean cleanState;
-        private EnumClass.RoofGarden roofGardenState;
+        public bool isClean = true;
 
-        public override void Start() {
-            base.Start();
-            treeState = EnumClass.Trees.NO;
-            cleanState = EnumClass.Clean.YES;
-            roofGardenState = EnumClass.RoofGarden.NO;
-        }
+        //Variables to check the current state
+        private EnumClass.Trees treeState = EnumClass.Trees.NO;
+        private EnumClass.Clean cleanState = EnumClass.Clean.YES;
+        private EnumClass.RoofGarden roofGardenState = EnumClass.RoofGarden.NO;
 
         public void SetRoofGardenState() {
             if (RoofGardenState) {
@@ -56,11 +51,11 @@ namespace Assets.Scripts.Items
                 if (DeadTreesState) DeadTreesState.SetActive(false);
 
                 treeState = EnumClass.Trees.YES;
-
             }
         }
 
         public void SetTrash(bool pIsClean) {
+            isClean = pIsClean;
 
             if (TrashState == null) return;
 

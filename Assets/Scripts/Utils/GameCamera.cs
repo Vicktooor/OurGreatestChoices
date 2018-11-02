@@ -13,8 +13,6 @@ namespace Assets.Scripts.Utils
 	/// </summary>
 	public class GameCamera : CameraCC
 	{
-		private bool _init = false;
-
 		public ECameraTargetType mode = ECameraTargetType.MAP;
 
 		[SerializeField]
@@ -39,10 +37,9 @@ namespace Assets.Scripts.Utils
 		{
 			base.OnEnable();
 			Events.Instance.AddListener<SelectPlayer>(SetPos);
+			Events.Instance.AddListener<OnPinchEnd>(ChangeSceneTransition);
 			Events.Instance.AddListener<OnHold>(Hold);
 			Events.Instance.AddListener<OnRemove>(Remove);
-			Events.Instance.AddListener<OnFocusButton>(DoFocus);
-			Events.Instance.AddListener<OnSwitchScene>(Zoom);
 			Events.Instance.AddListener<OnPlayerInitFinish>(Init);
 			Events.Instance.AddListener<OnStartSpeakingNPC>(ZoomOnPlayer);
 			Events.Instance.AddListener<OnEndSpeakingNPC>(ZoomOutPlayer);
@@ -52,10 +49,9 @@ namespace Assets.Scripts.Utils
 		{
 			base.OnDisable();
 			Events.Instance.RemoveListener<SelectPlayer>(SetPos);
-			Events.Instance.RemoveListener<OnHold>(Hold);
+            Events.Instance.RemoveListener<OnPinchEnd>(ChangeSceneTransition);
+            Events.Instance.RemoveListener<OnHold>(Hold);
 			Events.Instance.RemoveListener<OnRemove>(Remove);
-			Events.Instance.RemoveListener<OnFocusButton>(DoFocus);
-			Events.Instance.RemoveListener<OnSwitchScene>(Zoom);
 			Events.Instance.RemoveListener<OnPlayerInitFinish>(Init);
 			Events.Instance.RemoveListener<OnStartSpeakingNPC>(ZoomOnPlayer);
 			Events.Instance.RemoveListener<OnEndSpeakingNPC>(ZoomOutPlayer);
@@ -63,18 +59,12 @@ namespace Assets.Scripts.Utils
 
 		protected void Init(OnPlayerInitFinish e)
 		{
-			CameraManager.Instance.TransformCameraTarget(player.transform, out targetPosition, out targetRotation, mode);
+            planetTransform = EarthManager.Instance.planetLink.transform;
+            player = PlayerManager.Instance.GetPlayer();
+            CameraManager.Instance.TransformCameraTarget(player.transform, out targetPosition, out targetRotation, mode);
 			transform.position = targetPosition.normalized * CameraManager.Instance.MapViewDistance;
 			transform.rotation = targetRotation;
 			_oldHoldPosition = Vector2.zero;
-
-			// Display objects
-			if (!_init)
-			{
-				_init = true;
-				if (mode != ECameraTargetType.MAP) Events.Instance.Raise(new OnZoomFinish(mode));
-				CameraManager.Instance.ShowAtmosphere(false);
-			}
 		}
 
 		protected void Remove(OnRemove e)
@@ -83,9 +73,9 @@ namespace Assets.Scripts.Utils
 			_oldHoldPosition = Vector2.zero;
 		}
 
-		protected void Zoom(OnSwitchScene e)
+		public void ChangeSceneTransition(OnPinchEnd e)
 		{
-			ChangeScene(e.previousScene);
+			ChangeScene();
 		}
 
 		protected void ZoomOnPlayer(OnStartSpeakingNPC e)
@@ -98,12 +88,6 @@ namespace Assets.Scripts.Utils
 		{
             StopAllCoroutines();
             StartCoroutine(ZoomCoroutine(0.35f));
-		}
-
-		protected void DoFocus(OnFocusButton e)
-		{
-			Block();
-			StartCoroutine(TransitionCoroutine(mode, Vector3.zero, player));
 		}
 
 		protected void LateUpdate()
@@ -160,6 +144,8 @@ namespace Assets.Scripts.Utils
 
 		protected void OrbitalMove()
 		{
+            if (planetTransform == null) return;
+
 			Vector3 lastBlockedPos = transform.position;
 			Quaternion lastBlockedRot = transform.rotation;
 			Vector2 mousePos = ControllerInput.instance.touchCenterPosition;
@@ -213,9 +199,9 @@ namespace Assets.Scripts.Utils
 			return Mathf.Clamp(angle, min, max);
 		}
 
-		protected void ChangeScene(SceneString previousScene)
+		protected void ChangeScene()
 		{
-			if (previousScene == SceneString.MapView) StartCoroutine(TransitionCoroutine(ECameraTargetType.ZOOM, Vector3.zero, player));
+			if (mode == ECameraTargetType.MAP) StartCoroutine(TransitionCoroutine(ECameraTargetType.ZOOM, Vector3.zero, player));
 			else StartCoroutine(TransitionCoroutine(ECameraTargetType.MAP, Vector3.zero, player));
 		}
 
@@ -254,54 +240,50 @@ namespace Assets.Scripts.Utils
 
 			while (t < 1)
 			{
-				switch (targetView)
-				{
-					case ECameraTargetType.MAP:
-						if (mode == ECameraTargetType.MAP)
-						{
-							t += Time.deltaTime * 1.2f;
-							transform.position = Vector3.Slerp(basePosition, targetPosition, t);
+                switch (targetView)
+                {
+                    case ECameraTargetType.MAP:
+                        if (mode == ECameraTargetType.MAP)
+                        {
+                            t += Time.deltaTime;
+                            if (t > 1) t = 1;
+                            float x = Easing.CrossFade(Easing.SmoothStart, 2, Easing.SmoothStop, 2, t);
+                            transform.position = Vector3.Slerp(basePosition, targetPosition, x);
                             Reoriente();
-							yield return new WaitForEndOfFrame();
-						}
-						else
-						{
-							t += Time.deltaTime / 3f;
-							if (t > 1) t = 1;
-							transform.position += (transform.position.normalized - transform.forward) * (Time.deltaTime / 4f);
-						}						
-						break;
-					case ECameraTargetType.ZOOM:
-						t += Time.deltaTime / 3f;
-						if (t > 1) t = 1;
-						transform.position -= transform.position.normalized * Time.deltaTime;
-						break;
-					default:
-						break;
-				}
-				yield return new WaitForEndOfFrame();
-			}
+                            yield return null;
+                        }
+                        else
+                        {
+                            t += Time.deltaTime * (1f / SwitchPanel.TIME_TRANSITION);
+                            if (t > 1) t = 1;
+                            transform.position += (transform.position.normalized - transform.forward) * (Time.deltaTime / 4f);
+                        }
+                        break;
+                    case ECameraTargetType.ZOOM:
+                        t += Time.deltaTime  * (1f / SwitchPanel.TIME_TRANSITION);
+                        if (t > 1) t = 1;
+                        transform.position -= transform.position.normalized * Time.deltaTime;
+                        break;
+                    default:
+                        break;
+                }
+                yield return null;
+            }
 
 			if (targetView == ECameraTargetType.MAP)
 			{
-				Events.Instance.Raise(new LerpEnd());
 				if (mode == ECameraTargetType.ZOOM)
 				{
-					CameraManager.Instance.ShowAtmosphere(false);
 					transform.position = transform.position + transform.position.normalized * CameraManager.Instance.MapViewDistance;
-					transform.LookAt(planetTransform);
-					Events.Instance.Raise(new OnZoomFinish(targetView));
-					Events.Instance.Raise(new ZoomEnd());
-					Events.Instance.Raise(new ZoomEndUI());
+					if (planetTransform != null) transform.LookAt(planetTransform);
+                    CameraManager.Instance.HandleZoomEnd();
 				}
-			}
+                else Events.Instance.Raise(new OnEndSwitchedPlayer());
+            }
 			if (targetView == ECameraTargetType.ZOOM)
 			{
-				CameraManager.Instance.ShowAtmosphere(true);
-				Events.Instance.Raise(new OnZoomFinish(targetView));
-				Events.Instance.Raise(new ZoomEnd());
-				Events.Instance.Raise(new ZoomEndUI());				
-			}
+                CameraManager.Instance.HandleZoomEnd();
+            }
 
 			player = targetPlayer;
 			if (FtueManager.instance.active && targetView != mode) Events.Instance.Raise(new OnEndFtuePinch());
@@ -332,7 +314,7 @@ namespace Assets.Scripts.Utils
 					if (CameraManager.Instance.StepHeight < targetValue) CameraManager.Instance.StepHeight = targetValue;
 				}
 
-				if(PlayerManager.instance.playerType != EPlayer.ECO) PointingBubble.instance.Point();
+				if(PlayerManager.Instance.playerType != EPlayer.ECO) PointingBubble.instance.Point();
 
 				yield return null;
 			}
@@ -354,9 +336,9 @@ namespace Assets.Scripts.Utils
                 transform.position = player.transform.position + player.transform.position.normalized * CameraManager.Instance.MapViewDistance;
                 transform.LookAt(player.transform);
                 player = null;
-            }         
+            }
 
-            _init = false;
+            planetTransform = null;
             mode = ECameraTargetType.MAP;
             _blocked = false;           
             _holding = false;

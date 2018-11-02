@@ -90,9 +90,6 @@ public class ControllerInput : MonoBehaviour {
 
     #endregion
 
-    #region References
-    InteractableManager _interactableManager;
-    #endregion
 
     private int _panelNumber = 0;
     private int _previousPanelNumber = 0;
@@ -115,9 +112,6 @@ public class ControllerInput : MonoBehaviour {
         _screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
     }
 
-	void Start() {
-        if (InteractableManager.instance) _interactableManager = InteractableManager.instance;
-    }
 
     void Update() {
         _panelNumber = OpenScreens.Count;
@@ -195,7 +189,7 @@ public class ControllerInput : MonoBehaviour {
 
 	public float GetMoveInputMagnitude()
 	{
-		GameObject player = PlayerManager.instance.player;
+		Player player = PlayerManager.Instance.player;
 		if (player)
 		{
 			Vector2 playerPos = Camera.main.WorldToViewportPoint(player.transform.position);
@@ -348,23 +342,10 @@ public class ControllerInput : MonoBehaviour {
 		InteractablePNJ pnj = _hit.transform.GetComponent<InteractablePNJ>();
         
 		if (pnj != null) {
-            if (pnj.budgetComponent.name != string.Empty && (PlayerManager.instance.playerType == EPlayer.GOV || PlayerManager.instance.playerType == EPlayer.NGO)) {
-                /* Event for Dialogue Manager */
-                //Events.Instance.Raise(new OnFtuePNJInteract()); // FTUEICI
-				Events.Instance.Raise(new OnTapNPC(pnj));
-                return true;
-            }
-
-            else if(PlayerManager.instance.playerType == EPlayer.ECO) {
-                Events.Instance.Raise(new OnTapNPC(pnj));
-                return true;
-            }
-
             Events.Instance.Raise(new OnTapNPC(pnj));
 			return true;
         }
-        else if (_hit.transform.GetComponent<ItemPickup>() && PlayerManager.instance.playerType == EPlayer.ECO) {
-            Events.Instance.Raise(new OnClickInteractable(InteractableManager.instance.PICK_UP_TYPE, _hit.transform.gameObject));
+        else if (_hit.transform.GetComponent<ItemPickup>() && PlayerManager.Instance.playerType == EPlayer.ECO) {
             Events.Instance.Raise(new OnTapItemPickUp(_hit.transform.gameObject));		
 			return true;
         }

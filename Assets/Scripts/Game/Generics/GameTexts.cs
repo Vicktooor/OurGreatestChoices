@@ -12,7 +12,7 @@ public class TradWrapper
 public class LocalisedText
 {
     public string key;
-    public string txt;
+    public string value;
 }
 
 [Serializable]
@@ -28,43 +28,60 @@ public class GameTexts : UnityEngine.Object
         _locaTexts = new Dictionary<string, string>();
         foreach (LocalisedText t in Texts.objects)
         {
-            if (!_locaTexts.ContainsKey(t.key)) _locaTexts.Add(t.key, t.txt);
+            if (!_locaTexts.ContainsKey(t.key)) _locaTexts.Add(t.key, t.value);
         }
     }
 }
 
 public static class TextManager
 {
+    private static string keyPrefix = "#";
+
     private static SystemLanguage _language = SystemLanguage.English;
     public static SystemLanguage LANG { get { return _language; } } 
     private static Dictionary<SystemLanguage, GameTexts> _texts = new Dictionary<SystemLanguage, GameTexts>();
+    private static List<SystemLanguage> _loadedLanguage = new List<SystemLanguage>();
 
-    public static void LoadTraduction(SystemLanguage language)
+    public static void SetLanguage(SystemLanguage lang)
     {
-        if (_texts.ContainsKey(language)) return; 
+        if (!_loadedLanguage.Contains(lang))
+        {
+            if (LoadTraduction(lang))
+            {
+                _language = lang;
+                _loadedLanguage.Add(lang);
+            }
+        }
+    }
+
+    public static bool LoadTraduction(SystemLanguage language)
+    {
+        if (_texts.ContainsKey(language)) return true; 
         _language = language;
         GameTexts newText = new GameTexts();
-        newText.Texts = JsonManager.FromJson<TradWrapper>("Json/" + language + ".json", RuntimePlatform.WindowsPlayer);
+        newText.Texts = StreamingAssetAccessor.FromJson<TradWrapper>("Json/" + language + ".json");
         if (newText.Texts != null)
         {
             newText.Generate();
-            if (_texts.ContainsKey(language)) _texts[language] = newText;
-            else _texts.Add(language, newText);
+            _texts.Add(language, newText);
+            return true;
         }
+        else return false;
     }
 
     public static string GetText(string key)
     {
+        string gKey = keyPrefix + key;
         if (!_texts.ContainsKey(_language))
         {
             Debug.LogError(_language + ".json not found");
             return null;
         }
-        else if (!_texts[_language].LocaTexts.ContainsKey(key))
+        else if (!_texts[_language].LocaTexts.ContainsKey(gKey))
         {
-            Debug.LogError(_language + "[" + key + "] not found");
+            Debug.LogError(_language + "["+ keyPrefix + key + "] not found");
             return null;
         }
-        return _texts[_language].LocaTexts[key];
+        return _texts[_language].LocaTexts[gKey];
     }
 }

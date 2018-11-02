@@ -23,9 +23,9 @@ namespace Assets.Scripts.Game.UI.Ftue
             if (!btn.interactable) img.raycastTarget = false;
             else img.raycastTarget = true;
 
-            if (PlayerManager.instance)
+            if (PlayerManager.Instance)
             {
-                Player player = PlayerManager.instance.GetPlayerByType(targetPlayer);
+                Player player = PlayerManager.Instance.GetPlayerByType(targetPlayer);
                 if (player != null) transform.position = Camera.main.WorldToScreenPoint(player.transform.position);
             }
         }

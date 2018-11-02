@@ -2,226 +2,202 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public static class PropertyUtils
+public static class ArrayExtensions
 {
-    public static bool HasProperty<T>(string propertyName) where T : DraggableComponent
+    public static void ToList<T>(this T[] originalArray, out List<T> outList)
     {
-        return typeof(T).GetProperty(propertyName) != null;
+        outList = new List<T>();
+        int l = originalArray.Length;
+        for (int i = 0; i < l; i++)
+        {
+            outList.Add(originalArray[i]);
+        }
     }
 
-    public static object GetProperty<T>(T obj, string propertyName) where T : DraggableComponent
+    public static void Fill<T>(this T[] originalArray, T with)
     {
-        if (HasProperty<T>(propertyName)) return typeof(T).GetProperty(propertyName).GetValue(obj, null);
-        else return null;
+        int l = originalArray.Length;
+        for (int i = 0; i < l; i++)
+        {
+            originalArray[i] = with;
+        }
+    }
+
+    public static void Fill<T>(this T[,] originalArray, T with)
+    {
+        int l = originalArray.Length;
+        for (int i = 0; i < l; i++)
+        {
+            for (int j = 0; j < l; j++)
+            {
+                originalArray[i, j] = with;
+            }
+        }
     }
 }
 
-public struct NamedObject<T> where T : UnityEngine.Object
+public static class PropertyUtils
 {
-    public string name;
-    public T obj;
-
-    public NamedObject(T pObj, string pName = "")
+    public static T CastEnum<T>(string value) where T : struct, IConvertible
     {
-        name = pName;
-        obj = pObj;
+        T enumCast = new T();
+        try
+        {
+            enumCast = (T)Enum.Parse(typeof(T), value);
+            if (Enum.IsDefined(typeof(T), value)) return enumCast;
+            else return enumCast;
+        }
+        catch (ArgumentException)
+        {
+            Console.WriteLine(string.Format("{0} is not existing in enum {1}", value, typeof(T)));
+            return enumCast;
+        }
+    }
+
+    public static object GetPropertyValue(object src, string propName)
+    {
+        return src.GetType().GetField(propName).GetValue(src);
+    }
+
+    public static bool HasProperty<T>(string propertyName)
+    {
+        return typeof(T).GetField(propertyName) != null;
     }
 }
 
 public class ObjectArray<T> where T : UnityEngine.Object
 {
-    public Type ObjectType { get { return typeof(T); } }
-    private NamedObject<T>[] _array = new NamedObject<T>[0];
-    public NamedObject<T>[] Objs { get { return _array; } }
+    private Dictionary<string, T> _namedObjs = new Dictionary<string, T>();
+    public Dictionary<string, T> NamedObjs { get { return _namedObjs; } }
 
-    protected int _length;
+    protected int _length = 0;
     public int Length { get { return _length; } }
 
-    public void Add(T pObj, string pName = "")
+    public void Add(string oName, T obj)
     {
-        Dictionary<string, string> t = new Dictionary<string, string>();
-
-        if (pObj == null) return;
-
-        NamedObject<T>[] newArray;
-        if (_array.Length == 0) newArray = new NamedObject<T>[1] { new NamedObject<T>(pObj, pName) };
-        else
+        if (!Contains(oName))
         {
-            newArray = new NamedObject<T>[_array.Length + 1];
-            for (int i = 0; i < _array.Length; i++)
-            {
-                newArray[i] = _array[i];
-            }
-            newArray[newArray.Length - 1] = new NamedObject<T>(pObj, pName);
+            _namedObjs.Add(oName, obj);
+            _length++;
         }
-        _array = newArray;
-        _length = newArray.Length;
     }
 
     // Remove by object
-    public T Remove(T pObj)
+    public void Remove(T pObj)
     {
-        T foundObj = null;
-        if (pObj == null) return foundObj;
-        if (_array.Length == 0) return foundObj;
-        NamedObject<T>[] newArray = new NamedObject<T>[_array.Length - 1];
-        int index = -1;
-        for (int i = 0; i < _array.Length; i++)
+        if (Contains(pObj))
         {
-            if (pObj.Equals(_array[i].obj))
+            foreach (KeyValuePair<string, T> obj in _namedObjs)
             {
-                foundObj = pObj;
-                index = i;
-                break;
+                if (obj.Key.Equals(pObj))
+                {
+                    _namedObjs.Remove(obj.Key);
+                    _length--;
+                    return;
+                }
             }
         }
-
-        if (index < 0) return foundObj;
-
-        bool insert = false;
-        for (int i = 0; i < newArray.Length; i++)
-        {
-            if (i == index) insert = true;
-
-            if (!insert) newArray[i] = _array[i];
-            else newArray[i] = _array[i + 1];
-        }
-
-        _array = newArray;
-        _length = newArray.Length;
-        return foundObj;
     }
+
     // Remove by name
     public T Remove(string objName)
     {
-        T foundObj = null;
-        if (_array.Length == 0) return foundObj;
-        NamedObject<T>[] newArray = new NamedObject<T>[_array.Length - 1];
-        int index = -1;
-        for (int i = 0; i < _array.Length; i++)
+        if (Contains(objName))
         {
-            NamedObject<T> fStruct = _array[i];
-            if (objName.Equals(fStruct.name))
-            {
-                foundObj = fStruct.obj;
-                index = i;
-                break;
-            }
+            T rObj = _namedObjs[objName];
+            _namedObjs.Remove(objName);
+            _length--;
+            return rObj;
         }
-
-        if (index < 0) return foundObj;
-
-        bool insert = false;
-        for (int i = 0; i < newArray.Length; i++)
-        {
-            if (i == index) insert = true;
-
-            if (!insert) newArray[i] = _array[i];
-            else newArray[i] = _array[i + 1];
-        }
-
-        _array = newArray;
-        _length = newArray.Length;
-        return foundObj;
+        else return null;
     }
 
     // Contain ? by obj
     public bool Contains(T pObj)
     {
-        if (pObj == null)
-        {
-            Debug.LogError("ObjectArray.Contains(T pObj) -> pObj is null, can't find it");
-            return false;
-        }
-        for (int i = 0; i < _array.Length; i++)
-        {
-            if (_array[i].obj.Equals(pObj)) return true;
-        }
-        return false;
+        return _namedObjs.ContainsValue(pObj);
     }
+
     // Contain ? by name
     public bool Contains(string objName)
     {
-        if (objName == string.Empty)
-        {
-            Debug.LogError("ObjectArray.Contains(string objName) -> objName is empty, can't find it");
-            return false;
-        }
-        for (int i = 0; i < _array.Length; i++)
-        {
-            if (_array[i].name.Equals(objName)) return true;
-        }
-        return false;
+        return _namedObjs.ContainsKey(objName);
     }
 
-    // Find object by obj
-    public T Find(T pObj)
+    // Get obj
+    public T Get(string key)
     {
-        if (pObj == null)
-        {
-            Debug.LogError("ObjectArray.Contains(T pObj) -> pObj is null, can't find it");
-            return null;
-        }
-        for (int i = 0; i < _array.Length; i++)
-        {
-            if (_array[i].obj.Equals(pObj)) return _array[i].obj;
-        }
-        return null;
+        if (Contains(key)) return _namedObjs[key];
+        else return null;
     }
-    // Find object by name
-    public T Find(string objName)
+
+    /// <summary>
+    /// Find obj by testing a property equality
+    /// </summary>
+    /// <param name="propertyName">Property tested</param>
+    /// <param name="value">Tested value for equality</param>
+    /// <returns></returns>
+    public List<T> Find(string propertyName, object value)
     {
-        if (objName == string.Empty)
+        List<T> foundList = new List<T>();
+        foreach (KeyValuePair<string, T> item in _namedObjs)
         {
-            Debug.LogError("ObjectArray.FindByName(stringoObjName) -> objName is empty, can't find it");
-            return null;
+            if (PropertyUtils.HasProperty<T>(propertyName))
+            {
+                if (value.Equals(PropertyUtils.GetPropertyValue(item.Value, propertyName))) foundList.Add(item.Value);
+            }
         }
-        for (int i = 0; i < _array.Length; i++)
-        {
-            NamedObject<T> lData = _array[i];
-            if (lData.name.Equals(objName)) return lData.obj;
-        }
-        return null;
+        return foundList;
     }
 
     public void CheckIt()
     {
-        int iteCheck = Mathf.RoundToInt(_array.Length / 2f);
-        int[] newArray = new int[_array.Length];
+        List<KeyValuePair<string, T>> newArray = new List<KeyValuePair<string, T>>();
+        foreach (KeyValuePair<string, T> value in _namedObjs) newArray.Add(value);
+
+        KeyValuePair<string, T> swapObj;
+        int iteCheck = Mathf.RoundToInt(_length / 2f);       
         for (int i = 0; i < iteCheck; i++)
         {
-            NamedObject<T> SwapObj;
-            int rIndex1 = UnityEngine.Random.Range(0, _array.Length);
-            int rIndex2 = UnityEngine.Random.Range(0, _array.Length);
+            int rIndex1 = UnityEngine.Random.Range(0, _length);
+            int rIndex2 = UnityEngine.Random.Range(0, _length);
 
             if (rIndex1 == rIndex2) i--;
             else
             {
-                SwapObj = _array[rIndex1];
-                _array[rIndex1] = _array[rIndex2];
-                _array[rIndex2] = SwapObj;
+                swapObj = newArray[rIndex1];
+                newArray[rIndex1] = newArray[rIndex2];
+                newArray[rIndex2] = swapObj;
             }
         }
-    }
-
-    public void CleanDoublon()
-    {
-        ObjectArray<T> tArray = new ObjectArray<T>();
-
-        for (int i = 0; i < _array.Length; i++)
-        {
-            NamedObject<T> lObj = _array[i];
-            if (!tArray.Contains(lObj.obj)) tArray.Add(lObj.obj, lObj.name);
-        }
-
-        _array = tArray.Objs;
-        _length = tArray.Length;
+        Clear();
+        _length = newArray.Count;
+        for (int i = 0; i < _length; i++) Add(newArray[i].Key, newArray[i].Value);
     }
 
     public void Clear()
     {
-        _array = new NamedObject<T>[0];
+        _namedObjs.Clear();
         _length = 0;
+    }
+
+    public static List<T> CheckIt(List<T> list)
+    {
+        T swapObj;
+        int iteCheck = Mathf.RoundToInt(list.Count / 2f);
+        int lLength = list.Count;
+        for (int i = 0; i < iteCheck; i++)
+        {
+            int rIndex1 = UnityEngine.Random.Range(0, lLength);
+            int rIndex2 = UnityEngine.Random.Range(0, lLength);
+            if (rIndex1 == rIndex2) i--;
+            else
+            {
+                swapObj = list[rIndex1];
+                list[rIndex1] = list[rIndex2];
+                list[rIndex2] = swapObj;
+            }
+        }
+        return list;
     }
 }

@@ -50,32 +50,32 @@ public class Glossary : MonoSingleton<Glossary>
         if (_infos == null) _infos = GetComponentsInChildren<GlossaryInfo>();
         for (int i = 0; i < _infos.Length; i++)
         {
-            if (InventoryPlayer.instance.knowsItems.Contains(_primaryItems[i])) _infos[i].GetComponent<Image>().sprite = _primaryItems[i].icon;
+            if (InventoryPlayer.Instance.knowsItems.Contains(_primaryItems[i])) _infos[i].GetComponent<Image>().sprite = _primaryItems[i].icon;
             else _infos[i].GetComponent<Image>().sprite = _primaryItems[i].hiddenIcon;
         }
     }
 
     private void Set(int pIndex) {
-        if (InventoryPlayer.instance.knowsItems.Contains(_primaryItems[pIndex])) _sourceItemImage.texture = _primaryItems[pIndex].icon.texture;
+        if (InventoryPlayer.Instance.knowsItems.Contains(_primaryItems[pIndex])) _sourceItemImage.texture = _primaryItems[pIndex].icon.texture;
         else _sourceItemImage.texture = _primaryItems[pIndex].hiddenIcon.texture;
 
         _itemTransformedNGODesc.text = TextManager.GetText(_primaryItems[pIndex].NGOItem.glossaryDesc);
         _itemTransformedEcoDesc.text = TextManager.GetText(_primaryItems[pIndex].EcoItem.glossaryDesc);
         _itemTransformedGouvDesc.text = TextManager.GetText(_primaryItems[pIndex].GouvItem.glossaryDesc);
 
-        if (InventoryPlayer.instance.knowsItems.Contains(_primaryItems[pIndex].NGOItem))
+        if (InventoryPlayer.Instance.knowsItems.Contains(_primaryItems[pIndex].NGOItem))
         {
             _itemTransformedNGOImage.GetComponent<Image>().sprite = _primaryItems[pIndex].NGOItem.icon;
         }
         else _itemTransformedNGOImage.GetComponent<Image>().sprite = _primaryItems[pIndex].NGOItem.hiddenIcon;
 
-        if (InventoryPlayer.instance.knowsItems.Contains(_primaryItems[pIndex].EcoItem))
+        if (InventoryPlayer.Instance.knowsItems.Contains(_primaryItems[pIndex].EcoItem))
         {
             _itemTransformedEcoImage.GetComponent<Image>().sprite = _primaryItems[pIndex].EcoItem.icon;
         }
         else _itemTransformedEcoImage.GetComponent<Image>().sprite = _primaryItems[pIndex].EcoItem.hiddenIcon;
 
-        if (InventoryPlayer.instance.knowsItems.Contains(_primaryItems[pIndex].GouvItem))
+        if (InventoryPlayer.Instance.knowsItems.Contains(_primaryItems[pIndex].GouvItem))
         {
             _itemTransformedGouvImage.GetComponent<Image>().sprite = _primaryItems[pIndex].GouvItem.icon;
         }
@@ -93,7 +93,7 @@ public class Glossary : MonoSingleton<Glossary>
     }
 
     private bool KnowItem(Item pItem) {
-        Item knowItem = InventoryPlayer.instance.knowsItems.Find(e => e.Equals(pItem));
+        Item knowItem = InventoryPlayer.Instance.knowsItems.Find(e => e.Equals(pItem));
         return (knowItem != null) ? true : false; 
     }
 }

@@ -11,7 +11,7 @@ public enum EPlayer { NONE, ECO, GOV, NGO }
 
 namespace Assets.Scripts.Manager
 {
-    public class EarthManager : MonoBehaviour
+    public class EarthManager : MonoSingleton<EarthManager>
     {
         public static int NB_FOREST_PROPS = 0;
         public static int NB_SNOW_GROUND = 0;
@@ -20,7 +20,12 @@ namespace Assets.Scripts.Manager
 
         public static List<CitizenProp> citizens = new List<CitizenProp>();
 
-        public HoneycombPlanetSmooth _planetLink;
+        public string planetName;
+        public string ftuePlanetName;
+        [HideInInspector]
+        public string playingPlanetName;
+        public HoneycombPlanetSmooth planetModel;
+        public HoneycombPlanetSmooth planetLink;
 
         public string[] assetsFolder;
 
@@ -44,55 +49,32 @@ namespace Assets.Scripts.Manager
         public BillboardBubble bubblePrefab;
         [Header("Help Sprite prefab")]
         public BillboardHelp helpSpritePrefab;
-        [Header("PNJ State prefab")]
-        public BillboardNPCState PNJStatePrefab;
 
-        public Dictionary<EPlayer, KeyValuePair<int, Vector3>> playerPosition = new Dictionary<EPlayer, KeyValuePair<int, Vector3>>();
+        public Dictionary<EPlayer, KeyValuePair<int, Vector3>> playerPositions = new Dictionary<EPlayer, KeyValuePair<int, Vector3>>();
 
         protected float _planetRadius;
         public float PlanetRadius { get { return _planetRadius; } }
 
-        private bool _loaded = false;
-        public bool Loaded { get { return _loaded; } }
-
-        protected static EarthManager _instance;
-        public static EarthManager Instance
+        public void CreateOnlyPlanet()
         {
-            get { return _instance; }
-        }
-
-        protected void Awake()
-        {
-            if (_instance != null && _instance != this)
-            {
-                Destroy(this);
-                throw new Exception("An instance of EarthManager already exists.");
-            }
-            else _instance = this;
-        }
-
-        public void Start()
-        {
-            PlanetSave.LoadPlanet(_planetLink.name);
-            CreatePlanet();
+            StreamingAssetAccessor.Platform = RuntimePlatform.WindowsPlayer;
+            TextManager.SetLanguage(SystemLanguage.English);
+            ResourcesManager.Instance.Init();
+            PlanetSave.LoadCitizens(planetName);
+            PlanetSave.LoadPlayer(planetName);
+            PlanetSave.LoadPNJs(planetName);
+            GameManager.PARTY_TYPE = EPartyType.NEW;
+            playingPlanetName = planetName;
+            CreatePlanet(); 
         }
 
         public void CreatePlanet()
         {
-            _planetLink.StartGeneration(CreateFullPlanet);
-        }
-
-        protected bool ResourcesLoaded()
-        {
-            int nbFolder = assetsFolder.Length;
-            int nbLoaded = 0;
-            for (int i = 0; i < assetsFolder.Length; i++)
-            {
-                if (ResourceLoader.GetProgress(assetsFolder[i]) >= 100) nbLoaded++;
-            }
-
-            if (nbLoaded >= nbFolder) return true;
-            else return false;
+            planetLink = Instantiate(planetModel);
+            planetLink.transform.position = Vector3.zero;
+            planetLink.transform.rotation = Quaternion.identity;
+            planetLink.gameObject.name = planetName;
+            planetLink.StartGeneration(CreateFullPlanet);
         }
 
         public GameObject CreateProps(GameObject model, Vector3 pos, Cell associateCell)
@@ -105,6 +87,7 @@ namespace Assets.Scripts.Manager
             associateCell.Props.Add(newGo, model.name);
             associateCell.PropsCollider.Add(newGo, newGo.GetCollider());
             CatchTree(newGo);
+            newGo.Init();
             return newGo.gameObject;
         }
 
@@ -119,7 +102,8 @@ namespace Assets.Scripts.Manager
             newGo.transform.position += pos.normalized * newGo.offsetY;
             associateCell.Props.Add(newGo, model.name);
             associateCell.PropsCollider.Add(newGo, newGo.GetCollider());
-            CatchTree(newGo);  
+            CatchTree(newGo);
+            newGo.Init();
             return newGo.gameObject;
         }
 
@@ -140,14 +124,15 @@ namespace Assets.Scripts.Manager
             }
             associateCell.Props.Add(newGo, model.name);
             associateCell.PropsCollider.Add(newGo, newGo.GetCollider());
+            newGo.Init();
             return newGo.gameObject;
         }
 
-        protected void CreateCells()
+        protected void CreateCells(EPartyType partyType)
         {
-            foreach (GroundMesh ground in _planetLink.allGroundMesh)
+            foreach (GroundMesh ground in planetLink.allGroundMesh)
             {
-                GameObject newGo = Instantiate(_cellPrefab, Vector3.zero, Quaternion.identity, _planetLink.transform);
+                GameObject newGo = Instantiate(_cellPrefab, Vector3.zero, Quaternion.identity, planetLink.transform);
                 _cellsObj.Add(newGo);
 
                 Cell newCell = newGo.GetComponent<Cell>();
@@ -165,15 +150,25 @@ namespace Assets.Scripts.Manager
                 _cells.Add(newCell);
             }
 
-            _planetLink.GenerateNeighborLinks(_planetLink.GetMinimalNeighborDistance(), _cells);
+            planetLink.GenerateNeighborLinks(planetLink.GetMinimalNeighborDistance(), _cells);
 
-            if (PlanetSave.SavedCells.Count > 0)
+            if (partyType == EPartyType.SAVE)
             {
-                foreach (Cell cCell in _cells)
+                int l = _cells.Count;
+                Cell cCell;
+                for (int i = 0; i < l; i++)
                 {
+                    cCell = _cells[i];
                     Mesh finalMesh = cCell.gameObject.GetComponent<MeshFilter>().mesh;
-                    SaveCell sCell = PlanetSave.SavedCells.Find(c => c.ID == cCell.ID);
+                    List<SaveCell> outCells;
+                    ArrayExtensions.ToList(PlanetSave.GameStateSave.SavedCells, out outCells);
+                    SaveCell sCell = outCells.Find(c => c.ID == cCell.ID);
                     cCell.Init(sCell);
+
+                    cCell.SetPolution(sCell.poluted);
+                    if (sCell.poluted) PolutionArea.CELLS_USED.Add(cCell);
+                    cCell.SetDeforestation(sCell.deforested);
+                    if (sCell.deforested) DeforestationArea.CELLS_USED.Add(cCell);
 
                     UpdateNbCell(cCell.State);
 
@@ -186,22 +181,34 @@ namespace Assets.Scripts.Manager
                     finalMesh.RecalculateBounds();
                 }
             }
+            else if (partyType == EPartyType.NEW)
+            {
+                if (PlanetSave.LoadCells(playingPlanetName))
+                {
+                    foreach (Cell cCell in _cells)
+                    {
+                        Mesh finalMesh = cCell.gameObject.GetComponent<MeshFilter>().mesh;
+                        SaveCell sCell = PlanetSave.BaseCells.Find(c => c.ID == cCell.ID);
+                        cCell.Init(sCell);
+
+                        UpdateNbCell(cCell.State);
+
+                        finalMesh.vertices = cCell.GroundMesh.smoothVertex;
+                        finalMesh.triangles = cCell.GroundMesh.smoothTriangles;
+                        finalMesh.normals = cCell.GroundMesh.smoothNormals;
+                        finalMesh.uv = cCell.GroundMesh.UVs;
+
+                        cCell.gameObject.GetComponent<MeshCollider>().sharedMesh = finalMesh;
+                        finalMesh.RecalculateBounds();
+                    }
+                }
+            }
         }
 
         public void CreateFullPlanet()
         {
-            if (GameManager.Instance)
-            {
-                if (GameManager.PARTY_TYPE == EPartyType.NEW) PlanetSave.LoadPlanet(_planetLink.name);
-                else if (GameManager.PARTY_TYPE == EPartyType.SAVE)
-                {
-                    for (int i = 0; i < PlanetSave.GameStateSave.SavedCells.Length; i++)
-                        PlanetSave.SavedCells[i] = PlanetSave.GameStateSave.SavedCells[i];
-                }
-                else return;
-            }
-
-            CreateCells();
+            if (GameManager.Instance) CreateCells(GameManager.PARTY_TYPE);
+            else CreateCells(EPartyType.NEW);
             foreach (Cell c in _cells)
             {
                 foreach (KeyValuePair<Props, string> p in c.Props)
@@ -210,13 +217,6 @@ namespace Assets.Scripts.Manager
                 }
             }
             RecalculateUVMap();
-            if (!_loaded && PlanetMaker.instance.edit == EditState.INACTIVE)
-            {
-                LoadDialogues();
-                LoadBudget();
-                _loaded = true;
-            }
-
             Events.Instance.Raise(new OnEndPlanetCreation());
         }
 
@@ -240,52 +240,36 @@ namespace Assets.Scripts.Manager
             foreach (Cell lcell in _cells) lcell.SetVertexColors();
         }
 
-        public void SavePlanet()
+        public void DestroyPlanet()
         {
-            PlanetSave.SavePlanet(_cells, _planetLink.name);
-        }
-
-        public void SavePlayer()
-        {
-            PlanetSave.SavePlayer(_planetLink.name);
-        }
-
-        public void SaveDialogues()
-        {
-            PlanetSave.SavePNJDialogues(_planetLink.name);
-        }
-
-        public void SaveBudget()
-        {
-            PlanetSave.SaveBudgetConfiguration(_planetLink.name);
-        }
-
-        protected void OnDestroy()
-        {
-            _instance = null;
-        }
-
-        public void LoadDialogues()
-        {
-            if (PlanetSave.LoadPNJDialogues(_planetLink.name)) Events.Instance.Raise(new OnDialoguesLoaded());
-        }
-
-        public void LoadBudget()
-        {
-            if (PlanetSave.LoadBudget(_planetLink.name)) Events.Instance.Raise(new OnBudgetLoaded());
-        }
-
-        public void CatchTree(Props prop)
-        {
-            if (prop.GetType() == typeof(PoolTree)) NB_FOREST_PROPS++;
+            foreach (Cell c in _cells)
+            {
+                c.transform.Clear();
+                Destroy(c.gameObject);
+            }
+            Clear();
+            Cell.ResetCells();
+            if (planetLink) Destroy(planetLink.gameObject);
         }
 
         public void Clear()
         {
             _cellsObj.Clear();
             _cells.Clear();
-            playerPosition.Clear();
+            playerPositions.Clear();
+            playerPositions.Clear();
             citizens.Clear();
+        }
+
+        protected void OnDestroy()
+        {
+            DestroyPlanet();
+            _instance = null;
+        }
+
+        public void CatchTree(Props prop)
+        {
+            if (prop.GetType() == typeof(PoolTree)) NB_FOREST_PROPS++;
         }
     }
 }

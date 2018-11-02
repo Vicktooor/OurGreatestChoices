@@ -21,10 +21,10 @@ public class TransformThumbnail : MonoBehaviour
             _img = GetComponent<RawImage>();
         }
 
-        int nbSource = InventoryPlayer.instance.nbItems[sourceItem.name];
+        int nbSource = InventoryPlayer.Instance.nbItems[sourceItem.itemType];
         if (nbSource >= resultItem.nbForCraft) _textMesh.color = goodColor;
         else _textMesh.color = badColor;
-        _textMesh.text = InventoryPlayer.instance.nbItems[sourceItem.name] + "/" + resultItem.nbForCraft;
+        _textMesh.text = InventoryPlayer.Instance.nbItems[sourceItem.itemType] + "/" + resultItem.nbForCraft;
         _img.texture = sourceItem.icon.texture;
     }
 }

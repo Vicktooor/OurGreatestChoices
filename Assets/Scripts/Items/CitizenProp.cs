@@ -1,6 +1,5 @@
 ﻿using Assets.Scripts.Game.Save;
 using Assets.Scripts.Manager;
-using Assets.Scripts.PNJ;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,13 +8,13 @@ namespace Assets.Scripts.Items {
 	{
         public static float talkDistance = 0.15f;
 
+        public int ID;
+
         [Header("STATES")]
         [SerializeField]
         GameObject unHappyState;
         [SerializeField]
         GameObject fruitsMarketState;
-
-        public List<SimpleLocalisationText> dialogueText;
 
         private bool _isHappy = true;
         private bool _isFruitsMarket = false;
@@ -24,22 +23,12 @@ namespace Assets.Scripts.Items {
         {
             EarthManager.citizens.Add(this);
             base.Awake();
-            Events.Instance.AddListener<OnDialoguesLoaded>(OnLoadDialogue);
         }
 
-        protected void OnLoadDialogue(OnDialoguesLoaded e)
+        public override void Init()
         {
-            dialogueText = new List<SimpleLocalisationText>();
-            Events.Instance.RemoveListener<OnDialoguesLoaded>(OnLoadDialogue);
-            foreach (CitizenDialogueSave cs in PlanetSave.CitizenTexts)
-            {
-
-                Vector3 pos = new Vector3(cs.x, cs.y, cs.z);
-                if (pos.normalized == transform.position.normalized)
-                {
-                    for (int i = 0; i < cs.texts.Length; i++) dialogueText.Add(cs.texts[i]);
-                }
-            }
+            PositionID found = PlanetSave.CitizensID.Find(c => new Vector3(c.x, c.y, c.z) == transform.position);
+            ID = found.ID;
         }
 
         public void SetMood(bool pIsHappy) {
@@ -69,7 +58,6 @@ namespace Assets.Scripts.Items {
 
         protected override void OnDestroy()
         {
-            Events.Instance.RemoveListener<OnDialoguesLoaded>(OnLoadDialogue);
             base.OnDestroy();
         }
     }

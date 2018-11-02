@@ -9,22 +9,46 @@ public class InteractablePNJ_CarsCompany : InteractablePNJ {
 
     bool _haveBattery = false;
     bool _haveGreenBattery = false;
-    public bool HaveBudget { get { return budgetComponent.budget >= budgetComponent.targetBudget; } }
-    bool _isCompanyActivated = false;
     bool _hasCarcass = false;
 
+    bool _isCompanyActivated = false;
     bool _normalVehicle = false;
     bool _greenVehicle = false;
-
-    [Header("Thanks text")]
-    [SerializeField]
-    public List<ThanksStruct> whithoutMoneyThanks= new List<ThanksStruct>();
 
     [SerializeField]
     private List<GameObject> _carsList;
 
     [SerializeField]
     private GameObject _carsCompany;
+
+    protected override void CatchGivedObject()
+    {
+        if (InventoryPlayer.Instance.givedOject.ContainsKey(IDname))
+        {
+            if (InventoryPlayer.Instance.givedOject[IDname].Contains(EItemType.Carcass)) _hasCarcass = true;
+            if (InventoryPlayer.Instance.givedOject[IDname].Contains(EItemType.Battery)) _haveBattery = true;
+            if (InventoryPlayer.Instance.givedOject[IDname].Contains(EItemType.GreenBattery)) _haveGreenBattery = true;
+
+            if (_hasCarcass && HaveBudget(EWorldImpactType.CarsCompany))
+            {
+                if (!_isCompanyActivated) ActivateCarsCompany(false);
+            }
+
+            if (_isCompanyActivated && HaveBudget(EWorldImpactType.ElecCarsCompanyV1) && _haveBattery)
+                UpdateElectricityCars(false);
+
+            if (_isCompanyActivated && HaveBudget(EWorldImpactType.ElecCarsCompanyV2) && _haveGreenBattery)
+                UpdateGreenElectricityCars(false);
+        }
+    }
+
+    public override bool CanAccept(Item item)
+    {
+        if (item.itemType == EItemType.Carcass) return true;
+        if (item.itemType == EItemType.GreenBattery) return true;
+        if (item.itemType == EItemType.Battery) return true;
+        return base.CanAccept(item);
+    }
 
     public override void SearchPropLinked() {
         _carsList = new List<GameObject>();
@@ -35,75 +59,67 @@ public class InteractablePNJ_CarsCompany : InteractablePNJ {
         propLinked = lLinkDatabase.GetLinkObjects(buildingLink, typeof(CarsCompanyProp))[0];
     }
 
-    public override void OnBudgetLoaded(OnBudgetLoaded e)
-    {
-        base.OnBudgetLoaded(e);
+    public override void ReceiveItem(EItemType itemType) {
+        if (itemType == EItemType.Battery)
+        {
+            _haveBattery = true;
+            bool haveActiveBudget = HaveBudget(EWorldImpactType.ElecCarsCompanyV1);
+            if (haveActiveBudget && _isCompanyActivated && !_normalVehicle)
+            {
+                UpdateGreenElectricityCars();
+                ShowThanks(itemType, haveActiveBudget, _haveBattery);
+            }
+            else if (!haveActiveBudget && _isCompanyActivated && !_normalVehicle)
+            {
+                ShowThanks(itemType, haveActiveBudget, _haveBattery);
+            }
+        }
+        else if (itemType == EItemType.GreenBattery)
+        {
+            _haveGreenBattery = true;
+            bool haveActiveBudget = HaveBudget(EWorldImpactType.ElecCarsCompanyV2);
+            if (haveActiveBudget && _isCompanyActivated && !_greenVehicle)
+            {
+                UpdateGreenElectricityCars();
+                ShowThanks(itemType, haveActiveBudget, _haveGreenBattery);
+            }
+            else if (!haveActiveBudget && _isCompanyActivated && !_greenVehicle)
+            {
+                ShowThanks(itemType, haveActiveBudget, _haveGreenBattery);
+            }
+        }
+        else if (itemType == EItemType.Carcass)
+        {
+            _hasCarcass = true;
+            bool haveActiveBudget = HaveBudget(EWorldImpactType.CarsCompany);
+            if (haveActiveBudget && !_isCompanyActivated)
+            {
+                ActivateCarsCompany();
+                ShowThanks(itemType, haveActiveBudget, _hasCarcass);
+            }
+            else if (!haveActiveBudget && !_isCompanyActivated)
+            {
+                ShowThanks(itemType, haveActiveBudget, _hasCarcass);
+            }
+        }
+    }
+
+    void ActivateCarsCompany(bool showFX = true) {
         if (!_isCompanyActivated)
         {
-            if (ResourcesManager.instance) ResourcesManager.instance.RemoveBudgetComponent(budgetComponent);
-        }
-    }
-
-    public override void ReceiveItem(OnGiveNPC e) {
-        base.ReceiveItem(e);
-        if (e.targetNPC != this) return;
-
-        if (item.itemsLinked[0] == null) return;
-        else {
-            if (item.itemsLinked[0].name == null) return;
-        }
-        //If item given is Battery
-        if (e.item.name == item.itemsLinked[0].name) {
-            _haveBattery = true;
-            if (_isCompanyActivated && HaveBudget) UpdateElectricityCars();
-            else if (!_isCompanyActivated)
-            {
-                UIManager.instance.AddSDGNotification(new int[3] { 6, 13, 14 });
-                PointingBubble.instance.ChangeText(GetThanksLocalizedText(thanksTexts, EThanksKey.Battery));
-            }
-            else if (!HaveBudget) PointingBubble.instance.ChangeText(GetThanksLocalizedText(whithoutMoneyThanks, EThanksKey.NeedBudget));
-        }
-        //If item given is Green Battery
-        else if (e.item.name == item.itemsLinked[1].name) {
-            _haveGreenBattery = true;
-            if (_isCompanyActivated && HaveBudget)
-            {
-                UIManager.instance.AddSDGNotification(new int[3] { 6, 13, 14 });
-                UpdateGreenElectricityCars();
-            }
-            else if (!_isCompanyActivated) PointingBubble.instance.ChangeText(GetThanksLocalizedText(thanksTexts, EThanksKey.GreenBattery));
-            else if (!HaveBudget) PointingBubble.instance.ChangeText(GetThanksLocalizedText(whithoutMoneyThanks, EThanksKey.NeedBudget));
-        }
-
-        //If item given is Vehicle Carcass
-        else if (e.item.name == item.itemsLinked[2].name) {
-            _hasCarcass = true;
-            if (_hasCarcass && HaveBudget) ActivateCarsCompany();
-            PointingBubble.instance.ChangeText(GetThanksLocalizedText(thanksTexts, EThanksKey.Carcass));
-        }
-
-        else {
-            Events.Instance.Raise(new OnClickInteractable(InteractableManager.instance.FINISH_TYPE));
-            return;
-        }
-
-        Events.Instance.Raise(new OnClickInteractable(InteractableManager.instance.FINISH_TYPE));
-    }
-
-    void ActivateCarsCompany() {
-        if (!_isCompanyActivated) {
-            UIManager.instance.AddSDGNotification(new int[1] { 8 });
-            _carsCompany.GetComponent<CarsCompanyProp>().SetActivated();
-            _carsCompany.GetComponent<PropParticlesDisplay>().DisplayFX(true);
             _isCompanyActivated = true;
-            ResourcesManager.instance.AddBudgetComponent(budgetComponent);
+            _carsCompany.GetComponent<CarsCompanyProp>().SetActivated();
+            if (showFX)
+            {
+                _carsCompany.GetComponent<PropParticlesDisplay>().DisplayFX(true);
+                UIManager.instance.AddSDGNotification(new int[1] { 8 });
+            }
             QuestManager.Instance.CheckValidation();
         }
     }
 
     public override void OnUpdate(OnNewMonth e)
     {
-        OnReceiveBudget(null);
         base.OnUpdate(e);
     }
 
@@ -113,47 +129,43 @@ public class InteractablePNJ_CarsCompany : InteractablePNJ {
         return false;
     }
 
-    public override void OnReceiveBudget(OnReceiveBudget e) {
-        if (HaveBudget) {
-			DisplayMood(false);
-            if (_isCompanyActivated) {
-                if (_haveGreenBattery) {
-                    UpdateGreenElectricityCars();
-                    return;
-                }
-
-                if (_haveBattery) {
-                    UpdateElectricityCars();
-                    return;
-                }
+    public override void ReceiveBudget() {
+        if (budgetComponent.Working) {
+            DisplayMood(false);
+        }
+        else DisplayMood(true);
+        if (InventoryPlayer.Instance.givedOject.ContainsKey(IDname))
+        {
+            foreach (EItemType it in InventoryPlayer.Instance.givedOject[IDname])
+            {
+                ReceiveItem(it);
             }
         }
-		else {
-			DisplayMood(true);
-		}
     }
 
-    void UpdateElectricityCars() {
-        if (_normalVehicle) return; 
+    void UpdateElectricityCars(bool showFX = true) {
+        if (_normalVehicle || _greenVehicle) return; 
         _normalVehicle = true;
-        budgetComponent.SetBudgetStep(0);
-        Events.Instance.Raise(new OnCleanVehicles(budgetComponent.name));
+        budgetComponent.SetNewImpact(EWorldImpactType.ElecCarsCompanyV1);
+        if (showFX) UIManager.instance.AddSDGNotification(new int[3] { 6, 13, 14 });
         for (int i = 0; i < _carsList.Count; i++) {
             _carsList[i].GetComponent<CarItemProp>().SetElectricityMode();
-            _carsList[i].GetComponent<PropParticlesDisplay>().DisplayFX(true);
+            Events.Instance.Raise(new OnCleanVehicles(IDname));
+            if (showFX) _carsList[i].GetComponent<PropParticlesDisplay>().DisplayFX(true);
         }
     }
 
-    void UpdateGreenElectricityCars()
+    void UpdateGreenElectricityCars(bool showFX = true)
     {
         if (_greenVehicle) return;
         _greenVehicle = true;
-        budgetComponent.SetBudgetStep(1);
-        Events.Instance.Raise(new OnCleanVehicles(budgetComponent.name));
+        budgetComponent.SetNewImpact(EWorldImpactType.ElecCarsCompanyV2);
+        if (showFX) UIManager.instance.AddSDGNotification(new int[3] { 6, 13, 14 });
         for (int i = 0; i < _carsList.Count; i++)
         {
             _carsList[i].GetComponent<CarItemProp>().SetGreenElectricityMode();
-            _carsList[i].GetComponent<PropParticlesDisplay>().DisplayFX(true);
-		}
+            Events.Instance.Raise(new OnCleanVehicles(IDname));
+            if (showFX) _carsList[i].GetComponent<PropParticlesDisplay>().DisplayFX(true);
+        }
 	}
 }

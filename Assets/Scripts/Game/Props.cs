@@ -17,6 +17,8 @@ namespace Assets.Scripts.Game
 			base.Awake();
 		}
 
+        virtual public void Init() { }
+
 		public void UpdatePosition()
 		{
 			RaycastHit hit;

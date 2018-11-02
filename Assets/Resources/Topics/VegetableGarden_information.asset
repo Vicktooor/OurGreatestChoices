@@ -11,22 +11,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a1b0fc28f6fe604d85c897f5e1d4f5e, type: 3}
   m_Name: VegetableGarden_information
   m_EditorClassIdentifier: 
-  topicTitles:
-  - lang: 14
-    text: Potager
-  - lang: 10
-    text: Vegetable garden
-  targetItem: {fileID: 11400000, guid: af7ef54eb5a5e3944869f116eabd9608, type: 2}
+  id: 17
   texts:
-  - lang: 10
-    texts:
-    - My job here is to survey the forest, making sure nothing wrong happens.
-    - But everyone can do that, with a bit of elbow grease and dedication.
-    - Wouldn't hurt to have people grow plants in the city, to help raise awareness.
-  - lang: 14
-    texts:
-    - "Mon travail, c'est de surveiller la for\xEAt, histoire qu'il ne lui arrive
-      pas de probl\xE8me."
-    - "Mais \xE7a, tout le monde peut le faire, avec un petit peu de son temps."
-    - "\xC7a serait pas mal d'ajouter des plantations en ville, pour la sensibilisation."
+    playerText: 
+    NPCText: 
+    getInfo: 1
+    nextTexts: []
+  targetItem: {fileID: 11400000, guid: af7ef54eb5a5e3944869f116eabd9608, type: 2}
   icon: {fileID: 21300000, guid: 049ea23be7bd1684d924fb97dfd2c3e0, type: 3}

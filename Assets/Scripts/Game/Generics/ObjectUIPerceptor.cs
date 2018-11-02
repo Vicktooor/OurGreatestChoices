@@ -18,9 +18,6 @@ public class ObjectUIPerceptor : MonoBehaviour
 
     private IEnumerator Collect(Transform targetTransform, Action callback)
     {
-        Collider col = targetTransform.GetComponent<Collider>();
-        if (col != null) col.enabled = false;
-
         Vector3 worldPosition = _canvasContainer.transform.TransformPoint(_rectTransform.localPosition);
         Vector3 startPos = targetTransform.position;
         Vector3 up = _rectTransform.transform.up;
@@ -39,13 +36,23 @@ public class ObjectUIPerceptor : MonoBehaviour
             pos = Vector3.Lerp(startPos, worldPosition, t);
             yPos = up * Easing.Arch(t) * 2f;
             targetTransform.position = pos + (yPos * heightMultiplicator);
+            if (t >= 1f)
+            {
+                callback();
+                StopCoroutine(Collect(targetTransform, callback));
+            }
             yield return null;
-        }
-        callback();
+        }      
     }
 
     public void AttractObject(Transform targetTransform, Action callback)
     {
+        Collider col = targetTransform.GetComponent<Collider>();
+        if (col != null)
+        {
+            col.enabled = false;
+            col.isTrigger = false;
+        }
         StartCoroutine(Collect(targetTransform, callback));
     }
 }

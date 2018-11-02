@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-using Assets.Scripts.Game.Load;
 
 public class AsyncMainLoader : MonoSingleton<AsyncMainLoader>
 {

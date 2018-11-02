@@ -1,72 +1,214 @@
 {
     "objects": [
         {
-            "key": "__MajorName",
-            "txt": "Maire"
+            "key": "#MajorName1",
+            "value": "Maire"
         },
         {
-            "key": "__MajorPresentation1",
-            "txt": "Bonjour"
+            "key": "#MajorPresentation1",
+            "value": "Bonjour"
         },
         {
-            "key": "__MajorPresentation2",
-            "txt": "Que veut tu ?"
+            "key": "#MajorPresentation2",
+            "value": "Que veut tu ?"
         },
         {
-            "key": "__MajorEnd1",
-            "txt": "Allez"
+            "key": "#MajorEnd1",
+            "value": "Allez"
         },
         {
-            "key": "__MajorEnd2",
-            "txt": "A la revoyure"
+            "key": "#MajorEnd2",
+            "value": "A la revoyure"
         },
         {
-            "key": "__MajorThanks1",
-            "txt": "Merci"
+            "key": "#MajorThanks1",
+            "value": "Merci"
         },
         {
-            "key": "__MajorThanks2",
-            "txt": "Merci2"
+            "key": "#MajorThanks2",
+            "value": "Merci2"
         },
+
+
+
         {
             "key": "#WindTurbine",
-            "txt": "wind"
+            "value": "wind"
         },
         {
             "key": "#Tracks",
-            "txt": "trail"
+            "value": "trail"
         },
         {
             "key": "#Carcass",
-            "txt": "carcass"
+            "value": "carcass"
         },
         {
             "key": "#Elec",
-            "txt": "elec"
+            "value": "elec"
         },
         {
             "key": "#GreenElec",
-            "txt": "green elec"
+            "value": "green elec"
         },
         {
             "key": "#FruitSeed",
-            "txt": "seed"
+            "value": "seed"
         },
         {
             "key": "#FruitMarket",
-            "txt": "fruit market"
+            "value": "fruit market"
         },
         {
             "key": "#Garden",
-            "txt": "garden"
+            "value": "garden"
         },
         {
             "key": "#Battery",
-            "txt": "bat"
+            "value": "bat"
         },
         {
             "key": "#GreenBattery",
-            "txt": "green bat"
+            "value": "green bat"
+        },
+
+
+
+        {
+            "key": "#citizen0",
+            "value": "You're heading towards the mountains. The cold snow feels nice..."
+        },
+        {
+            "key": "#citizen1",
+            "value": "Over there's the desert! The obelisks give a cool, ancient touch to the place!"
+        },
+        {
+            "key": "#citizen2",
+            "value": "This way to Neo New Ville! Check out the CERN, it's a cool building!"
+        },
+        {
+            "key": "#citizen3",
+            "value": "We should stop extracting oil in the sea; Just look at the water..."
+        },
+        {
+            "key": "#citizen4",
+            "value": "Electric cars would be a nice change around here."
+        },
+        {
+            "key": "#citizen5",
+            "value": "I learnt so much about SDGs in the SDG tab, you should take a look too!"
+        },
+        {
+            "key": "#citizen6",
+            "value": "If you ever feel lost, just open up your Quest Log!"
+        },
+        {
+            "key": "#citizen7",
+            "value": "The city would be so much better off with a new electricity wiring system..."
+        },
+        {
+            "key": "#citizen8",
+            "value": "Fruits aren't just tasty: Transform them and you'll see how useful they can get!"
+        },
+        {
+            "key": "#citizen9",
+            "value": "You shouldn't put entire companies in danger just to help others..."
+        },
+        {
+            "key": "#citizen10",
+            "value": "The more intel you gather, the better you understand what needs to be done!"
+        },
+        {
+            "key": "#citizen11",
+            "value": "Check out the signs all over town for extra info!"
+        },
+        {
+            "key": "#citizen12",
+            "value": "Welcome! All inhabitants of the planet will be happy to share their knowledge with you!"
+        },
+        {
+            "key": "#citizen13",
+            "value": "Economy, forest levels, pollution levels and citizen mood are all connected!"
+        },
+        {
+            "key": "#citizen14",
+            "value": "Try to upgrade everything at the same time: Don't let economy crush the planet's health!"
+        },
+        {
+            "key": "#citizen15",
+            "value": "You can check how the planet's doing at any time by zooming out."
+        },
+        {
+            "key": "#citizen16",
+            "value": "You'll need to use all 3 of your characters together to solve problems!"
+        },
+        {
+            "key": "#citizen17",
+            "value": "Gather useful information with the help of the NGOs!"
+        },
+        {
+            "key": "#citizen18",
+            "value": "Transform Items with the Entrepreneur character's abilities, and give them to who needs'em!"
+        },
+        {
+            "key": "#citizen19",
+            "value": "The government character can balance out funding between infrastructures!"
+        },
+        {
+            "key": "#citizen20",
+            "value": "If you ever feel lost, just open up your Quest Log! Also, go check out the Coal Power Plant."
+        },
+        {
+            "key": "#citizen21",
+            "value": "This town needs some greenery! Like fruits, or something..."
+        },
+        {
+            "key": "#citizen22",
+            "value": "Nothing like a good walk in the park! Head east to reach the mountains."
+        },
+        {
+            "key": "#citizen23",
+            "value": "Check out the signs all over town for extra info!"
+        },
+        {
+            "key": "#citizen24",
+            "value": "We must find a way to create renewable energy to safeguard the forest."
+        },
+        {
+            "key": "#citizen25",
+            "value": "Such dirty water... Gives me shivers all over..."
+        },
+        {
+            "key": "#citizen26",
+            "value": "Over there is Hillside, the montainous hotspot!"
+        },
+        {
+            "key": "#citizen27",
+            "value": "Neo New Ville's just South of here!"
+        },
+        {
+            "key": "#citizen28",
+            "value": "I learnt so much about SDGs in the SDG tab, you should take a look too!"
+        },
+        {
+            "key": "#citizen29",
+            "value": "If you ever feel lost, just open up your Quest Log!"
+        },
+        {
+            "key": "#citizen30",
+            "value": "You shouldn't put entire companies in danger just to help others..."
+        },
+        {
+            "key": "#citizen31",
+            "value": "You can know how a city is doing economically just by looking at the streets and citizens"
+        },
+        {
+            "key": "#citizen32",
+            "value": "You can check how the planet's doing at any time by zooming out."
+        },
+        {
+            "key": "#citizen33",
+            "value": "Check out the signs all over town for extra info!"
         }
     ]
 }

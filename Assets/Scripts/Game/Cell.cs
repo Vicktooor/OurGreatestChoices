@@ -3,7 +3,6 @@ using Assets.Scripts.Game.Objects;
 using Assets.Scripts.Game.Save;
 using Assets.Scripts.Items;
 using Assets.Scripts.Manager;
-using Assets.Scripts.PNJ;
 using Assets.Scripts.Utils;
 using System;
 using System.Collections;
@@ -67,8 +66,8 @@ namespace Assets.Scripts.Game
 		protected bool _poluted;
 		public bool Poluted { get { return _poluted; } }
 
-		protected float _selfPolution;
-		public float SelfPolution { get { return _selfPolution; } set { _selfPolution = value; } }
+        protected bool _deforested;
+        public bool Deforested { get { return _deforested; }  set { _deforested = value; } }
 
 		protected float _stateHealth;
         protected bool _walkable;
@@ -78,9 +77,6 @@ namespace Assets.Scripts.Game
 
         protected float _elevation;
         public float Elevation { get { return _elevation; } }
-
-		private bool _stabilized = true;
-		public bool Stabilized { get { return _stabilized; } set { _stabilized = value; } }
 
 		protected GroundMesh _groundMesh;
         public GroundMesh GroundMesh { get { return _groundMesh; } }
@@ -111,8 +107,6 @@ namespace Assets.Scripts.Game
 		/// </summary>
 		public void Init(GroundMesh meshObject)
         {
-			Culling<Cell>.Instance.Add(this);
-
 			meshObject.centerIndex = CustomGeneric.ArrayContain(meshObject.smoothVertex, meshObject.centerPosition);
 			_indexes = meshObject.indexes;           
             _stateHealth = 1;			
@@ -121,6 +115,8 @@ namespace Assets.Scripts.Game
             _isElevating = false;
             _neighborElevationID = -1;
             _groundMesh = meshObject;
+            _poluted = false;
+            _deforested = false;
             _axis = GetCenterPosition();
 			_personnalMesh = GetComponent<MeshFilter>().mesh;
 			_personnalCollider = GetComponents<MeshCollider>();
@@ -137,13 +133,21 @@ namespace Assets.Scripts.Game
         {
 			_state = savedProperties.state;
             _walkable = savedProperties.walkable;
+
             if (savedProperties.state == CellState.SEA) _walkable = false;
             UpdateHeight(savedProperties.elevation - _groundMesh.centerPosition.magnitude);
             InitColor();
 
 			if (savedProperties.Names != null)
 				SpawnSavedProps(savedProperties);
-		}
+        }
+
+        public void ForcePolution(bool state)
+        {
+            _poluted = state;
+            EarthManager.PoluteCell(_state, _poluted);
+            ChangeColor(_poluted);
+        }
 		
 		public void SetPolution(bool isPoluted)
 		{
@@ -156,10 +160,23 @@ namespace Assets.Scripts.Game
             }
 		}
 
+        public void SetDeforestation(bool toCut)
+        {
+            _deforested = toCut;
+            foreach (KeyValuePair<Props, string> p in _props)
+            {
+                if (p.Key.GetType() == typeof(PoolTree))
+                {
+                    PoolTree pt = (PoolTree)p.Key;
+                    pt.SetDeforestation(toCut);
+                }
+            }
+        }
+
 		protected void ChangeColor(bool poluted)
 		{
-            _selfPolution = (poluted) ? 1f : 0f;
-            _color = Color.Lerp(_initialColor, PlanetMaker.instance.Colors.Find(c => c.type == _state).PolutedColor, _selfPolution);
+            float polution = (poluted) ? 1f : 0f;
+            _color = Color.Lerp(_initialColor, PlanetMaker.instance.Colors.Find(c => c.type == _state).PolutedColor, polution);
             SetVertexColors();
             foreach (Cell c in Neighbors) c.SetVertexColors();
         }
@@ -174,7 +191,8 @@ namespace Assets.Scripts.Game
 			for (int i = 0; i < nbProps; i++)
 			{
 				if (savedItem.Names[i] == null || savedItem.Names[i] == string.Empty) continue;
-					GameObject model = Resources.Load<GameObject>("Game/" + savedItem.Names[i]);
+
+                GameObject model = Resources.Load<GameObject>("Game/" + savedItem.Names[i]);
 				if (savedItem.buildingLinkedItems[i].type != EnumClass.TypeBuilding.None && model)
 				{
 					EarthManager.Instance.CreateSavedProps(
@@ -649,19 +667,14 @@ namespace Assets.Scripts.Game
 
                 if (dist < CitizenProp.talkDistance)
                 {
-                    SimpleLocalisationText tmpText;
-                    int length = tCitizen.dialogueText.Count;
-                    for (int i = 0; i < length; i++)
+                    string text = TextManager.GetText("citizen" + tCitizen.ID);
+                    if (text != string.Empty)
                     {
-                        tmpText = tCitizen.dialogueText[i];
-                        if (tmpText.text != string.Empty && GameManager.LANGUAGE == tmpText.lang)
-                        {
-                            _citizenBubble = Instantiate(EarthManager.Instance.bubblePrefab, tCitizen.transform.position + (tCitizen.transform.up.normalized) * 0.15f, Quaternion.identity) as BillboardBubble;
-                            _citizenBubble.text.text = tmpText.text;
-                            _citizenBubble.citizen = tCitizen;
-                            _citizenBubble.SetVisibility(dist, CitizenProp.talkDistance);
-                        }                     
-                    }               
+                        _citizenBubble = Instantiate(EarthManager.Instance.bubblePrefab, tCitizen.transform.position + (tCitizen.transform.up.normalized) * 0.15f, Quaternion.identity) as BillboardBubble;
+                        _citizenBubble.text.text = text;
+                        _citizenBubble.citizen = tCitizen;
+                        _citizenBubble.SetVisibility(dist, CitizenProp.talkDistance);
+                    }
                 }
             }   
             else if (_citizenBubble != null)
@@ -698,13 +711,13 @@ namespace Assets.Scripts.Game
 
                 if (dist < InteractablePNJ.helpDistance)
                 {
-                    if (PlayerManager.instance.playerType == EPlayer.GOV) {
-                        if (tPnj.budgetComponent.name == string.Empty || tPnj.budgetComponent.targetBudget <= 0) return;
+                    if (PlayerManager.Instance.playerType == EPlayer.GOV) {
+                        if (tPnj.budgetComponent.initialBudget == 0) return;
                     }
 
                     _pnjHelp = Instantiate(EarthManager.Instance.helpSpritePrefab, tPnj.transform.position + (tPnj.transform.up.normalized) * 0.15f, Quaternion.identity) as BillboardHelp;
                     _pnjHelp.pnj = tPnj;
-                    _pnjHelp.Init(PlayerManager.instance.playerType);
+                    _pnjHelp.Init(PlayerManager.Instance.playerType);
                     _pnjHelp.SetVisibility(dist);
                 }
             }

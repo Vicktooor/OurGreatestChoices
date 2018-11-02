@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.Game;
 using Assets.Scripts.Manager;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +10,8 @@ public class PolutionArea
     public static int SNOW_POLUTED = 0;
     public static int FIELD_POLUTED = 0;
 
-    private static List<Cell> CELLS_USED = new List<Cell>();
+    private static List<Cell> _CELLS_USED = new List<Cell>();
+    public static List<Cell> CELLS_USED { get { return _CELLS_USED; } }
     protected float _ratio = 0;
 
     public Cell initialCell;
@@ -17,25 +19,23 @@ public class PolutionArea
     private List<CellState> polutionStates;
     private int cellIterator = 0;
     private int iteration = 0;
-    private List<ObjectArray<Cell>> iterationCells = new List<ObjectArray<Cell>>();
+    private List<List<Cell>> iterationCells = new List<List<Cell>>();
 
     public PolutionArea(int cID, List<CellState> polutionTypes)
     {
         ObjectArray<Cell> newArray = new ObjectArray<Cell>();
         initialCell = EarthManager.Instance.Cells.Find(c => c.ID == cID);
         polutionStates = polutionTypes;
-        newArray.Add(initialCell);
-        iterationCells.Add(newArray);
+        iterationCells.Add(new List<Cell>() { initialCell });
     }
 
     public void Start()
     {
         if (iteration == 0 && cellIterator == 0)
         {
-            iterationCells.Clear();
-            ObjectArray<Cell> newArray = new ObjectArray<Cell>();
-            newArray.Add(initialCell);
-            iterationCells.Add(newArray);
+            Clear();
+            iterationCells.Add(new List<Cell>() { initialCell });
+            Action();
         }
     }
 
@@ -54,67 +54,69 @@ public class PolutionArea
             if (_ratio <= targetRatio) return;
         }
 
-        ObjectArray<Cell> iArray = iterationCells[iteration];
+        List<Cell> iArray = iterationCells[iteration];
         if (toPoluted)
         {
-            if (cellIterator < iArray.Length && cellIterator >= 0)
+            if (cellIterator < iArray.Count && cellIterator >= 0)
             {
-                iArray.Objs[cellIterator].obj.SetPolution(toPoluted);
+                iArray[cellIterator].SetPolution(toPoluted);
                 cellIterator++;
             }
-            else ExtendPolution(iArray.Objs);
+            else ExtendPolution(iArray);
         }
         else
         {
-            if (cellIterator <= iArray.Length && cellIterator > 0)
+            if (cellIterator <= iArray.Count && cellIterator > 0)
             {
                 cellIterator--;
-                iArray.Objs[cellIterator].obj.SetPolution(toPoluted);
+                iArray[cellIterator].SetPolution(toPoluted);
             }
             else RetractPolution();
         }
     }
 
-    protected void ExtendPolution(NamedObject<Cell>[] tCells)
+    protected void ExtendPolution(List<Cell> tCells)
     {
-        ObjectArray<Cell> newArray = new ObjectArray<Cell>();
+        List<Cell> newArray = new List<Cell>();
 
-        int nbCell = tCells.Length;
+        int nbCell = tCells.Count;
         for (int i = 0; i < nbCell; i++)
         {
-            int nbICell = tCells[i].obj.Neighbors.Count;
+            int nbICell = tCells[i].Neighbors.Count;
             for (int j = 0; j < nbICell; j++)
             {
-                Cell neighbor = tCells[i].obj.Neighbors[j];
+                Cell neighbor = tCells[i].Neighbors[j];
                 if (!neighbor.Poluted && !newArray.Contains(neighbor) && !CELLS_USED.Contains(neighbor) && polutionStates.Contains(neighbor.State))
                 {
                     newArray.Add(neighbor);
-                    CELLS_USED.Add(neighbor);
+                    _CELLS_USED.Add(neighbor);
                 }
             }
         }
 
-        if (newArray.Length > 0)
+        if (newArray.Count > 0)
         {
             iteration++;
             cellIterator = 0;
-            newArray.CheckIt();
+            newArray = ObjectArray<Cell>.CheckIt(newArray);
             iterationCells.Add(newArray);
+            Action();
         }
         else ForceExtend();
     }
 
     protected void ForceExtend()
     {
-        List<Cell> catchCells = EarthManager.Instance.Cells.FindAll(c => polutionStates.Contains(c.State) && !CELLS_USED.Contains(c));
+        List<Cell> catchCells = EarthManager.Instance.Cells.FindAll(c => polutionStates.Contains(c.State) && !_CELLS_USED.Contains(c));
         if (catchCells.Count > 0)
         {
             iteration++;
             cellIterator = 0;
-            CELLS_USED.Add(catchCells[0]);
-            ObjectArray<Cell> newArray = new ObjectArray<Cell>();
+            _CELLS_USED.Add(catchCells[0]);
+            List<Cell> newArray = new List<Cell>();
             newArray.Add(catchCells[0]);
             iterationCells.Add(newArray);
+            Action();
         }
     }
 
@@ -122,12 +124,12 @@ public class PolutionArea
     {
         if (iteration > 0)
         {
-            int lLength = iterationCells[iteration].Length;
-            for (int i = 0; i < lLength; i++) CELLS_USED.Remove(iterationCells[iteration].Objs[i].obj);
+            int lLength = iterationCells[iteration].Count;
+            for (int i = 0; i < lLength; i++) CELLS_USED.Remove(iterationCells[iteration][i]);
 
             iterationCells.Remove(iterationCells[iteration]);
             iteration--;
-            cellIterator = iterationCells[iteration].Length;
+            cellIterator = iterationCells[iteration].Count;
         }
         else ForceRetract();
     }
@@ -139,10 +141,11 @@ public class PolutionArea
         {
             iteration++;
             cellIterator = catchCells.Count;
-            ObjectArray<Cell> newArray = new ObjectArray<Cell>();
+            List<Cell> newArray = new List<Cell>();
             int lLength = catchCells.Count;
             for (int i = 0; i < lLength; i++) newArray.Add(catchCells[i]);
             iterationCells.Add(newArray);
+            Action();
         }
     }
 
@@ -179,5 +182,20 @@ public class PolutionArea
         else if (WorldValues.STATE_CLEANLINESS >= 2f) return 0f;
         else if (WorldValues.STATE_CLEANLINESS >= 1f) return 0.25f;
         else return 0.5f;
+    }
+
+    private void Clear()
+    {
+        cellIterator = 0;
+        iteration = 0;
+        iterationCells.Clear();
+    }
+
+    public static void ClearStatic()
+    {
+        _CELLS_USED.Clear();
+        SEA_POLUTED = 0;
+        SNOW_POLUTED = 0;
+        FIELD_POLUTED = 0;
     }
 }

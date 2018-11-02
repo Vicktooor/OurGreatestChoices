@@ -11,27 +11,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a1b0fc28f6fe604d85c897f5e1d4f5e, type: 3}
   m_Name: FruitBasket_information
   m_EditorClassIdentifier: 
-  topicTitles:
-  - lang: 14
-    text: Panier de fruits
-  - lang: 10
-    text: Fruits basket
-  targetItem: {fileID: 11400000, guid: 76d42ae169cd23341b5e6a7478e826a8, type: 2}
+  id: 7
   texts:
-  - lang: 10
-    texts:
-    - In this town, we back up innovative projects that thrive for a better future!
-    - '... As much as possible, of course. We can''t neglect our duties when it comes
-      to management.'
-    - We're also looking for ideas to better our citizens' daily lives!
-    - For example, I hear everyone talking about wanting to open up a fruit market...
-  - lang: 14
-    texts:
-    - Ici, a Neo New Ville, nous soutenons des projets innovants ameliorant notre
-      avenir !
-    - "... Dans la mesure du possible. Nos engagements municipaux doivent quand m\xEAme
-      \xEAtre respect\xE9s."
-    - "Nous sommes aussi \xE0 la recherche d'id\xE9es innovantes pour la ville !"
-    - "Par exemple, je sais que les habitants aimeraient organiser un march\xE9 aux
-      fruits..."
+    playerText: 
+    NPCText: 
+    getInfo: 1
+    nextTexts: []
+  targetItem: {fileID: 11400000, guid: 76d42ae169cd23341b5e6a7478e826a8, type: 2}
   icon: {fileID: 21300000, guid: d10910662fe6bc74286130f311b4836e, type: 3}

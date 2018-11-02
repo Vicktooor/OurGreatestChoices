@@ -1,49 +1,55 @@
 ﻿using Assets.Scripts.Game.NGO;
 using Assets.Scripts.Game.Save;
+using Assets.Scripts.Game.UI;
 using Assets.Scripts.Manager;
-using Assets.Scripts.PNJ;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum EThanksKey { None, Carcass, Battery, GreenBattery, Tracks, FruitSeed, FruitMarker, VegetableGarden, Electricity, GreenElectricity, NeedBudget, WindTurbine }
+[Serializable]
+public class ThanksText
+{
+    public string itemType;
+    public string haveBudgetText;
+    public string haveItemText;
+    public string fullThanks;
+}
 
 [Serializable]
-public struct ThanksStruct
+public class DialoguePNJ
 {
-    public EThanksKey key;
-    public List<SimpleLocalisationText> text;
+    public string introText;
+    public string outroText;
+    public List<int> topicIDs;
+    public List<ThanksText> thanks;
+}
+
+[Serializable]
+public class DialogueWrap
+{
+    public string key;
+    public DialoguePNJ value;
+}
+
+[Serializable]
+public class DialogueWrapper
+{
+    public List<DialogueWrap> objects;
 }
 
 public class InteractablePNJ : Interactable
 {
+    public static Dictionary<string, DialoguePNJ> DialoguesDatabase;
+
+    public static List<InteractablePNJ> PNJs = new List<InteractablePNJ>();
     public static float helpDistance = 0.9f;
 
-    [HideInInspector]
-    public static List<Type> SPEAKABLE_TYPES = new List<Type>()
-    {
-        typeof(InteractablePNJ),
-        typeof(InteractablePNJ_CarsCompany),
-        typeof(InteractablePNJ_CERN ),
-        typeof(InteractablePNJ_CoalPower),
-        typeof(InteractablePNJ_WaterDiversion),
-        typeof(InteractablePNJ_TownHall),
-    };
-
-	public static List<InteractablePNJ> PNJs = new List<InteractablePNJ>();
+    public string IDname;
+    private string dialogueKey;
 
     [Header("Budget Component")]
 	public BudgetComponent budgetComponent;
-	[Header("Presentation text")]
-	public List<SimpleLocalisationText> presentationTexts;
-	[Header("Blocnote topics")]
-	public List<GovernmentTopic> govTopics;
-	public List<ContractorTopic> contTopics;
-	[Header("End text")]
-	public List<SimpleLocalisationText> leavingTexts;
-    [Header("Thanks text")]
-    public List<ThanksStruct> thanksTexts = new List<ThanksStruct>();
 
     [Header("Mood State")]
     protected GameObject _moodState;
@@ -51,27 +57,49 @@ public class InteractablePNJ : Interactable
 	[Header("UI Head sprite")]
 	public Sprite pictoHead;
 
-	protected override void Awake()
+    public bool HaveBudget(EWorldImpactType target) 
+    {
+        if (ResourcesManager.Instance.BudgetValues.ContainsKey(target))
+        {
+            return budgetComponent.budget >= ResourcesManager.Instance.BudgetValues[target].targetBudget;
+        }
+        else return false;
+    }
+
+    protected override void Awake()
 	{
-		base.Awake();
+		base.Awake();        
 		PNJs.Add(this);
-		Events.Instance.AddListener<OnDialoguesLoaded>(LoadDialogues);
-		Events.Instance.AddListener<OnBudgetLoaded>(OnBudgetLoaded);
-		Events.Instance.AddListener<OnSelectTopic>(SelectTopic);
-        Events.Instance.AddListener<OnGiveNPC>(ReceiveItem);
         Events.Instance.AddListener<OnNewMonth>(OnUpdate);
     }
 
+    public override void Init()
+    {
+        PositionKey found = PlanetSave.PNJs.Find(p => new Vector3(p.x, p.y, p.z) == transform.position);
+        IDname = found.key;
+        budgetComponent = new BudgetComponent(IDname);
+        if (GameManager.PARTY_TYPE == EPartyType.SAVE)
+        {
+            List<BudgetsSave> saves;
+            ArrayExtensions.ToList(PlanetSave.GameStateSave.Budgets, out saves);
+            BudgetsSave save = saves.Find(s => s.npcName == IDname);
+            if (save != null)
+            {
+                budgetComponent.budget = save.budget;
+                budgetComponent.Investment = save.investment;
+            }
+        }
+        if (InventoryPlayer.Instance) CatchGivedObject();
+    }
+
+    protected virtual void CatchGivedObject() { }
+
     protected override void OnEnable() {
         base.OnEnable();
-        Events.Instance.AddListener<OnReceiveBudget>(OnReceiveBudget);
-        Events.Instance.AddListener<OnGiveBudget>(OnSendBudget);
     }
 
 	protected override void OnDisable() {
         base.OnDisable();
-        Events.Instance.RemoveListener<OnReceiveBudget>(OnReceiveBudget);
-        Events.Instance.RemoveListener<OnGiveBudget>(OnSendBudget);
     }
 
     public virtual bool HaveHisItem()
@@ -79,84 +107,38 @@ public class InteractablePNJ : Interactable
         return false;
     }
 
-    public void LoadDialogues(OnDialoguesLoaded e)
-	{
-		Events.Instance.RemoveListener<OnDialoguesLoaded>(LoadDialogues);
-		foreach (SaveDialogueNPC itemDial in PlanetSave.PNJDialogues)
-		{
-            Vector3 testPos = transform.position;
-            Vector3 pos = new Vector3(itemDial.x, itemDial.y, itemDial.z); 
-            if (pos.normalized == testPos.normalized)
-			{
-				List<SimpleLocalisationText> prezTxts = new List<SimpleLocalisationText>();
-				List<SimpleLocalisationText> leaveTxts = new List<SimpleLocalisationText>();
-				for (int i = 0; i < itemDial.presentationTxts.Length; i++) prezTxts.Add(itemDial.presentationTxts[i]);
-				for (int i = 0; i < itemDial.leavingTxts.Length; i++) leaveTxts.Add(itemDial.leavingTxts[i]);
-				presentationTexts = prezTxts;
-				leavingTexts = leaveTxts;
-
-				List<GovernmentTopic> gList = new List<GovernmentTopic>();
-				foreach (string gtName in itemDial.govTopics) gList.Add(Resources.Load<GovernmentTopic>("Topics/" + gtName));
-				govTopics = gList;
-
-				List<ContractorTopic> cList = new List<ContractorTopic>();
-				foreach (string ctName in itemDial.contTopics)
-				{
-					ContractorTopic nTopic = Resources.Load<ContractorTopic>("Topics/" + ctName);
-					cList.Add(nTopic);
-					Events.Instance.Raise(new OnSetDialogueTarget(nTopic));
-				}
-				contTopics = cList;
-			}
-		}		
-	}
-
-	public virtual void OnBudgetLoaded(OnBudgetLoaded e)
-	{
-		Events.Instance.RemoveListener<OnBudgetLoaded>(OnBudgetLoaded);
-		foreach (SaveBudgetComponent bc in PlanetSave.BudgetElements)
-		{
-            Vector3 testPos = transform.position;
-            Vector3 pos = new Vector3(bc.x, bc.y, bc.z);
-            if (pos.normalized == testPos.normalized)
-			{
-				budgetComponent = bc.budgetComp;
-                budgetComponent.SetWorking();
-			}
-		}
-	}
-
     public virtual void OnUpdate(OnNewMonth e)
     {
-        if (budgetComponent.budget < budgetComponent.targetBudget)
+        if (budgetComponent != null)
         {
-            DisplayMood(true);
-        }
-        if (budgetComponent.budget >= budgetComponent.targetBudget)
-        {
-            DisplayMood(false);
+            if (budgetComponent.Working)
+            {
+                DisplayMood(true);
+            }
+            else DisplayMood(false);
         }
     }
 
-    public virtual void OnSendBudget(OnGiveBudget e)
+    public virtual void SendBudget()
     {
-        if (budgetComponent.name != e.comp.name) return;
-        if (budgetComponent.budget < budgetComponent.targetBudget)
+        if (budgetComponent.Working)
         {
             DisplayMood(true);
         }
-        if (budgetComponent.budget >= budgetComponent.targetBudget)
+        else
         {
             DisplayMood(false);
         }
     }
 
-    public virtual void OnReceiveBudget(OnReceiveBudget e) {
-        if (budgetComponent.name != e.comp.name) return;
-        if (budgetComponent.budget < budgetComponent.targetBudget) {
+    public virtual void ReceiveBudget()
+    {
+        if (budgetComponent.Working)
+        {
             DisplayMood(true);
         }
-        if (budgetComponent.budget >= budgetComponent.targetBudget) {
+        else
+        {
             DisplayMood(false);
         }
     }
@@ -167,55 +149,14 @@ public class InteractablePNJ : Interactable
 
     public override void TransitionMode(OnTransition e) {
         base.TransitionMode(e);
-       // _renderer.material.color = _colorDefault;
     }
 
-    public bool CanAccept(Item item) {
-        return CheckIfItemIsContained(item);
-    }
-
-    protected bool CheckIfItemIsContained(Item pItem) {
-        for (int i = 0; i < item.itemsLinked.Count; i++) {
-            if (item.itemsLinked[i].name == pItem.name) {
-                return true;
-            }
-        }
+    virtual public bool CanAccept(Item item) {
         return false;
     }
 
-    public virtual void ReceiveItem(OnGiveNPC e) {
-        if (e.targetNPC != this) return;
+    public virtual void ReceiveItem(EItemType itemType) {
     }
-
-    int GetKey(Item pItem) {
-        for (int i = 0; i < item.itemsLinked.Count; i++) {
-            if (item.itemsLinked[i] == pItem) return i;
-        }
-
-        return 0;
-    }
-
-	protected void SelectTopic(OnSelectTopic e)
-	{
-		if (e.selectedNpc != this) return;
-		foreach (ContractorTopic ct in contTopics)
-		{
-			if (e.topicItem.topicType == ct.GetType())
-			{
-				Events.Instance.Raise(new OnClickSelectTopicContractor(ct));
-				return;
-			}
-		}
-
-		foreach (GovernmentTopic gt in govTopics)
-		{
-			if (e.topicItem.topicType == gt.GetType())
-			{
-				Events.Instance.Raise(new OnClickSelectTopicGov());
-				return;
-			}
-		}
-	}
 
     protected void InstantiateFeedback(bool pState, GameObject targetObj)
     {
@@ -239,28 +180,57 @@ public class InteractablePNJ : Interactable
         DestroyObject(emitPs.gameObject);
     }
 
-    public static string GetThanksLocalizedText(List<ThanksStruct> list, EThanksKey type)
+    public static List<BudgetsSave> GenerateSave()
     {
-        for (int i = 0; i < list.Count; i++)
+        List<BudgetsSave> newSave = new List<BudgetsSave>();
+        foreach (InteractablePNJ pnj in PNJs)
         {
-            for (int j = 0; j < list[i].text.Count; j++)
+            if (pnj.budgetComponent != null)
             {
-                if (list[i].text[j].lang == GameManager.LANGUAGE)
-                {
-                    return list[i].text[j].text;
-                }
-            } 
+                BudgetsSave save = pnj.budgetComponent.GenerateSave();
+                save.npcName = pnj.IDname;
+                newSave.Add(save);
+            }
         }
-        return string.Empty;
+        return newSave;
+    }
+
+    public bool CanTalkTo(EPlayer playerType)
+    {
+        if (playerType == EPlayer.GOV)
+        {
+            if (budgetComponent.initialBudget > 0) return true;
+            return false;
+        }
+        else if (playerType == EPlayer.NGO)
+        {
+            if (DialoguesDatabase.ContainsKey(IDname))
+            {
+                if (DialoguesDatabase[IDname].topicIDs.Count > 0) return true;
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public virtual void ShowThanks(EItemType targetType, bool haveBudget, bool haveItem)
+    {
+        NPCWrap dialKey =  ResourcesManager.Instance.NPCs.objects.Find(e => e.ID == IDname);
+        if (dialKey != null)
+        {
+            ThanksText txts = DialoguesDatabase[dialKey.NPCText].thanks.Find(t => t.itemType == targetType.ToString());
+            if (txts != null)
+            {
+                if (haveBudget && haveItem) PointingBubble.instance.PNJThanks(this, txts.fullThanks);
+                else if (haveBudget) PointingBubble.instance.PNJThanks(this, txts.haveBudgetText);
+                else if (haveItem) PointingBubble.instance.PNJThanks(this, txts.haveItemText);
+            }
+        }
     }
 
     protected override void OnDestroy()
     {
         Events.Instance.RemoveListener<OnNewMonth>(OnUpdate);
-        Events.Instance.RemoveListener<OnDialoguesLoaded>(LoadDialogues);
-        Events.Instance.RemoveListener<OnBudgetLoaded>(OnBudgetLoaded);
-        Events.Instance.RemoveListener<OnSelectTopic>(SelectTopic);
-        Events.Instance.RemoveListener<OnGiveNPC>(ReceiveItem);
         base.OnDestroy();
     }
 }

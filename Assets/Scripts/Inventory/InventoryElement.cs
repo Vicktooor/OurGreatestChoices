@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class InventoryElement : DraggableComponent
 {
-    public string itemName;
+    public EItemType itemType;
     private Image img;
     private TextMeshProUGUI textMesh;
 
@@ -13,14 +13,14 @@ public class InventoryElement : DraggableComponent
     {
         textMesh = GetComponentInChildren<TextMeshProUGUI>();
         img = GetComponent<Image>();
-        Item item = InventoryPlayer.instance.itemsWornArray.Find(i => i.name == itemName);
+        Item item = InventoryPlayer.Instance.itemsWornArray.Find(i => i.itemType == itemType);
         img.sprite = item.icon;
-        textMesh.text = InventoryPlayer.instance.nbItems[itemName].ToString();
+        textMesh.text = InventoryPlayer.Instance.nbItems[itemType].ToString();
     }
 
     public void MajText()
     {
-        textMesh.text = InventoryPlayer.instance.nbItems[itemName].ToString();
+        textMesh.text = InventoryPlayer.Instance.nbItems[itemType].ToString();
     }
 
 }

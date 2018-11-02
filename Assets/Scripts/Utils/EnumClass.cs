@@ -10,8 +10,7 @@ public class EnumClass : MonoBehaviour {
     //Enum for scene
     //ENUM FOR PLAYERS TYPE
     public enum TYPE { NGO, GOV, BUISNESS };
-    //Enum for buildings
-    public enum TypeBuilding{ None, TownHall, Factory, NormalHouse, VegetableBuilding, WindTurbine, Cars, Animals, Citizens };
+    public enum TypeBuilding { None, TownHall, CarsCompany }
 
     //Enum for Buildings States
     public enum Trees { NO, YES, Dead};

@@ -53,7 +53,7 @@ public class BouncingTree : MonoBehaviour {
 
     [Header("Player")]
     [SerializeField]
-    GameObject _player;
+    Player _player;
 
     public bool canPopItem = false;
     public Item popItem;
@@ -91,7 +91,7 @@ public class BouncingTree : MonoBehaviour {
     }
 
     void InitPlayer() {
-        if (PlayerManager.instance) _player = PlayerManager.instance.player;
+        if (PlayerManager.Instance) _player = PlayerManager.Instance.player;
     }
 
     #endregion

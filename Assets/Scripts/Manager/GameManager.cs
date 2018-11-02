@@ -9,13 +9,15 @@ using Assets.Script;
 using Assets.Scripts.Game.UI.Global;
 using Assets.Scripts.Game.UI.Ftue;
 using Assets.Scripts.Game.Save;
+using System.Collections.Generic;
+using Assets.Scripts.Items;
 
 public enum EPartyType { NONE = 0, NEW, SAVE}
 
 /// <summary>
 /// 
 /// </summary>
-public class GameManager : MonoBehaviour
+public class GameManager : MonoSingleton<GameManager>
 {
     public static string VERSION = "4.0";
     public static SystemLanguage LANGUAGE = SystemLanguage.English;
@@ -30,79 +32,85 @@ public class GameManager : MonoBehaviour
 	private SceneString _loadedScene;
 	public SceneString LoadedScene { get { return _loadedScene; } }
 
-	protected static GameManager _instance;
-	public static GameManager Instance
-	{
-		get { return _instance; }
-	}
+    private bool _isChangingScene = false;
+    public bool IsChangingScene { get { return _isChangingScene; } }
 
-    public static void SetFR() { LANGUAGE = SystemLanguage.French; }
-    public static void SetEN() { LANGUAGE = SystemLanguage.English; }
+    private bool _gameStarted = false;
 
-	protected void Awake()
-	{
-		if (_instance != null && _instance != this)
-		{
-			Destroy(this);
-			throw new Exception("An instance of GameManager already exists.");
-		}
-		else _instance = this;
-
-		Screen.orientation = ScreenOrientation.Portrait;
-        TextManager.LoadTraduction(SystemLanguage.English);
-	}
-
-	protected void Start()
-	{
-        PlanetSave.LoadParty();
-		_loadedScene = SceneString.MapView;
-		Events.Instance.AddListener<OnEndPlanetCreation>(OnEndCreation);
-		Events.Instance.AddListener<ZoomEnd>(ChangeScene);
+    protected override void Awake()
+    {
+        base.Awake();
+        Screen.orientation = ScreenOrientation.Portrait;
+        _loadedScene = SceneString.MapView;
     }
 
-	public void OnClickOnStartButton()
+    protected void Start()
+    {
+        LoadGameParty();
+    }
+
+    public void OnClickOnStartButton()
 	{
+        Events.Instance.AddListener<OnEndPlanetCreation>(OnEndCreation);
         FtueManager.instance.Display(false);
         PARTY_TYPE = EPartyType.NEW;
+        EarthManager.Instance.playerPositions = PlanetSave.DeserializePlayerPositions(PlanetSave.BasePlayerPos);
+        EarthManager.Instance.playingPlanetName = EarthManager.Instance.ftuePlanetName;
         EarthManager.Instance.CreatePlanet();
-	}
+    }
 
     public void OnClickOnContinueButton()
     {
         FtueManager.instance.Display(false);
         PARTY_TYPE = EPartyType.SAVE;
-        EarthManager.Instance.CreatePlanet();
+        if (PlanetSave.GameStateSave.version != null)
+        {
+            Events.Instance.AddListener<OnEndPlanetCreation>(OnEndCreation);
+            InventoryPlayer.Instance.Load();
+            List<SavePlayerPosition> players;
+            ArrayExtensions.ToList(PlanetSave.GameStateSave.SavedPlayers, out players);
+            EarthManager.Instance.playerPositions = PlanetSave.DeserializePlayerPositions(players);
+            EarthManager.Instance.playingPlanetName = EarthManager.Instance.planetName;
+            EarthManager.Instance.CreatePlanet();
+        }
+        else PARTY_TYPE = EPartyType.NONE;
     }
 
-	protected IEnumerator LoadCoroutine(string sceneName, LoadSceneMode mode)
+    public void LoadGameParty()
+    {
+        Events.Instance.Raise(new PartyLoaded(PlanetSave.LoadParty()));
+    }
+
+    /// <summary>
+	/// Appelé après la créationde la planet
+	/// </summary>
+	/// <param name="e"></param>
+	void OnEndCreation(OnEndPlanetCreation e)
+    {
+        Events.Instance.RemoveListener<OnEndPlanetCreation>(OnEndCreation);
+        StartCoroutine(LoadCoroutine(SceneString.MapView.ToString(), LoadSceneMode.Single));
+    }
+
+    protected IEnumerator LoadCoroutine(string sceneName, LoadSceneMode mode)
 	{
-		AsyncOperation loadingScene = SceneManager.LoadSceneAsync(sceneName, mode);
+        _isChangingScene = true;
+        AsyncOperation loadingScene = SceneManager.LoadSceneAsync(sceneName, mode);
 		while (!loadingScene.isDone)
 		{
 			yield return null;
 		}
-        Events.Instance.Raise(new SharePlayerPosition(EarthManager.Instance.playerPosition));
         _loadedScene = (SceneString)Enum.Parse(typeof(SceneString), sceneName);
-        StartCoroutine(SafeTimeCoroutine(_loadedScene));
-	}
 
-    private bool _ftueStarted = false;
-    private IEnumerator SafeTimeCoroutine(SceneString nScene)
-    {
-        if (!_ftueStarted)
+        if (!_gameStarted)
         {
-            _ftueStarted = true;
             FtueManager.instance.Launch();
+            WorldManager.Instance.InitPolution();
         }
 
-        Events.Instance.Raise(new OnSceneLoaded(nScene));
-
-        int cFrame = 0;
-        while (cFrame < safeLoadFrame)
-        {
-            cFrame++;
-            yield return null;
-        }
+        _isChangingScene = false;
+        Events.Instance.Raise(new SharePlayerPosition(EarthManager.Instance.playerPositions));
+        Events.Instance.Raise(new OnSceneLoaded(_loadedScene));
+        if (!_gameStarted) _gameStarted = true;
     }
 
     /// <summary>
@@ -111,60 +119,47 @@ public class GameManager : MonoBehaviour
     /// 
     /// 
     /// <param name="e"></param>
-    void ChangeScene(ZoomEnd e)
+    public void ChangeScene()
 	{
-		if (_loadedScene == SceneString.MapView)
+        Events.Instance.Raise(new OnSwitchScene((_loadedScene == SceneString.MapView) ? ECameraTargetType.ZOOM : ECameraTargetType.MAP));
+        if (_loadedScene == SceneString.MapView)
 			StartCoroutine(LoadCoroutine(SceneString.ZoomView.ToString(), LoadSceneMode.Single));
 		else if (_loadedScene == SceneString.ZoomView)
 			StartCoroutine(LoadCoroutine(SceneString.MapView.ToString(), LoadSceneMode.Single));
 	}
 
-	/// <summary>
-	/// Appelé après la créationde la planet
-	/// </summary>
-	/// <param name="e"></param>
-	void OnEndCreation(OnEndPlanetCreation e)
-	{	
-		StartCoroutine(LoadCoroutine(_loadedScene.ToString(), LoadSceneMode.Single));
-        Events.Instance.Raise(new OnZoomFinish(ECameraTargetType.MAP));
-    }
-
     public void GoToMenu()
     {
         PlanetSave.SaveParty();
 
-        PARTY_TYPE = EPartyType.NONE;
-        _ftueStarted = false;
-
-        TimeManager.instance.Stop();
-        foreach (Cell c in EarthManager.Instance.Cells)
-        {
-            c.transform.Clear();
-            Destroy(c.gameObject);
-        }
-        EarthManager.Instance.Clear();
-        CameraManager.Instance.Reset();
-        Cell.ResetCells();
-
+        _gameStarted = false;
+        UIManager.instance.Clear();
+        TimeManager.Instance.Stop();
         LinkDatabase.Instance.Clear();
-        WorldManager.instance.Clear();
-        ResourcesManager.instance.Clear();
-
+        WorldManager.Instance.Clear();
         ControllerInput.instance.ResetDatasTouch();
+        InteractablePNJ.PNJs.Clear();
+        ResourcesManager.Instance.Clear();
+        CameraManager.Instance.Reset();
+        EarthManager.Instance.DestroyPlanet();
+        InventoryPlayer.Instance.Clear();
+        PlayerManager.Instance.Clear();
 
         Events.Instance.Raise(new OnGoToMenu());
-        PlanetSave.LoadParty();
+
         StartCoroutine(LoadMainMenu());
     }
 
     protected IEnumerator LoadMainMenu()
     {
-        AsyncOperation loadingScene = SceneManager.LoadSceneAsync("InitScene");
-        while (!loadingScene.isDone)
+        AsyncOperation unloadingScene = SceneManager.UnloadSceneAsync(_loadedScene.ToString());
+        while (!unloadingScene.isDone)
         {
             yield return null;
         }
         _loadedScene = SceneString.MapView;
+        PARTY_TYPE = EPartyType.NONE;
+        LoadGameParty();
     }
 
     public void CloseGame()
@@ -174,7 +169,6 @@ public class GameManager : MonoBehaviour
 
     protected void OnDestroy()
     {
-        Events.Instance.RemoveListener<OnEndPlanetCreation>(OnEndCreation);
         _instance = null;
 	}
 }

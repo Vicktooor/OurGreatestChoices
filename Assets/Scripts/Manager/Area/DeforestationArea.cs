@@ -1,11 +1,14 @@
 ﻿using Assets.Scripts.Game;
 using Assets.Scripts.Game.Objects;
+using Assets.Scripts.Game.Save;
 using Assets.Scripts.Manager;
+using System;
 using System.Collections.Generic;
 
 public class DeforestationArea
 {
-    private static List<Cell> CELLS_USED = new List<Cell>();
+    private static List<Cell> _CELLS_USED = new List<Cell>();
+    public static List<Cell> CELLS_USED { get { return _CELLS_USED; } }
     public static int NB_FOREST_CUT = 0;
     protected float _ratio;
 
@@ -13,24 +16,21 @@ public class DeforestationArea
 
     private int cellIterator = 0;
     private int iteration = 0;
-    private List<ObjectArray<Cell>> iterationCells = new List<ObjectArray<Cell>>();
+    private List<List<Cell>> iterationCells = new List<List<Cell>>();
 
     public DeforestationArea(int cID)
     {
-        ObjectArray<Cell> newArray = new ObjectArray<Cell>();
         initialCell = EarthManager.Instance.Cells.Find(c => c.ID == cID);
-        newArray.Add(initialCell);
-        iterationCells.Add(newArray);
+        iterationCells.Add(new List<Cell>() { initialCell });
     }
 
     public void Start()
     {
         if (iteration == 0 && cellIterator == 0)
         {
-            iterationCells.Clear();
-            ObjectArray<Cell> newArray = new ObjectArray<Cell>();
-            newArray.Add(initialCell);
-            iterationCells.Add(newArray);
+            Clear();
+            iterationCells.Add(new List<Cell>() { initialCell });
+            Action();
         }
     }
 
@@ -49,66 +49,53 @@ public class DeforestationArea
             if (_ratio >= targetRatio) return;
         }
 
-        ObjectArray<Cell> iArray = iterationCells[iteration];
+        List<Cell> iArray = iterationCells[iteration];
         if (toCut)
         {
-            if (cellIterator < iArray.Length && cellIterator >= 0)
+            if (cellIterator < iArray.Count && cellIterator >= 0)
             {
-                foreach (KeyValuePair<Props, string> p in iArray.Objs[cellIterator].obj.Props)
-                {
-                    if (p.Key.GetType() == typeof(PoolTree))
-                    {
-                        PoolTree pt = (PoolTree)p.Key;
-                        pt.SetDeforestation(toCut);
-                    }
-                }
+                iArray[cellIterator].SetDeforestation(toCut);
                 cellIterator++;
             }
-            else ExtendDeforestation(iArray.Objs);
+            else ExtendDeforestation(iArray);
         }
         else
         {
-            if (cellIterator < iArray.Length && cellIterator >= 0)
+            if (cellIterator < iArray.Count && cellIterator >= 0)
             {
-                foreach (KeyValuePair<Props, string> p in iArray.Objs[cellIterator].obj.Props)
-                {
-                    if (p.Key.GetType() == typeof(PoolTree))
-                    {
-                        PoolTree pt = (PoolTree)p.Key;
-                        pt.SetDeforestation(toCut);
-                    }
-                }
+                iArray[cellIterator].SetDeforestation(toCut);
                 cellIterator++;
             }
             else RetractDeforestation();
         }
     }
 
-    protected void ExtendDeforestation(NamedObject<Cell>[] tCells)
+    protected void ExtendDeforestation(List<Cell> tCells)
     {
-        ObjectArray<Cell> newArray = new ObjectArray<Cell>();
+        List<Cell> newArray = new List<Cell>();
 
-        int nbCell = tCells.Length;
+        int nbCell = tCells.Count;
         for (int i = 0; i < nbCell; i++)
         {
-            int nbICell = tCells[i].obj.Neighbors.Count;
+            int nbICell = tCells[i].Neighbors.Count;
             for (int j = 0; j < nbICell; j++)
             {
-                Cell neighbor = tCells[i].obj.Neighbors[j];
-                if (!newArray.Contains(neighbor) && PoolTree.ForestCells.Contains(neighbor) && !CELLS_USED.Contains(neighbor))
+                Cell neighbor = tCells[i].Neighbors[j];
+                if (!newArray.Contains(neighbor) && PoolTree.ForestCells.Contains(neighbor) && !_CELLS_USED.Contains(neighbor))
                 {
                     newArray.Add(neighbor);
-                    CELLS_USED.Add(neighbor);
+                    _CELLS_USED.Add(neighbor);
                 }
             }
         }
 
-        if (newArray.Length > 0)
+        if (newArray.Count > 0)
         {
             iteration++;
             cellIterator = 0;
-            newArray.CheckIt();
+            newArray = ObjectArray<Cell>.CheckIt(newArray);
             iterationCells.Add(newArray);
+            Action();
         }
         else ForceExtend();
     }
@@ -116,12 +103,12 @@ public class DeforestationArea
     protected void ForceExtend()
     {
         List<Cell> catchCells = new List<Cell>();
-        foreach (NamedObject<Cell> c in PoolTree.ForestCells.Objs)
+        foreach (Cell c in PoolTree.ForestCells)
         {
-            if (!CELLS_USED.Contains(c.obj))
+            if (!_CELLS_USED.Contains(c))
             {
                 bool containUncutAsset = false;
-                List<PoolTree> treesAsset = c.obj.GetProps<PoolTree>();
+                List<PoolTree> treesAsset = c.GetProps<PoolTree>();
                 foreach (PoolTree pt in treesAsset)
                 {
                     if (!pt.IsCut)
@@ -132,8 +119,8 @@ public class DeforestationArea
                 }
                 if (containUncutAsset)
                 {
-                    catchCells.Add(c.obj);
-                    CELLS_USED.Add(c.obj);
+                    catchCells.Add(c);
+                    _CELLS_USED.Add(c);
                 }
             }
         }
@@ -142,10 +129,11 @@ public class DeforestationArea
         {
             iteration++;
             cellIterator = 0;
-            ObjectArray<Cell> newArray = new ObjectArray<Cell>();
+            List<Cell> newArray = new List<Cell>();
             int lLength = catchCells.Count;
             for (int i = 0; i < lLength; i++) newArray.Add(catchCells[i]);
             iterationCells.Add(newArray);
+            Action();
         }
     }
 
@@ -153,8 +141,8 @@ public class DeforestationArea
     {
         if (iteration > 0)
         {
-            int lLength = iterationCells[iteration].Length;
-            for (int i = 0; i < lLength; i++) CELLS_USED.Remove(iterationCells[iteration].Objs[i].obj);
+            int lLength = iterationCells[iteration].Count;
+            for (int i = 0; i < lLength; i++) _CELLS_USED.Remove(iterationCells[iteration][i]);
 
             iterationCells.Remove(iterationCells[iteration]);
             iteration--;
@@ -166,12 +154,12 @@ public class DeforestationArea
     private void ForceRetract()
     {
         List<Cell> catchCells = new List<Cell>();
-        foreach (NamedObject<Cell> c in PoolTree.ForestCells.Objs)
+        foreach (Cell c in PoolTree.ForestCells)
         {
-            if (!CELLS_USED.Contains(c.obj))
+            if (!_CELLS_USED.Contains(c))
             {
                 bool containCutAsset = false;
-                List<PoolTree> treesAsset = c.obj.GetProps<PoolTree>();
+                List<PoolTree> treesAsset = c.GetProps<PoolTree>();
                 foreach (PoolTree pt in treesAsset)
                 {
                     if (pt.IsCut)
@@ -182,8 +170,8 @@ public class DeforestationArea
                 }
                 if (containCutAsset)
                 {
-                    catchCells.Add(c.obj);
-                    CELLS_USED.Add(c.obj);
+                    catchCells.Add(c);
+                    _CELLS_USED.Add(c);
                 }
             }
         }
@@ -192,10 +180,11 @@ public class DeforestationArea
         {
             iteration++;
             cellIterator = 0;
-            ObjectArray<Cell> newArray = new ObjectArray<Cell>();
+            List<Cell> newArray = new List<Cell>();
             int lLength = catchCells.Count;
             for (int i = 0; i < lLength; i++) newArray.Add(catchCells[i]);
             iterationCells.Add(newArray);
+            Action();
         }
     }
 
@@ -221,5 +210,18 @@ public class DeforestationArea
         else if (WorldValues.STATE_FOREST >= 2f) return 1f;
         else if (WorldValues.STATE_FOREST >= 1f) return 0.75f;
         else return 0.5f;
+    }
+
+    private void Clear()
+    {
+        cellIterator = 0;
+        iteration = 0;
+        iterationCells.Clear();
+    }
+
+    public static void ClearStatic()
+    {
+        _CELLS_USED.Clear();
+        NB_FOREST_CUT = 0;
     }
 }

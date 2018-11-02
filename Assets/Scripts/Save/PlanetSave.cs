@@ -1,16 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System;
-using Assets.Scripts.PNJ;
-using Assets.Scripts.Game.NGO;
 using Assets.Scripts.Manager;
 using Assets.Scripts.Items;
-using Assets.Scripts.Utils;
-using Assets.Scripts.Game.UI.Ftue;
 
-// AUTHOR - Victor
+[Serializable]
+public struct GivedItemSave
+{
+    public string npcName;
+    public EItemType[] givedItems;
+}
+
+[Serializable]
+public struct InventoryItemSave
+{
+    public EItemType type;
+    public int nb;
+}
 
 namespace Assets.Scripts.Game.Save
 {
@@ -18,100 +25,98 @@ namespace Assets.Scripts.Game.Save
 	public struct PartySave
 	{
         public string version;
-        public string[] itemsName;
 
-        // Game save
+        public float moneyStock;
+        public EItemType[] knowsItem;
+        public InventoryItemSave[] items;
         public SaveCell[] SavedCells;
+        public SavePlayerPosition[] SavedPlayers;
+        public TimeSave SavedTime;
+        public WorldSave WorldSave;
+        public GivedItemSave[] GivedItems;
+        public BudgetsSave[] Budgets;
 
-        public void Generate(List<Item> pList, List<SaveCell> cells)
-		{
+        public void Generate(
+            List<Item> pList,
+            List<SaveCell> cells, List<SavePlayerPosition> players,
+            TimeSave timeSave, Dictionary<EItemType, int> inventory,
+            WorldSave worldSave,
+            Dictionary<string, List<EItemType>> givedItems,
+            BudgetsSave[] budgetsSave
+            )
+        {
+            SavedPlayers = players.ToArray();
             SavedCells = cells.ToArray();
-            if (pList != null)
+            SavedTime = timeSave;
+            WorldSave = worldSave;
+            Budgets = budgetsSave;
+            if (pList.Count > 0)
 			{
-				itemsName = new string[pList.Count];
-				for (int i = 0; i < pList.Count; i++) itemsName[0] = pList[i].name;
-			} else itemsName = new string[0];
+                knowsItem = new EItemType[pList.Count];
+				for (int i = 0; i < pList.Count; i++) knowsItem[0] = pList[i].itemType;
+			}
+            else knowsItem = new EItemType[0];
+            items = new InventoryItemSave[inventory.Count];
+            if (inventory.Count > 0)
+            {
+                InventoryItemSave newItem;
+                int index = 0;
+                foreach (KeyValuePair<EItemType, int> item in inventory)
+                {
+                    newItem = new InventoryItemSave();
+                    newItem.nb = item.Value;
+                    newItem.type = item.Key;
+                    items[index] = newItem;
+                    index++;
+                }
+            }
+            GivedItems = new GivedItemSave[givedItems.Count];
+            int k = 0;
+            foreach (KeyValuePair<string, List<EItemType>> item in givedItems)
+            {
+                GivedItems[k].npcName = item.Key;
+                GivedItems[k].givedItems = item.Value.ToArray();
+                k++;
+            }
 		}
 	}
 
 	[Serializable]
-	public struct BiomeSave
-	{
-		public int[,] biomes;
-	}
-
-	[Serializable]
-	public struct SaveBudgetComponent
+	public struct PositionID
 	{
 		public float x;
 		public float y;
 		public float z;
-		public BudgetComponent budgetComp;
+		public int ID;
 
-		public SaveBudgetComponent(Vector3 worldPos, BudgetComponent cBudget)
+		public PositionID(Vector3 pos, int pID = -1)
 		{
-			x = worldPos.x;
-			y = worldPos.y;
-			z = worldPos.z;
-			budgetComp = cBudget;
+			x = pos.x;
+			y = pos.y;
+			z = pos.z;
+			ID = pID;
 		}
 	}
 
     [Serializable]
-    public struct CitizenDialogueSave
+    public struct PositionKey
     {
         public float x;
         public float y;
         public float z;
-        public SimpleLocalisationText[] texts;
+        public string key;
 
-        public CitizenDialogueSave(Vector3 pos, SimpleLocalisationText[] txt)
+        public PositionKey(Vector3 pos, string pKey)
         {
-            texts = txt;
             x = pos.x;
             y = pos.y;
             z = pos.z;
+            key = pKey;
         }
     }
 
+    #region Cell data structure
     [Serializable]
-	public struct SaveDialogueNPC
-	{
-		public float x;
-		public float y;
-		public float z;
-		public string[] govTopics;
-		public string[] contTopics;
-		public SimpleLocalisationText[] presentationTxts;
-		public SimpleLocalisationText[] leavingTxts;
-
-		public SaveDialogueNPC(Vector3 worldPos, List<SimpleLocalisationText> presTxts, List<SimpleLocalisationText> leaveTxts, List<GovernmentTopic> govs, List<ContractorTopic> conts)
-		{
-			x = worldPos.x;
-			y = worldPos.y;
-			z = worldPos.z;
-
-			presentationTxts = presTxts.ToArray();
-			leavingTxts = leaveTxts.ToArray();
-
-			List<string> govList = new List<string>();
-            foreach (GovernmentTopic so in govs)
-            {
-                if (so != null) govList.Add(so.name);
-            }
-			govTopics = govList.ToArray();
-
-			List<string> contList = new List<string>();
-            foreach (ContractorTopic so in conts)
-            {
-                if (so != null) contList.Add(so.name);
-            }
-			contTopics = contList.ToArray();
-		}
-	}
-
-	#region Cell data structure
-	[Serializable]
 	public struct SaveCell
 	{
 		public int ID;
@@ -119,6 +124,9 @@ namespace Assets.Scripts.Game.Save
 		public CellState state;
 		public float elevation;
         public bool walkable;
+
+        public bool poluted;
+        public bool deforested;
 
 		public float[] propsX;
 		public float[] propsY;
@@ -133,7 +141,7 @@ namespace Assets.Scripts.Game.Save
 
 		public BuildingLink[] buildingLinkedItems;
 
-		public SaveCell(CellState cState, int bID, float cElevation, bool walk, List<KeyValuePair<string[], List<float[]>>> props, int cID, BuildingLink[] cBuilds)
+		public SaveCell(CellState cState, int bID, float cElevation, bool walk, List<KeyValuePair<string[], List<float[]>>> props, int cID, BuildingLink[] cBuilds, bool pPoluted, bool pDeforested)
 		{
 			ID = cID;
 			biomeID = bID;
@@ -141,6 +149,9 @@ namespace Assets.Scripts.Game.Save
 			state = cState;
 			elevation = cElevation;
             walkable = walk;
+
+            poluted = pPoluted;
+            deforested = pDeforested;
 
 			propsX = props[0].Value[0];
 			propsY = props[0].Value[1];
@@ -177,220 +188,163 @@ namespace Assets.Scripts.Game.Save
 
 	public static class PlanetSave
 	{
-        public static bool LOADED = false;
+        #region Party
+        public static PartySave GameStateSave = new PartySave();
 
-		public static PartySave GameStateSave = new PartySave();
-		public static List<SaveDialogueNPC> PNJDialogues = new List<SaveDialogueNPC>();
-		public static List<CitizenDialogueSave> CitizenTexts = new List<CitizenDialogueSave>();
-		public static List<SaveBudgetComponent> BudgetElements = new List<SaveBudgetComponent>();
-		public static List<SaveCell> SavedCells = new List<SaveCell>();
-		public static List<SavePlayerPosition> PlayerPos = new List<SavePlayerPosition>();
-
-		public static void SaveParty()
-		{
-			BinaryFormatter bf = new BinaryFormatter();
-            var fileName = string.Format("{0}/{1}", Application.persistentDataPath, "PartySave.gd");
-
-            GameStateSave.Generate(InventoryPlayer.instance.knowsItems, ConvertPlanetToSerialiable(EarthManager.Instance.Cells));
-            GameStateSave.version = GameManager.VERSION;
-
-            if (File.Exists(fileName))
-            {
-                FileStream file = File.OpenWrite(fileName);
-                bf.Serialize(file, GameStateSave);
-                file.Close();
-            }
-            else
-            {
-                FileStream file = File.Create(fileName);
-                bf.Serialize(file, GameStateSave);
-                file.Close();
-            }
-        }
-
-		public static void LoadParty()
-		{
-			BinaryFormatter bf = new BinaryFormatter();
-
-			try
-			{
-#if UNITY_STANDALONE
-                string editorPath = Application.streamingAssetsPath + "/Save/PartySave.gd";
-                if (File.Exists(editorPath))
-                {
-                    FileStream fileSave = File.OpenRead(editorPath);
-                    GameStateSave = (PartySave)bf.Deserialize(fileSave);
-                    fileSave.Close();
-
-                    int length = GameStateSave.SavedCells.Length;
-                    for (int i = 0; i < length; i++)
-                    {
-                        SavedCells.Add(GameStateSave.SavedCells[i]);
-                    }
-
-                    foreach (string str in GameStateSave.itemsName)
-                    {
-                        Item lItem = Resources.Load<Item>("Items/" + str);
-                        if (lItem != null)
-                        {
-                            if (InventoryPlayer.instance) InventoryPlayer.instance.knowsItems.Add(lItem);
-                            break;
-                        }
-                    }
-
-                    LOADED = true;
-                    Events.Instance.Raise(new PartyLoaded(LOADED));
-                }               
-#endif
-
-#if UNITY_ANDROID
-                string androidPath = "jar:file://" + Application.dataPath + "!/assets/Save/PartySave.gd";
-                if (!PlanetMaker.instance.buildForMobile) androidPath = Application.streamingAssetsPath + "/Save/PartySave.gd";
-                string fileName = string.Format("{0}/{1}", Application.persistentDataPath, "PartySave.gd");
-
-                if (File.Exists(fileName))
-                {
-                    FileStream file = File.OpenRead(fileName);
-                    GameStateSave = (PartySave)bf.Deserialize(file);
-                    file.Close();
-
-                    if (GameManager.VERSION == GameStateSave.version)
-                    {
-                        int length = GameStateSave.SavedCells.Length;
-                        for (int i = 0; i < length; i++)
-                        {
-                            SavedCells.Add(GameStateSave.SavedCells[i]);
-                        }
-
-                        foreach (string str in GameStateSave.itemsName)
-                        {
-                            Item lItem = Resources.Load<Item>("Items/" + str);
-                            if (lItem != null)
-                            {
-                                if (InventoryPlayer.instance) InventoryPlayer.instance.knowsItems.Add(lItem);
-                                break;
-                            }
-                        }
-
-                        LoadPlayer();
-
-                        if (GameStateSave.SavedCells.Length == 162) LOADED = true;
-                    }
-                    else File.Delete(fileName);
-                }
-
-                Events.Instance.Raise(new PartyLoaded(LOADED));
-#endif
-            }
-            catch (Exception err)
-			{
-				Debug.LogError("Load game state error : " + err.Message);
-				throw;
-			}
-		}
-
-		public static void SavePlanet(List<Cell> planetCells, string saveName)
-		{
-			BinaryFormatter bf = new BinaryFormatter();
-			FileStream file = File.Create(Application.streamingAssetsPath + "/Save/" + saveName + "Save.gd");
-			bf.Serialize(file, ConvertPlanetToSerialiable(planetCells));
-			file.Close();
-		}
-
-		public static void SavePlayer(string saveName)
-		{
-			BinaryFormatter bf = new BinaryFormatter();
-			FileStream file = File.Create(Application.streamingAssetsPath + "/Save/Player/" + saveName + "PlayerSave.gd");
-			bf.Serialize(file, ConvertPlayerPositionToSerializable(EarthManager.Instance.playerPosition));
-			file.Close();
-		}
-
-        public static void LoadPlayer()
+        public static void SaveParty()
         {
-            BinaryFormatter bf = new BinaryFormatter();
-
-            string androidPathPlayerPos = "jar:file://" + Application.dataPath + "!/assets/Save/Player/PlanetGoldTestPlayerSave.gd";
-            if (!PlanetMaker.instance.buildForMobile) androidPathPlayerPos = Application.streamingAssetsPath + "/Save/Player/PlanetGoldTestPlayerSave.gd";
-            string fileName = string.Format("{0}/{1}", Application.persistentDataPath, "PlanetGoldTestPlayerSave.gd");
-
-            WWW wwwfilep = new WWW(androidPathPlayerPos);
-            while (!wwwfilep.isDone) { }
-            File.WriteAllBytes(fileName, wwwfilep.bytes);
-            StreamReader wrp = new StreamReader(fileName);
-            PlayerPos = (List<SavePlayerPosition>)bf.Deserialize(wrp.BaseStream);
-            wrp.Close();
-
-            foreach (SavePlayerPosition ps in PlayerPos)
-            {
-                if (!EarthManager.Instance.playerPosition.ContainsKey(ps.player))
-                    EarthManager.Instance.playerPosition.Add(ps.player, new KeyValuePair<int, Vector3>(ps.cellID, new Vector3(ps.X, ps.Y, ps.Z)));
-                else
-                    EarthManager.Instance.playerPosition[ps.player] = new KeyValuePair<int, Vector3>(ps.cellID, new Vector3(ps.X, ps.Y, ps.Z));
-            }
+            string path = PersistenDataManager.GetPersistentPath("/Save/PartySave.gd");
+            GameStateSave.Generate(
+                InventoryPlayer.Instance.knowsItems,
+                ConvertPlanetToSerialiable(EarthManager.Instance.Cells),
+                ConvertPlayerPositionToSerializable(EarthManager.Instance.playerPositions),
+                TimeManager.Instance.GenerateSave(),
+                InventoryPlayer.Instance.nbItems,
+                WorldManager.Instance.GenerateSave(),
+                InventoryPlayer.Instance.givedOject,
+                InteractablePNJ.GenerateSave().ToArray()
+                );
+            GameStateSave.moneyStock = InventoryPlayer.Instance.moneyStock;
+            GameStateSave.version = GameManager.VERSION;
+            PersistenDataManager.Serialize(GameStateSave, path);
         }
 
-		public static bool LoadPlanet(string targetSaveName)
-		{
-			BinaryFormatter bf = new BinaryFormatter();
-
-#if UNITY_ANDROID // ANDROID PLANET LOAD FUNCTION
-			string androidPath = "jar:file://" + Application.dataPath + "!/assets/Save/" + targetSaveName + "Save.gd";
-			if (!PlanetMaker.instance.buildForMobile) androidPath = Application.streamingAssetsPath + "/Save/" + targetSaveName + "Save.gd";
-			var fileName = string.Format("{0}/{1}", Application.persistentDataPath, targetSaveName + "Save.gd");
-
-            if (File.Exists(fileName))
+        public static bool LoadParty()
+        {
+            string path = PersistenDataManager.GetPersistentPath("/Save/PartySave.gd");
+            if (File.Exists(path))
             {
-                WWW wwwfile = new WWW(androidPath);
-                while (!wwwfile.isDone) { }
-                File.WriteAllBytes(fileName, wwwfile.bytes);
-                StreamReader wr = new StreamReader(fileName);
-                SavedCells = (List<SaveCell>)bf.Deserialize(wr.BaseStream);
-                wr.Close();
-
-                LoadPlayer();
-
+                GameStateSave = (PartySave)PersistenDataManager.Deserialize(path);
                 return true;
             }
             else return false;
-#endif
+        }
+        #endregion
 
-#if UNITY_STANDALONE // DESKTOP PLANET LOAD FUNCTION
-			string editorPath = Application.streamingAssetsPath + "/Save/" + targetSaveName + "Save.gd";
-			string editorPathPlayer = Application.streamingAssetsPath + "/Save/Player/" + targetSaveName + "PlayerSave.gd";
-			if (File.Exists(editorPath))
-			{
-				FileStream file = File.OpenRead(editorPath);
-				SavedCells = (List<SaveCell>)bf.Deserialize(file);
-				file.Close();
-			}
-			else return false;
+        #region Planet
+        public static List<SaveCell> BaseCells = new List<SaveCell>();
 
-			if (File.Exists(editorPath))
-			{
-				try
-				{
-					FileStream filePlayerPos = File.OpenRead(editorPathPlayer);
-					PlayerPos = (List<SavePlayerPosition>)bf.Deserialize(filePlayerPos);
-					filePlayerPos.Close();
+        public static void SaveCells(List<Cell> planetCells, string planetName)
+        {
+            string path = StreamingAssetAccessor.GetStreamingAssetPath() + "Save/" + planetName + "Save.gd";
+            if (File.Exists(path)) FileManager.WriteFile(path, ConvertPlanetToSerialiable(planetCells));
+            else FileManager.CreateFile(path, ConvertPlanetToSerialiable(planetCells));
+        }
 
-					foreach (SavePlayerPosition ps in PlayerPos)
-					{
-						EarthManager.Instance.playerPosition.Add(ps.player, new KeyValuePair<int, Vector3>(ps.cellID, new Vector3(ps.X, ps.Y, ps.Z)));
-					}
-				}
-				catch (Exception err)
-				{
-					Debug.LogError("Load players error : " + err.Message + " -> " + editorPath);
-					return true;
-					throw;
-				}
-			}
-			else return false;
-			return true;
-#endif
-		}
+        public static bool LoadCells(string planetName)
+        {
+            string path = StreamingAssetAccessor.GetStreamingAssetPath() + "Save/" + planetName + "Save.gd";            
+            if (File.Exists(path))
+            {
+                BaseCells = (List<SaveCell>)StreamingAssetAccessor.Deserialize("Save/" + planetName + "Save.gd");
+                return true;
+            }
+            else return false;
+        }
+        #endregion
 
-		public static List<SaveCell> ConvertPlanetToSerialiable(List<Cell> planetCells)
+        #region Citizens
+        public static List<PositionID> CitizensID = new List<PositionID>();
+
+        public static void SaveCitizens(string planetName)
+        {
+            string path = StreamingAssetAccessor.GetStreamingAssetPath() + "Save/" + planetName + "CitizensSave.gd";
+            List<PositionID> citizenSaves = new List<PositionID>();
+            foreach (CitizenProp cp in EarthManager.citizens)
+            {
+                citizenSaves.Add(new PositionID(cp.transform.position, cp.ID));
+            }
+            if (File.Exists(path)) FileManager.WriteFile(path, citizenSaves);
+            else FileManager.CreateFile(path, citizenSaves);
+        }
+
+        public static bool LoadCitizens(string planetName)
+        {
+            string path = StreamingAssetAccessor.GetStreamingAssetPath() + "Save/" + planetName + "CitizensSave.gd";
+            if (File.Exists(path))
+            {
+                CitizensID = (List<PositionID>)StreamingAssetAccessor.Deserialize("Save/" + planetName + "CitizensSave.gd");
+                return true;
+            }
+            else return false;
+        }
+        #endregion
+
+        #region PlayersPosition
+        public static List<SavePlayerPosition> BasePlayerPos = new List<SavePlayerPosition>();
+
+        public static void SavePlayer(string saveName)
+        {
+            string path = StreamingAssetAccessor.GetStreamingAssetPath() + "Save/" + saveName + "PlayerSave.gd";
+            if (File.Exists(path)) FileManager.WriteFile(path, ConvertPlayerPositionToSerializable(EarthManager.Instance.playerPositions));
+            else FileManager.CreateFile(path, ConvertPlayerPositionToSerializable(EarthManager.Instance.playerPositions));
+        }
+
+        public static bool LoadPlayer(string saveName)
+        {
+            string path = StreamingAssetAccessor.GetStreamingAssetPath() + "Save/" + saveName + "PlayerSave.gd";
+            if (File.Exists(path))
+            {
+                BasePlayerPos = (List<SavePlayerPosition>)StreamingAssetAccessor.Deserialize("Save/" + saveName + "PlayerSave.gd");
+                foreach (SavePlayerPosition ps in BasePlayerPos)
+                {
+                    if (!EarthManager.Instance.playerPositions.ContainsKey(ps.player)) EarthManager.Instance.playerPositions.Add(ps.player, new KeyValuePair<int, Vector3>(ps.cellID, new Vector3(ps.X, ps.Y, ps.Z)));
+                    else EarthManager.Instance.playerPositions[ps.player] = new KeyValuePair<int, Vector3>(ps.cellID, new Vector3(ps.X, ps.Y, ps.Z));
+                }
+                return true;
+            }
+            else return false;
+        }
+
+        public static List<SavePlayerPosition> ConvertPlayerPositionToSerializable(Dictionary<EPlayer, KeyValuePair<int, Vector3>> allPos)
+        {
+            List<SavePlayerPosition> posList = new List<SavePlayerPosition>();
+            foreach (KeyValuePair<EPlayer, KeyValuePair<int, Vector3>> iPlayer in allPos)
+            {
+                posList.Add(new SavePlayerPosition(iPlayer.Value.Key, iPlayer.Key, iPlayer.Value.Value));
+            }
+            return posList;
+        }
+
+        public static Dictionary<EPlayer, KeyValuePair<int, Vector3>> DeserializePlayerPositions(List<SavePlayerPosition> allPosList)
+        {
+            Dictionary<EPlayer, KeyValuePair<int, Vector3>> posList = new Dictionary<EPlayer, KeyValuePair<int, Vector3>>();
+            foreach (SavePlayerPosition iPlayer in allPosList)
+            {
+                posList.Add(iPlayer.player, new KeyValuePair<int, Vector3>(iPlayer.cellID, new Vector3(iPlayer.X, iPlayer.Y, iPlayer.Z)));
+            }
+            return posList;
+        }
+        #endregion
+
+        #region PNJ
+        public static List<PositionKey> PNJs = new List<PositionKey>();
+
+        public static void SavePnjs(string planetName)
+        {
+            string path = StreamingAssetAccessor.GetStreamingAssetPath() + "Save/" + planetName + "PNJs.gd";
+            List<PositionKey> pnjSaved = new List<PositionKey>();
+            foreach (InteractablePNJ pnj in InteractablePNJ.PNJs)
+            {
+                pnjSaved.Add(new PositionKey(pnj.transform.position, pnj.IDname));
+            }
+            if (File.Exists(path)) FileManager.WriteFile(path, pnjSaved);
+            else FileManager.CreateFile(path, pnjSaved);
+        }
+
+        public static bool LoadPNJs(string planetName)
+        {
+            string path = StreamingAssetAccessor.GetStreamingAssetPath() + "Save/" + planetName + "PNJs.gd";
+            if (File.Exists(path))
+            {
+                PNJs = (List<PositionKey>)StreamingAssetAccessor.Deserialize("Save/" + planetName + "PNJs.gd");
+                return true;
+            }
+            else return false;
+        }
+        #endregion
+
+        public static List<SaveCell> ConvertPlanetToSerialiable(List<Cell> planetCells)
 		{
 			List<SaveCell> convertedCells = new List<SaveCell>();
 			foreach (Cell lCell in planetCells)
@@ -430,7 +384,7 @@ namespace Assets.Scripts.Game.Save
 				elements.Add(new KeyValuePair<string[], List<float[]>>(propNames, new List<float[]>() { posNatX, posNatY, posNatZ, rotNatX, rotNatY, rotNatZ, rotNatW }));
 
 				// Create save cell
-				SaveCell newSaveCell = new SaveCell(lCell.State, lCell.BiomeID ,lCell.Elevation, lCell.walkable, elements, lCell.ID, links.ToArray());
+				SaveCell newSaveCell = new SaveCell(lCell.State, lCell.BiomeID ,lCell.Elevation, lCell.walkable, elements, lCell.ID, links.ToArray(), lCell.Poluted, lCell.Deforested);
 				convertedCells.Add(newSaveCell);
 			}
 			return convertedCells;
@@ -444,16 +398,6 @@ namespace Assets.Scripts.Game.Save
 				if (p.Key) clearedList.Add(p.Key, p.Value);
 			}
 			return clearedList;
-		}
-
-		public static List<SavePlayerPosition> ConvertPlayerPositionToSerializable(Dictionary<EPlayer, KeyValuePair<int, Vector3>> allPos)
-		{
-			List<SavePlayerPosition> posList = new List<SavePlayerPosition>();
-			foreach (KeyValuePair<EPlayer, KeyValuePair<int, Vector3>> iPlayer in allPos)
-			{
-				posList.Add(new SavePlayerPosition(iPlayer.Value.Key, iPlayer.Key, iPlayer.Value.Value));
-			}
-			return posList;
 		}
 
 		public static List<BuildingLink> GetBuildLinks(Dictionary<Props, string> list)
@@ -472,182 +416,6 @@ namespace Assets.Scripts.Game.Save
 				}	
 			}
 			return lList;
-		}
-
-		public static void SavePNJDialogues(string planetName)
-		{
-			List<SaveDialogueNPC> NPCdialogues = new List<SaveDialogueNPC>();
-			foreach (Cell c in EarthManager.Instance.Cells)
-			{
-				foreach (KeyValuePair<Props, string> item in c.Props)
-				{
-					if (GameTypes.PNJ_TYPES.Contains(item.Key.GetType()))
-					{
-						InteractablePNJ pnj = (InteractablePNJ)item.Key;
-
-						if (pnj.presentationTexts.Count > 0)
-						{
-							SaveDialogueNPC dialogueSave = new SaveDialogueNPC(
-								pnj.transform.position,
-								pnj.presentationTexts,
-								pnj.leavingTexts,
-								pnj.govTopics,
-								pnj.contTopics
-							);
-
-							NPCdialogues.Add(dialogueSave);
-						}						
-					}
-				}
-			}
-
-			BinaryFormatter bf = new BinaryFormatter();
-			FileStream file = File.Create(Application.streamingAssetsPath + "/Save/" + planetName + "WorldDialoguesSave.gd");
-			bf.Serialize(file, NPCdialogues);
-			file.Close();
-
-            SaveCitizensDialogue(planetName);
-		}
-
-        private static void SaveCitizensDialogue(string planetName)
-        {
-            List<CitizenDialogueSave> citizenSaves = new List<CitizenDialogueSave>();
-            foreach (CitizenProp cp in EarthManager.citizens)
-            {
-                citizenSaves.Add(new CitizenDialogueSave(cp.transform.position, cp.dialogueText.ToArray()));
-            }
-
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Create(Application.streamingAssetsPath + "/Save/" + planetName + "CitizensSave.gd");
-            bf.Serialize(file, citizenSaves);
-            file.Close();
-        }
-
-        public static bool LoadPNJDialogues(string planetName)
-		{			
-			string targetSaveName = planetName + "WorldDialoguesSave.gd";
-			string targetCitizenSaveName = planetName + "CitizensSave.gd";
-			BinaryFormatter bf = new BinaryFormatter();
-
-#if UNITY_ANDROID // ANDROID PLANET LOAD FUNCTION
-			string androidPath = "jar:file://" + Application.dataPath + "!/assets/Save/" + targetSaveName;
-			string androidCitizenPath = "jar:file://" + Application.dataPath + "!/assets/Save/" + targetCitizenSaveName;
-
-			if (!PlanetMaker.instance.buildForMobile) androidPath = Application.streamingAssetsPath + "/Save/" + targetSaveName;
-			if (!PlanetMaker.instance.buildForMobile) androidCitizenPath = Application.streamingAssetsPath + "/Save/" + targetCitizenSaveName;
-
-			var fileName = string.Format("{0}/{1}", Application.persistentDataPath, targetSaveName);
-			var fileCitizenName = string.Format("{0}/{1}", Application.persistentDataPath, targetCitizenSaveName);
-
-			WWW wwwfile = new WWW(androidPath);
-			while (!wwwfile.isDone) { }
-			File.WriteAllBytes(fileName, wwwfile.bytes);
-			StreamReader wr = new StreamReader(fileName);
-			PNJDialogues = (List<SaveDialogueNPC>)bf.Deserialize(wr.BaseStream);
-			wr.Close();
-
-            WWW wwwCitizenfile = new WWW(androidCitizenPath);
-			while (!wwwCitizenfile.isDone) { }
-			File.WriteAllBytes(fileCitizenName, wwwCitizenfile.bytes);
-			StreamReader wrCitizen = new StreamReader(fileCitizenName);
-			CitizenTexts = (List<CitizenDialogueSave>)bf.Deserialize(wrCitizen.BaseStream);
-			wrCitizen.Close();
-
-			return true;
-#endif
-
-#if UNITY_STANDALONE // DESKTOP PLANET LOAD FUNCTION
-            string editorPath = Application.streamingAssetsPath + "/Save/" +  targetSaveName;	
-			string editorCitizenPath = Application.streamingAssetsPath + "/Save/" + targetCitizenSaveName;
-
-            if (File.Exists(editorPath))
-            {
-                FileStream file = File.OpenRead(editorPath);
-                PNJDialogues = (List<SaveDialogueNPC>)bf.Deserialize(file);
-                file.Close();
-                Debug.Log("PNJ dialogues : " + PNJDialogues.Count);
-            }
-            else
-            {
-                Debug.LogError("Pas de dialogues pour PNJ");
-                return false;
-            }
-
-            if (File.Exists(editorCitizenPath))
-            {
-                FileStream file = File.OpenRead(editorCitizenPath);
-                CitizenTexts = (List<CitizenDialogueSave>)bf.Deserialize(file);
-                file.Close();
-            }
-            else Debug.LogError("Pas de dialogues pour les citizen");
-
-			return true;
-#endif
-		}
-
-		public static void SaveBudgetConfiguration(string planetName)
-		{
-			List<SaveBudgetComponent> budgetComps = new List<SaveBudgetComponent>();
-			foreach (Cell c in EarthManager.Instance.Cells)
-			{
-				foreach (KeyValuePair<Props, string> item in c.Props)
-				{
-					if (GameTypes.PNJ_TYPES.Contains(item.Key.GetType()))
-					{
-						InteractablePNJ pnj = (InteractablePNJ)item.Key;
-
-						if (pnj.budgetComponent.name != string.Empty)
-						{
-							SaveBudgetComponent budgetComp = new SaveBudgetComponent(
-								pnj.transform.position,
-								pnj.budgetComponent
-							);
-
-							budgetComps.Add(budgetComp);
-						}
-					}
-				}
-			}
-
-			BinaryFormatter bf = new BinaryFormatter();
-			FileStream file = File.Create(Application.streamingAssetsPath + "/Save/" + planetName + "BudgetConfiguration.gd");
-			bf.Serialize(file, budgetComps);
-			file.Close();
-		}
-
-		public static bool LoadBudget(string planetName)
-		{
-			string targetBudgetName = planetName + "BudgetConfiguration.gd";
-			BinaryFormatter bf = new BinaryFormatter();
-
-#if UNITY_ANDROID
-			string androidPath = "jar:file://" + Application.dataPath + "!/assets/Save/" + targetBudgetName;
-			if (!PlanetMaker.instance.buildForMobile) androidPath = Application.streamingAssetsPath + "/Save/" + targetBudgetName;
-			var fileName = string.Format("{0}/{1}", Application.persistentDataPath, targetBudgetName);
-
-			WWW wwwfile = new WWW(androidPath);
-			while (!wwwfile.isDone) { }
-			File.WriteAllBytes(fileName, wwwfile.bytes);
-			StreamReader wr = new StreamReader(fileName);
-			BudgetElements = (List<SaveBudgetComponent>)bf.Deserialize(wr.BaseStream);
-			wr.Close();
-
-			return true;
-#endif
-
-#if UNITY_STANDALONE
-			string editorBudgetPath = Application.streamingAssetsPath + "/Save/" + targetBudgetName;
-
-			if (File.Exists(editorBudgetPath))
-			{
-				FileStream file = File.OpenRead(editorBudgetPath);
-				BudgetElements = (List<SaveBudgetComponent>)bf.Deserialize(file);
-				file.Close();
-				Debug.Log("Budget number : " + BudgetElements.Count);
-			}
-			else return false;
-			return true;
-#endif
 		}
 	}
 }

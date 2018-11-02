@@ -8,7 +8,7 @@ namespace Assets.Scripts.Game
 	{
         public static float BOOST_TARGET_VALUE = 2f;
         public static float TRANSFERT_VALUE = 1f;
-        public static float PLAYER_MONEY_MULTIPLICATOR = 2500f;
+        public static int PLAYER_MONEY_MULTIPLICATOR = 2000;
 
         public static float STATE_FOREST = 0f;
         public static float STATE_CLEANLINESS = 0f;
@@ -23,29 +23,8 @@ namespace Assets.Scripts.Game
         public static float BAD_STEP = -1f;
         public static float GOOD_STEP = 1f;
 
-        public static void NewYear(List<BudgetComponent> budgets, List<BudgetWorldValues> bonusImpacts)
+        public static void NewYear(BudgetGlobalImpact globalImpact)
         {
-            BudgetGlobalImpact globalImpact = new BudgetGlobalImpact();
-
-            foreach (BudgetWorldValues bwv in bonusImpacts)
-            {
-                BudgetGlobalImpact bgi = BudgetComponent.GetBonusImpact(bwv);
-                globalImpact.cleanliness += bgi.cleanliness;
-                globalImpact.economy += bgi.economy;
-                globalImpact.forest += bgi.forest;
-                globalImpact.npc += bgi.npc;
-            }
-
-            foreach (BudgetComponent bc in budgets)
-            {
-                BudgetGlobalImpact bgi = bc.GetWorldImpact();
-                globalImpact.cleanliness += bgi.cleanliness;
-                globalImpact.economy += bgi.economy;
-                globalImpact.forest += bgi.forest;
-                globalImpact.npc += bgi.npc;
-                bc.Investment = 0;
-            }
-
             globalImpact.forest += I_STATE_FOREST;
             globalImpact.cleanliness += I_STATE_CLEANLINESS;
             globalImpact.npc += I_STATE_NPC;
@@ -55,7 +34,7 @@ namespace Assets.Scripts.Game
             Events.Instance.Raise(new OnChangeGauges());
         }
 
-        private static void ApplyImpact(BudgetGlobalImpact values)
+        public static void ApplyImpact(BudgetGlobalImpact values)
         {
             float lForest = STATE_FOREST;
             float lEconomy = STATE_ECONOMY;

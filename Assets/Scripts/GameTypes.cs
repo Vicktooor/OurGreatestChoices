@@ -14,7 +14,7 @@ namespace Assets.Scripts
 			typeof(InteractablePNJ_CERN),
 			typeof(InteractablePNJ_CoalPower),
 			typeof(InteractablePNJ_TownHall),
-			typeof(InteractablePNJ_WaterDiversion)
+			typeof(InteractablePNJ_OilPlant)
 		};
 	}
 }

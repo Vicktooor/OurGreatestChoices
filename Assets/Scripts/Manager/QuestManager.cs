@@ -10,9 +10,9 @@ public class Quest
 {
     public int ID = -1;
     public string NGOtarget;
-    public string itemName;
-    public string[] activitiesName;
-    public string selectedActivity;
+    public EItemType itemType;
+    public EBudgetType[] activitiesName;
+    public EBudgetType selectedActivity;
     public int unlockQuestID;
     public int step;
     public bool validated;
@@ -32,7 +32,6 @@ public class QuestManager : MonoBehaviour
     #endregion
 
     private UIQuest[] _questList;
-    private List<UIQuestMapButton> _iconsMapBtn = new List<UIQuestMapButton>();
     private Quest _runningQuest;
 
     public UIObjectPointIcon arrowModel;
@@ -40,7 +39,6 @@ public class QuestManager : MonoBehaviour
     public Transform container;
     public Sprite NGOSprite;
     public Sprite EntrepreneurSprite;
-    public UIQuestMapButton mapIconModel;
 
     protected ECameraTargetType view;
 
@@ -53,7 +51,7 @@ public class QuestManager : MonoBehaviour
         }
         else _instance = this;
 
-        Events.Instance.AddListener<OnZoomFinish>(OnChangeScene);
+        Events.Instance.AddListener<OnSwitchScene>(OnChangeScene);
         view = ECameraTargetType.MAP;
 
         ArrowDisplayer.Instances(ArrowDisplayerName).SetContainer(container as RectTransform);
@@ -95,13 +93,14 @@ public class QuestManager : MonoBehaviour
             for (int j = 0; j < pnjCount; j++)
             {
                 InteractablePNJ pnj = InteractablePNJ.PNJs[j];
-                if (pnj.budgetComponent.name == selectedQuest.activitiesName[i])
+                if (pnj.budgetComponent == null) continue;
+                if (pnj.budgetComponent.type == selectedQuest.activitiesName[i])
                 {
                     InteractablePNJ_TownHall major = pnj as InteractablePNJ_TownHall;
                     InteractablePNJ_CoalPower coalPNJ = pnj as InteractablePNJ_CoalPower;
                     if (major != null)
                     {
-                        if (selectedQuest.itemName == "Fruit Seed")
+                        if (selectedQuest.itemType == EItemType.FruitSeed)
                         {
                             if (major.HasFruitSeed())
                             {
@@ -109,7 +108,7 @@ public class QuestManager : MonoBehaviour
                                 break;
                             }
                         }
-                        else if (selectedQuest.itemName == "Tracks")
+                        else if (selectedQuest.itemType == EItemType.Tracks)
                         {
                             if (major.HasMetro())
                             {
@@ -117,7 +116,7 @@ public class QuestManager : MonoBehaviour
                                 break;
                             }
                         }
-                        else if (selectedQuest.itemName == "Fruits_Market")
+                        else if (selectedQuest.itemType == EItemType.FruitMarket)
                         {
                             if (major.HasFruitBasket())
                             {
@@ -128,7 +127,7 @@ public class QuestManager : MonoBehaviour
                     }
                     else if (coalPNJ != null)
                     {
-                        if (selectedQuest.itemName == "Wind Turbine")
+                        if (selectedQuest.itemType == EItemType.WindTurbine)
                         {
                             if (coalPNJ.IsUpdated())
                             {
@@ -139,7 +138,7 @@ public class QuestManager : MonoBehaviour
                     }
                     else
                     {
-                        if (selectedQuest.itemName == "Vehicule Carcass")
+                        if (selectedQuest.itemType == EItemType.Carcass)
                         {
                             if (pnj.HaveHisItem())
                             {
@@ -167,11 +166,10 @@ public class QuestManager : MonoBehaviour
     {
         ArrowDisplayer.Instances(ArrowDisplayerName).CleanArrows();
         pinchSprite.gameObject.SetActive(false);
-        CleanIcons();
 
         if (_runningQuest == null || _runningQuest.validated) return;
 
-        bool hasItem = InventoryPlayer.instance.ContainItem(_runningQuest.itemName) != null;
+        bool hasItem = InventoryPlayer.Instance.ContainItem(_runningQuest.itemType) != null;
 
         if (_runningQuest.step < 1 && !hasItem)
         {
@@ -179,7 +177,7 @@ public class QuestManager : MonoBehaviour
             for (int i = 0; i < pnjCount; i++)
             {
                 InteractablePNJ pnj = InteractablePNJ.PNJs[i];
-                if (pnj.budgetComponent.name == _runningQuest.NGOtarget)
+                if (pnj.IDname == _runningQuest.NGOtarget)
                 {
                     UIObjectPointIcon pointer = ArrowDisplayer.Instances(ArrowDisplayerName).UseArrow<UIObjectPointIcon>(350f, 0, true, pnj.transform.position, NGOSprite, ArrowDisplayerName, false);
                     if (view == ECameraTargetType.MAP) ArrowDisplayer.Instances(ArrowDisplayerName).SetActiveArrows(false);
@@ -197,7 +195,7 @@ public class QuestManager : MonoBehaviour
         if (_runningQuest.step == 1)
         {
             if (!hasItem) return;
-            if (_runningQuest.selectedActivity != string.Empty)
+            if (_runningQuest.selectedActivity != EBudgetType.None)
             {
                 NextQuestStep();
                 return;
@@ -209,11 +207,7 @@ public class QuestManager : MonoBehaviour
                     pinchSprite.gameObject.SetActive(true);
                     pinchSprite.GetComponent<Animator>().SetBool("pinch", false);
                 }
-                else
-                {
-                    ShowActivitiesSelection();
-                    pinchSprite.gameObject.SetActive(false);
-                }
+                else pinchSprite.gameObject.SetActive(false);
             }
         }
 
@@ -233,7 +227,7 @@ public class QuestManager : MonoBehaviour
                 for (int i = 0; i < pnjCount; i++)
                 {
                     InteractablePNJ pnj = InteractablePNJ.PNJs[i];
-                    if (pnj.budgetComponent.name == _runningQuest.selectedActivity)
+                    if (pnj.budgetComponent.type == _runningQuest.selectedActivity)
                     {
                         UIObjectPointIcon pointer = ArrowDisplayer.Instances(ArrowDisplayerName).UseArrow<UIObjectPointIcon>(350f, 0, true, pnj.transform.position, EntrepreneurSprite, ArrowDisplayerName, false);
                     }
@@ -249,13 +243,13 @@ public class QuestManager : MonoBehaviour
         DisplayQuest();
     }
 
-    public void NGOTalkTo(string pnjTargetName)
+    public void NGOTalkTo(string pnjname)
     {
         for (int i = 0; i < Quests.Count; i++)
         {
             if (Quests[i].step < 1)
             {
-                if (Quests[i].NGOtarget == pnjTargetName)
+                if (Quests[i].NGOtarget == pnjname)
                 {
                     Quests[i].step++;
                     if (_runningQuest == Quests[i]) DisplayQuest();
@@ -265,7 +259,7 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    public void EcoTalkTo(string pnjTargetName)
+    public void EcoTalkTo(EBudgetType pnjTargetName)
     {
         for (int i = 0; i < Quests.Count; i++)
         {
@@ -284,33 +278,9 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    protected void ShowActivitiesSelection()
-    {
-        Camera cam = Camera.main;
-        for (int i = 0; i < _runningQuest.activitiesName.Length; i++)
-        {
-            for (int j = 0; j < InteractablePNJ.PNJs.Count; j++)
-            {
-                InteractablePNJ pnj = InteractablePNJ.PNJs[j];
-                if (pnj.budgetComponent.name == _runningQuest.activitiesName[i])
-                {
-                    UIQuestMapButton mapIcon = Instantiate(mapIconModel, cam.WorldToScreenPoint(pnj.propLinked.transform.position), Quaternion.identity, container);
-                    mapIcon.SetPNJ(pnj);
-                    _iconsMapBtn.Add(mapIcon);
-                }
-            }
-        }
-    }
-
-    protected void CleanIcons()
-    {
-        foreach (UIQuestMapButton btn in _iconsMapBtn) Destroy(btn.gameObject);
-        _iconsMapBtn.Clear();
-    }
-
     public void SelectTarget(InteractablePNJ tPnj)
     {
-        _runningQuest.selectedActivity = tPnj.budgetComponent.name;
+        _runningQuest.selectedActivity = tPnj.budgetComponent.type;
         NextQuestStep();
     }
 
@@ -345,14 +315,14 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    protected void OnChangeScene(OnZoomFinish e)
+    protected void OnChangeScene(OnSwitchScene e)
     {
-        if (e.view == ECameraTargetType.MAP)
+        if (e.mode == ECameraTargetType.MAP)
         {
             view = ECameraTargetType.MAP;
             ArrowDisplayer.Instances(ArrowDisplayerName).SetActiveArrows(false);
         }
-        else if (e.view == ECameraTargetType.ZOOM)
+        else if (e.mode == ECameraTargetType.ZOOM)
         {
             view = ECameraTargetType.ZOOM;
             ArrowDisplayer.Instances(ArrowDisplayerName).SetActiveArrows(true);
@@ -368,6 +338,6 @@ public class QuestManager : MonoBehaviour
 
     protected void OnDestroy()
     {
-        Events.Instance.RemoveListener<OnZoomFinish>(OnChangeScene);
+        Events.Instance.RemoveListener<OnSwitchScene>(OnChangeScene);
     }
 }

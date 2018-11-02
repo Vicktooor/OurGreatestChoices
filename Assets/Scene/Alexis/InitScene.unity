@@ -205,10 +205,14 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 468735981}
-  - component: {fileID: 468735983}
+  - component: {fileID: 468735985}
+  - component: {fileID: 468735984}
   - component: {fileID: 468735982}
+  - component: {fileID: 468735987}
+  - component: {fileID: 468735986}
+  - component: {fileID: 468735983}
   m_Layer: 0
-  m_Name: LoadDatabase
+  m_Name: PersistentManagers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -247,6 +251,159 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 87f6d1b09814c76488ba43dab68fcea7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &468735984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 468735980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46ef5171da42cd94ca44a103cf7fc1ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planetName: PlanetGoldTest
+  ftuePlanetName: PlanetGoldTest
+  planetModel: {fileID: 114054480274737196, guid: 8df95542939834f44825f8d16a25400d,
+    type: 2}
+  planetLink: {fileID: 0}
+  assetsFolder:
+  - Game
+  - Topics
+  _cellPrefab: {fileID: 1288703542744556, guid: ed753421c2c242140a393bc6657a0706,
+    type: 2}
+  bubblePrefab: {fileID: 114372543318758386, guid: 2f19cbe678dcfe94798e142ed7f32087,
+    type: 2}
+  helpSpritePrefab: {fileID: 114696831758750950, guid: 0a96d9fad3d20bc48801d06c3f5c0b68,
+    type: 2}
+--- !u!114 &468735985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 468735980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85ab60730578e5c46b9bb273d8159282, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  npcPath: Json/NPCs.json
+  valuesPath: Json/BudgetsValues.json
+  impactsPath: Json/BudgetsImpact.json
+  dialoguesPath: Json/NPCDialogues.json
+  contractTopics:
+  - {fileID: 11400000, guid: f796b72738787b34d903ea9da425fb42, type: 2}
+  - {fileID: 11400000, guid: 408d63c0a336d1049a167cb323f7c0d0, type: 2}
+  - {fileID: 11400000, guid: c9111a6900c2a254eb49856df8ed3428, type: 2}
+  - {fileID: 11400000, guid: d704f1b078caaec45a0d78efd38759c4, type: 2}
+  - {fileID: 11400000, guid: 0cc27825c58357c4da092ad142196647, type: 2}
+  - {fileID: 11400000, guid: 9994dd35863325d428da768f06abf549, type: 2}
+  - {fileID: 11400000, guid: f8e2ac5b88862604aa266c4d15d3a9f1, type: 2}
+  - {fileID: 11400000, guid: e0eb74386dfff9749b1e2590f810041a, type: 2}
+  - {fileID: 11400000, guid: 2b0dcb1762bce4d4eb96547c353386bf, type: 2}
+  - {fileID: 11400000, guid: 0305c2b2d3d1d2e4aa082cfa0a01f057, type: 2}
+  govTopics:
+  - {fileID: 11400000, guid: dcfb6f6dc2794a346b16282dd97c4e6c, type: 2}
+  - {fileID: 11400000, guid: 5ec9d9535c9cecd4faebba39eb99c707, type: 2}
+  - {fileID: 11400000, guid: 2a8e4dbbc1737ee42a1956da0b6c6c5d, type: 2}
+  - {fileID: 11400000, guid: 46ff15d4a7dd87c4dba8b009026af6a8, type: 2}
+  - {fileID: 11400000, guid: deecf647d83c0434d9ac9e843299d105, type: 2}
+  - {fileID: 11400000, guid: 448cf70d08893244bb7e70421f7b6e8a, type: 2}
+  - {fileID: 11400000, guid: af61b579f2b936041858e1110e6e1c8d, type: 2}
+  - {fileID: 11400000, guid: 0d475503a65721843891c61d9d54462d, type: 2}
+  - {fileID: 11400000, guid: 67d1de9dd780c374389e5bec9d84681c, type: 2}
+  - {fileID: 11400000, guid: 7f86d41432df9bd48b13a0ba0ad3302f, type: 2}
+--- !u!114 &468735986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 468735980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47e0c098885aaa0419d640343132d153, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showButtons: 0
+  _randomGroundColor: 1
+  edit: 0
+  _smoothNormalFactor: 0.25
+  _groundEditState: 1
+  showUsingTiles: 1
+  _elevationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _nbNeighbors: 0
+  _colors:
+  - type: 0
+    colors:
+    - {r: 0.18823531, g: 0.34901962, b: 0.21176472, a: 0}
+    - {r: 0.27058825, g: 0.41960788, b: 0.21176472, a: 0}
+    - {r: 0.35686275, g: 0.5019608, b: 0.21176472, a: 0}
+    - {r: 0.5019608, g: 0.6392157, b: 0.24705884, a: 0}
+    PolutedColor: {r: 0.3602941, g: 0.35532454, b: 0.18014705, a: 0}
+  - type: 1
+    colors:
+    - {r: 0.9294118, g: 0.7137255, b: 0.3372549, a: 0}
+    - {r: 0.9686275, g: 0.7686275, b: 0.39607847, a: 0}
+    - {r: 0.5137255, g: 0.41960788, b: 0.28235295, a: 0}
+    - {r: 0.98823535, g: 0.8352942, b: 0.5411765, a: 0}
+    PolutedColor: {r: 0, g: 0, b: 0, a: 0}
+  - type: 2
+    colors:
+    - {r: 0.8431373, g: 0.8470589, b: 0.8431373, a: 0}
+    - {r: 0.7960785, g: 0.80392164, b: 0.79215693, a: 0}
+    - {r: 0.73333335, g: 0.7411765, b: 0.7294118, a: 0}
+    - {r: 0.8862746, g: 0.83921576, b: 0.8196079, a: 0}
+    PolutedColor: {r: 0.24313726, g: 0.18039216, b: 0.101960786, a: 0}
+  - type: 3
+    colors:
+    - {r: 0.12156863, g: 0.1764706, b: 0, a: 0}
+    - {r: 0.32156864, g: 0.3921569, b: 0.24705884, a: 0}
+    - {r: 0.078431375, g: 0.27450982, b: 0.2627451, a: 0}
+    - {r: 0.3019608, g: 0.29411766, b: 0.17254902, a: 0}
+    PolutedColor: {r: 0.24264705, g: 0.18043491, b: 0.10169765, a: 0}
+  - type: 4
+    colors:
+    - {r: 0.34117648, g: 0.40000004, b: 0.45098042, a: 0}
+    - {r: 0.2392157, g: 0.27450982, b: 0.3372549, a: 0}
+    - {r: 0.18823531, g: 0.26666668, b: 0.3372549, a: 0}
+    - {r: 0.45098042, g: 0.47058827, b: 0.45098042, a: 0}
+    PolutedColor: {r: 0, g: 0, b: 0, a: 0}
+  - type: 6
+    colors:
+    - {r: 0.98823535, g: 0.8352942, b: 0.5411765, a: 0}
+    PolutedColor: {r: 0.21536508, g: 0, b: 0.22794116, a: 0}
+  - type: 5
+    colors:
+    - {r: 0.65882355, g: 0.69411767, b: 0.854902, a: 0}
+    PolutedColor: {r: 0.09411765, g: 0.09411765, b: 0.09019608, a: 0}
+  snapTo: 1
+  propsEditType: 0
+  showUsingProps: 1
+  _propsModel: {fileID: 0}
+  _decalType: 0
+  _decalMaterial: {fileID: 0}
+  _decalSprite: {fileID: 0}
+  _pushDistance: 0.1
+  _decalName: 
+  selectedPlayer: 0
+  _testPathfinding: 0
+  biomeIDEdit: 
+--- !u!114 &468735987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 468735980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4ea175b267927c44b708958dfa0df84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &971799630

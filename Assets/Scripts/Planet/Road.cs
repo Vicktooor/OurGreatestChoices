@@ -26,7 +26,7 @@ namespace Assets.Scripts.Planet
 
         public void Awake()
         {
-            roadInfo = JsonManager.FromJson<RoadInfo>("Json/Roads/" + roadInfo.name + ".json", RuntimePlatform.WindowsPlayer);
+            RoadInfo json = StreamingAssetAccessor.FromJson<RoadInfo>("Json/Roads/" + roadInfo.name + ".json");
             if (roadInfo != null) TRACKS.Add(roadInfo.name, roadInfo);
         }
     }

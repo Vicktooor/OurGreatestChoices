@@ -4,8 +4,6 @@ using Assets.Scripts.Utils;
 [AddComponentMenu("Camera-Control/Mouse Orbit with zoom")]
 public class CameraOrbital : CameraCC
 {
-    public Transform target;
-
     public float distance = 17.0f;
     public float xSpeed = 120.0f;
     public float ySpeed = 120.0f;
@@ -49,7 +47,7 @@ public class CameraOrbital : CameraCC
 	{
 		Quaternion rotation = Quaternion.Euler(y, x, 0);
 		Vector3 negDistance = new Vector3(0.0f, 0.0f, -distance);
-		Vector3 position = rotation * negDistance + target.position;
+		Vector3 position = rotation * negDistance + Vector3.zero;
 
 		transform.rotation = rotation;
 		transform.position = position;

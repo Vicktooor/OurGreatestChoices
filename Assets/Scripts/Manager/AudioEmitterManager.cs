@@ -156,7 +156,6 @@ namespace Assets.Scripts.Manager {
             Events.Instance.AddListener<OnNewObject>(NewObject);
             Events.Instance.AddListener<OnWrongObject>(WrongObject);
             Events.Instance.AddListener<OnGoodObject>(OnGoodObject);
-            Events.Instance.AddListener<OnGiveBudget>(GiveMoney);
             Events.Instance.AddListener<OnPopUp>(PopUp);
             Events.Instance.AddListener<OnNPCDialogueSFX>(NPCDialogue);
 
@@ -335,7 +334,7 @@ namespace Assets.Scripts.Manager {
             PlayEmitter(SFX_GOOD_OBJECT_STRING);
         }
 
-        void GiveMoney(OnGiveBudget pEvent) {
+        void GiveMoney() {
             PlayEmitter(SFX_GIVE_MONEY_STRING);
         }
 
@@ -403,11 +402,10 @@ namespace Assets.Scripts.Manager {
             int forestNumber = 0;
             int deforestationNumber = 0;
 
-            GameObject p = PlayerManager.instance.player;
+            Player p = PlayerManager.Instance.player;
             if (p)
             {
-                Player lPlayer = p.GetComponent<Player>();
-                foreach (KeyValuePair<Props, string> item in lPlayer.AssociateCell.Props)
+                foreach (KeyValuePair<Props, string> item in p.AssociateCell.Props)
                 {
                     if (item.Key.GetType() == typeof(PoolTree))
                     {
@@ -425,7 +423,7 @@ namespace Assets.Scripts.Manager {
                     }
                 }
 
-                foreach (Cell c in lPlayer.AssociateCell.Neighbors)
+                foreach (Cell c in p.AssociateCell.Neighbors)
                 {
                     foreach (KeyValuePair<Props, string> item in c.Props)
                     {
@@ -463,11 +461,10 @@ namespace Assets.Scripts.Manager {
         void CheckTownAMB() {
             StudioEventEmitter emitter = GetEmitter(AMB_CITY_STRING);
 
-            GameObject p = PlayerManager.instance.player;
+            Player p = PlayerManager.Instance.player;
             if (p)
             {
-                Player lPlayer = p.GetComponent<Player>();
-                foreach (KeyValuePair<Props, string> item in lPlayer.AssociateCell.Props)
+                foreach (KeyValuePair<Props, string> item in p.AssociateCell.Props)
                 {
                     if (TYPES_BUILDINGS.Contains(item.Key.GetType()))
                     {
@@ -476,7 +473,7 @@ namespace Assets.Scripts.Manager {
                     }
                 }
 
-                foreach (Cell c in lPlayer.AssociateCell.Neighbors)
+                foreach (Cell c in p.AssociateCell.Neighbors)
                 {
                     foreach (KeyValuePair<Props, string> item in c.Props)
                     {

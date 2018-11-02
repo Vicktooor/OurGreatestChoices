@@ -2,71 +2,68 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Scripts.Game.Load
+public class MainLoader<T> : Singleton<MainLoader<T>> where T : UnityEngine.Object
 {
-    public class MainLoader<O> : Singleton<MainLoader<O>> where O : UnityEngine.Object
-    {
-        private Dictionary<Type, ObjectArray<O>> _resources = new Dictionary<Type, ObjectArray<O>>();
+    private Dictionary<Type, ObjectArray<T>> _resources = new Dictionary<Type, ObjectArray<T>>();
 
-        public O Load(string folderPath, string fileName)
+    public T Load(string folderPath, string fileName)
+    {
+        Type lType = typeof(T);
+        if (ResourcesContainArrayOf(lType))
         {
-            Type lType = typeof(O);
-            if (ResourcesContainArrayOf(lType))
-            {
-                O lAsset = _resources[lType].Find(fileName);
-                if (lAsset != null) return lAsset;
-                else
-                {
-                    O lResource = Resources.Load<O>(folderPath + fileName);
-                    _resources[lType].Add(lResource, fileName);
-                    return lResource;
-                }
-            }
+            T lAsset = _resources[lType].Get(fileName);
+            if (lAsset != null) return lAsset;
             else
             {
-                _resources.Add(lType, new ObjectArray<O>());
-                O lResource = Resources.Load<O>(folderPath + fileName);
-                _resources[lType].Add(lResource, fileName);
+                T lResource = Resources.Load<T>(folderPath + fileName);
+                _resources[lType].Add(fileName, lResource);
                 return lResource;
             }
         }
-
-        public void LoadAsync(string folderPath, string fileName)
+        else
         {
-            Type lType = typeof(O);
-            AsyncMainLoader.Instance.LoadAsync<O>(folderPath, fileName);
+            _resources.Add(lType, new ObjectArray<T>());
+            T lResource = Resources.Load<T>(folderPath + fileName);
+            _resources[lType].Add(fileName, lResource);
+            return lResource;
         }
+    }
 
-        public void AddAsyncLoadedResource(O loadedAsset, string fileName)
-        {
-            Type lType = typeof(O);
-            if (ResourcesContainArrayOf(lType))
-            {
-                O lAsset = _resources[lType].Find(fileName);
-                if (lAsset != null) return;
-                else _resources[lType].Add(loadedAsset, fileName);
-            }
-            else
-            {
-                _resources.Add(lType, new ObjectArray<O>());
-                _resources[lType].Add(loadedAsset, fileName);
-            }
-        }
+    public void LoadAsync(string folderPath, string fileName)
+    {
+        Type lType = typeof(T);
+        AsyncMainLoader.Instance.LoadAsync<T>(folderPath, fileName);
+    }
 
-        public O GetResource(string resourceName)
+    public void AddAsyncLoadedResource(T loadedAsset, string fileName)
+    {
+        Type lType = typeof(T);
+        if (ResourcesContainArrayOf(lType))
         {
-            Type lType = typeof(O);
-            if (_resources.ContainsKey(lType))
-            {
-                return _resources[lType].Find(resourceName);
-            }
-            else return null;
+            T lAsset = _resources[lType].Get(fileName);
+            if (lAsset != null) return;
+            else _resources[lType].Add(fileName, loadedAsset);
         }
+        else
+        {
+            _resources.Add(lType, new ObjectArray<T>());
+            _resources[lType].Add(fileName, loadedAsset);
+        }
+    }
 
-        public bool ResourcesContainArrayOf(Type lType)
+    public T GetResource(string resourceName)
+    {
+        Type lType = typeof(T);
+        if (_resources.ContainsKey(lType))
         {
-            if (_resources.ContainsKey(lType)) return true;
-            else return false;
+            return _resources[lType].Get(resourceName);
         }
+        else return null;
+    }
+
+    public bool ResourcesContainArrayOf(Type lType)
+    {
+        if (_resources.ContainsKey(lType)) return true;
+        else return false;
     }
 }

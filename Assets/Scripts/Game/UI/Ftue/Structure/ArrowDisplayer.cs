@@ -8,7 +8,7 @@ public class ArrowDisplayer
 {
     private static Dictionary<string, ArrowDisplayer> _instances = new Dictionary<string, ArrowDisplayer>();
 
-    private ObjectArray<UIObjectPointer> _arrows = new ObjectArray<UIObjectPointer>();
+    private List<UIObjectPointer> _arrows = new List<UIObjectPointer>();
     private Transform _container;
     private UIObjectPointer _modelSimple;
     private UIObjectPointIcon _modelIcon;
@@ -125,7 +125,7 @@ public class ArrowDisplayer
 
     public void SetActiveArrows(bool tState)
     {
-        foreach (NamedObject<UIObjectPointer> ps in _arrows.Objs) ps.obj.gameObject.SetActive(tState);
+        foreach (UIObjectPointer ps in _arrows) ps.gameObject.SetActive(tState);
     }
 
     public void DestroyArrow(UIObjectPointer arrow)
@@ -136,7 +136,7 @@ public class ArrowDisplayer
 
     public void CleanArrows()
     {
-        foreach (NamedObject<UIObjectPointer> ps in _arrows.Objs) GameObject.Destroy(ps.obj.gameObject);
+        foreach (UIObjectPointer ps in _arrows) GameObject.Destroy(ps.gameObject);
         _arrows.Clear();
     }
 }
