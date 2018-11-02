@@ -29,15 +29,13 @@ public class UIElementDragger : MonoBehaviour {
                 objectToDragImage = objectToDrag.GetComponent<Image>();
                 objectToDragImage.raycastTarget = false;
 
-                //Disable the scrolling when dragging
                 objectToDrag.transform.parent.transform.parent.GetComponent<ScrollRect>().enabled = false;
             }
         }
 
         if (dragging) {
-            //if (GameManager.Instance.isOnDesk)
-            objectToDrag.position = Input.mousePosition;
-            //else objectToDrag.position = Input.GetTouch(0).position;
+            if (GameManager.Instance.IsOnDesk) objectToDrag.position = Input.mousePosition;
+            else objectToDrag.position = Input.GetTouch(0).position;
         }
 
         if (Input.GetMouseButtonUp(0)) {

@@ -723,10 +723,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46ef5171da42cd94ca44a103cf7fc1ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  planetName: PlanetGoldTest
+  planetName: PlanetFTUE
   ftuePlanetName: PlanetGoldTest
   playingPlanetName: 
   planetModel: {fileID: 114054480274737196, guid: 8df95542939834f44825f8d16a25400d,
+    type: 2}
+  planetFtueModel: {fileID: 114255058729481230, guid: 8595895a0bfe88a44865bf95109f04a0,
     type: 2}
   planetLink: {fileID: 0}
   assetsFolder:

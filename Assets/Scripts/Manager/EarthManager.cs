@@ -25,6 +25,7 @@ namespace Assets.Scripts.Manager
         [HideInInspector]
         public string playingPlanetName;
         public HoneycombPlanetSmooth planetModel;
+        public HoneycombPlanetSmooth planetFtueModel;
         public HoneycombPlanetSmooth planetLink;
 
         public string[] assetsFolder;
@@ -60,20 +61,34 @@ namespace Assets.Scripts.Manager
             StreamingAssetAccessor.Platform = RuntimePlatform.WindowsPlayer;
             TextManager.SetLanguage(SystemLanguage.English);
             ResourcesManager.Instance.Init();
-            PlanetSave.LoadCitizens(planetName);
-            PlanetSave.LoadPlayer(planetName);
-            PlanetSave.LoadPNJs(planetName);
-            GameManager.PARTY_TYPE = EPartyType.NEW;
-            playingPlanetName = planetName;
-            CreatePlanet(); 
+
+            if (ftuePlanetName != string.Empty)
+            {
+                GameManager.PARTY_TYPE = EPartyType.NEW;
+                playingPlanetName = ftuePlanetName;
+                PlanetSave.LoadCitizens(playingPlanetName);
+                PlanetSave.LoadPlayer(playingPlanetName);
+                PlanetSave.LoadPNJs(playingPlanetName);
+                CreatePlanet();
+            }
+            else if (planetName != string.Empty)
+            {
+                GameManager.PARTY_TYPE = EPartyType.NEW;
+                playingPlanetName = planetName;
+                PlanetSave.LoadCitizens(playingPlanetName);
+                PlanetSave.LoadPlayer(playingPlanetName);
+                PlanetSave.LoadPNJs(playingPlanetName);
+                CreatePlanet();
+            }
         }
 
         public void CreatePlanet()
         {
-            planetLink = Instantiate(planetModel);
+            if (playingPlanetName == ftuePlanetName) planetLink = Instantiate(planetFtueModel);
+            else if (playingPlanetName == planetName) planetLink = Instantiate(planetModel);
             planetLink.transform.position = Vector3.zero;
             planetLink.transform.rotation = Quaternion.identity;
-            planetLink.gameObject.name = planetName;
+            planetLink.gameObject.name = playingPlanetName;
             planetLink.StartGeneration(CreateFullPlanet);
         }
 
