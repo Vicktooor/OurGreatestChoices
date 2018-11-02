@@ -469,12 +469,12 @@ namespace Assets.Scripts.Utils
         {
 			if (!showButtons) return;
 
-            if (GUI.Button(new Rect(10, 10, 50, 25), "Save")) PlanetSave.SaveCells(EarthManager.Instance.Cells, EarthManager.Instance.planetName);
-            if (GUI.Button(new Rect(10, 45, 120, 25), "Save Player")) PlanetSave.SavePlayer(EarthManager.Instance.planetName);
+            if (GUI.Button(new Rect(10, 10, 50, 25), "Save")) PlanetSave.SaveCells(EarthManager.Instance.Cells, EarthManager.Instance.playingPlanetName);
+            if (GUI.Button(new Rect(10, 45, 120, 25), "Save Player")) PlanetSave.SavePlayer(EarthManager.Instance.playingPlanetName);
 			if (GUI.Button(new Rect(70, 10, 50, 25), "Light")) RecalulateNormals();
 			if (GUI.Button(new Rect(130, 10, 50, 25), "UVs")) EarthManager.Instance.RecalculateUVMap();
-            if (GUI.Button(new Rect(300, 10, 120, 25), "Save Pnjs")) PlanetSave.SavePnjs(EarthManager.Instance.planetName);
-            if (GUI.Button(new Rect(430, 10, 120, 25), "Save Citizens")) PlanetSave.SaveCitizens(EarthManager.Instance.planetName);
+            if (GUI.Button(new Rect(300, 10, 120, 25), "Save Pnjs")) PlanetSave.SavePnjs(EarthManager.Instance.playingPlanetName);
+            if (GUI.Button(new Rect(430, 10, 120, 25), "Save Citizens")) PlanetSave.SaveCitizens(EarthManager.Instance.playingPlanetName);
             if (GUI.Button(new Rect(430, 70, 50, 25), "Load")) EarthManager.Instance.CreateOnlyPlanet();
 
 			float y = 100;
