@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Assets.Script;
+using Assets.Scripts.Game.UI.Ftue;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.PostProcessing;
@@ -17,7 +19,7 @@ namespace Assets.Scripts.Utils
 
         public ECamera startCamera;
 
-		private float MinZoomDistance = 0.35f;
+		private float MinZoomDistance = 0.82f;
 		[SerializeField]
 		private float MaxZoomDistance = 1.2f;
 		[SerializeField]
@@ -29,8 +31,14 @@ namespace Assets.Scripts.Utils
 		[SerializeField]
 		protected float _mapViewDistance = 10f;
 		public float MapViewDistance {
-			get { return Mathf.Clamp(_mapViewDistance, MinMapDistance, MaxMapDistance); }
-			set { _mapViewDistance = Mathf.Clamp(value, MinMapDistance, MaxMapDistance); }
+			get {
+                if (FtueManager.instance.active) return Mathf.Clamp(_mapViewDistance, 3f, 8f);
+                else return Mathf.Clamp(_mapViewDistance, MinMapDistance, MaxMapDistance);
+            }
+			set {
+                if (FtueManager.instance.active) _mapViewDistance = Mathf.Clamp(value, 3f, 8f);
+                else _mapViewDistance = Mathf.Clamp(value, MinMapDistance, MaxMapDistance);
+            }
 		}
 
 		[SerializeField]
@@ -55,7 +63,7 @@ namespace Assets.Scripts.Utils
 		}
 
 		[SerializeField]
-		protected float _distanceToplayer = 0.85f;
+		protected float _distanceToplayer = 0.9f;
 		public float DistanceToplayer
 		{
 			get { return Mathf.Clamp(_distanceToplayer, MinZoomDistance, MaxZoomDistance); }
@@ -92,6 +100,8 @@ namespace Assets.Scripts.Utils
 		private PostProcessingProfile _postProcess;
 		[SerializeField]
 		private GameObject _atmospherePlane;
+        [SerializeField]
+        private GameObject _clouds;
 
 		protected void Awake()
 		{
@@ -120,8 +130,9 @@ namespace Assets.Scripts.Utils
         public void HandleZoomEnd()
         {
             _endCalled = false;
-            _mapViewDistance = 10f;
-            _distanceToplayer = 0.85f;
+            MapViewDistance = 10f;
+            _distanceToplayer = 0.9f;
+            UIManager.instance.ActiveUI();
         }
 
 		protected void Update()
@@ -139,16 +150,19 @@ namespace Assets.Scripts.Utils
 			{
 				_postProcess.depthOfField.enabled = true;
 				_atmospherePlane.SetActive(true);
-			}
+                _clouds.SetActive(true);
+            }
             else if (toShow && QUALITY == EQuality.Standard)
             {
                 _atmospherePlane.SetActive(true);
+                _clouds.SetActive(false);
             }
 			else
 			{
 				_postProcess.depthOfField.enabled = false;
 				_atmospherePlane.SetActive(false);
-			}
+                _clouds.SetActive(false);
+            }
 		}
 
         public void SetQuality(EQuality quality)
@@ -176,7 +190,15 @@ namespace Assets.Scripts.Utils
             if (GameManager.Instance.LoadedScene == SceneString.MapView)
             {
                 MapViewDistance += e.value / 100f;
-                if (_mapViewDistance <= MinMapDistance && !_endCalled)
+                if (FtueManager.instance.active)
+                {
+                    if (_mapViewDistance <= 3f && !_endCalled)
+                    {
+                        _endCalled = true;
+                        Events.Instance.Raise(new OnPinchEnd());
+                    }
+                }
+                else if (_mapViewDistance <= MinMapDistance && !_endCalled)
                 {
                     _endCalled = true;
                     Events.Instance.Raise(new OnPinchEnd());
@@ -191,6 +213,13 @@ namespace Assets.Scripts.Utils
                     {
                         _endCalled = true;
                         Events.Instance.Raise(new OnPinchEnd());
+                    }
+                }
+                else if (e.value < 0)
+                {
+                    if (_distanceToplayer >= MinZoomDistance && !_endCalled)
+                    {
+                        DistanceToplayer += e.value / 1000f;
                     }
                 }
             }
@@ -254,7 +283,7 @@ namespace Assets.Scripts.Utils
 			}
 		}
 
-		private GameCamera GetGameCamera()
+        private GameCamera GetGameCamera()
 		{
             if (!typedCameras.ContainsKey(ECamera.GAME)) return null;
 			GameCamera gameCam = (GameCamera)typedCameras[ECamera.GAME];
@@ -263,6 +292,7 @@ namespace Assets.Scripts.Utils
 
         public void Reset()
         {
+            ShowAtmosphere(false);
             GameCamera.Reset();
             ActiveCamera(startCamera);
         }

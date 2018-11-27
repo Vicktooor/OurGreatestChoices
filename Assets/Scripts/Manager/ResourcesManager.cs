@@ -128,6 +128,7 @@ namespace Assets.Scripts.Manager
 
         public List<ContractorTopic> contractTopics;
         public List<GovernmentTopic> govTopics;
+        public List<Item> ItemModels;
 
         private NPCWrapper _npcs;
         public NPCWrapper NPCs { get { return _npcs; } }
@@ -144,6 +145,12 @@ namespace Assets.Scripts.Manager
 
         public void Init()
         {
+            ItemModels = new List<Item>();
+            foreach (EItemType it in Enum.GetValues(typeof(EItemType)))
+            {
+                if (it != EItemType.None) ItemModels.Add(Resources.Load<Item>("Items/" + it.ToString()));
+            }
+
             _impacts = StreamingAssetAccessor.FromJson<ImpactsWrapper>(impactsPath);
             List<KeyValuePair<string, BudgetWorldValues>> pairImpact = FileManager.GenerateList<BudgetWorldValues, ImpactWrap>(_impacts.objects);
             DicWrapper<BudgetWorldValues> wrapperImpact = FileManager.GenerateDicWrapper(pairImpact);
@@ -190,9 +197,9 @@ namespace Assets.Scripts.Manager
             foreach (BudgetComponent bc in _budgetComponents)
             {
                 BudgetWorldValues impact;
-                if (!bc.impacts.Contains(EWorldImpactType.None) && !bc.impacts.Contains(EWorldImpactType.BankruptedTownHall))
+                if (!bc.impacts.Contains(EWorldImpactType.None))
                 {
-                    foreach (EWorldImpactType e in bc.impacts)
+                    foreach (EWorldImpactType e in bc.impacts.ToArray())
                     {
                         impact = _impactsDatabase[e];
                         globalImpact.cleanliness += impact.cleanliness.val + (bc.budget * impact.cleanliness.multiplicator);
@@ -201,15 +208,6 @@ namespace Assets.Scripts.Manager
                         globalImpact.npc += impact.npc.val + (bc.budget * impact.npc.multiplicator);
                         bc.PassAYear();
                     }
-                }
-                else if (bc.impacts.Contains(EWorldImpactType.BankruptedTownHall))
-                {
-                    impact = _impactsDatabase[EWorldImpactType.BankruptedTownHall];
-                    globalImpact.cleanliness += impact.cleanliness.val + (bc.budget * impact.cleanliness.multiplicator);
-                    globalImpact.economy += impact.economy.val + (bc.budget * impact.economy.multiplicator);
-                    globalImpact.forest += impact.forest.val + (bc.budget * impact.forest.multiplicator);
-                    globalImpact.npc += impact.npc.val + (bc.budget * impact.npc.multiplicator);
-                    bc.PassAYear();
                 }
             }
             foreach (KeyValuePair<EWorldImpactType, int> bonus in _bonusValues)

@@ -170,7 +170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _yearTime: 30
-  canActive: 0
+  active: 0
   skySpeed: 5
 --- !u!1 &139431594
 GameObject:
@@ -619,7 +619,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showButtons: 1
-  _randomGroundColor: 0
+  _randomGroundColor: 1
   edit: 1
   _smoothNormalFactor: 0.25
   _groundEditState: 1
@@ -723,8 +723,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46ef5171da42cd94ca44a103cf7fc1ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  planetName: PlanetFTUE
-  ftuePlanetName: PlanetGoldTest
+  planetName: PlanetGoldTest
+  ftuePlanetName: 
   playingPlanetName: 
   planetModel: {fileID: 114054480274737196, guid: 8df95542939834f44825f8d16a25400d,
     type: 2}
@@ -777,6 +777,7 @@ MonoBehaviour:
   dialoguesPath: Json/NPCDialogues.json
   contractTopics: []
   govTopics: []
+  ItemModels: []
 --- !u!114 &995803011
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -961,6 +962,7 @@ MonoBehaviour:
   _stepHeight: 0.35
   _postProcess: {fileID: 11400000, guid: c963ef07364e57b40beb7d9dccdff8ca, type: 2}
   _atmospherePlane: {fileID: 0}
+  _clouds: {fileID: 0}
 --- !u!114 &1055834005
 MonoBehaviour:
   m_ObjectHideFlags: 0

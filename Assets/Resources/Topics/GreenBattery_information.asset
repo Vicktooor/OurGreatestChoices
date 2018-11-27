@@ -13,9 +13,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 9
   texts:
-    playerText: 
-    NPCText: 
+    playerText: GreenBatteryInfo0
+    NPCText: GreenBatteryAnswer0
     getInfo: 1
     nextTexts: []
+    smileySprite: {fileID: 0}
+    iconSprite: {fileID: 0}
   targetItem: {fileID: 11400000, guid: 55671b850176eb34f8f15cfee0282f00, type: 2}
-  icon: {fileID: 21300000, guid: d75f981844ec9d741afbec1663d2e714, type: 3}
+  icon: {fileID: 21300000, guid: 866a5ca203087bf4480741cba6fb20bf, type: 3}

@@ -35,13 +35,14 @@ namespace Assets.Script {
 
         public ObjectUIPerceptor inventoryTarget;
         public SwitchPanel clouds;
+        public List<GameObject> menuPanel; 
 
         [SerializeField]
         GameObject GlossaryPanel;
         [SerializeField]
         GameObject GlobalGaugesPanel;
-        [SerializeField]
-        GameObject _cloudPanel;
+
+        public PanelTweener panelSkip;
         
         [Header("Gauges")]
         [SerializeField]
@@ -116,14 +117,6 @@ namespace Assets.Script {
         private List<Sprite> _sdgIconQueue = new List<Sprite>();
         #endregion
 
-        #region Event
-        [HideInInspector]
-        public SwitchEvent switchButtonEvent;
-
-        [HideInInspector]
-        public UnityEvent pressButtonEvent;
-        #endregion
-
         [Header("SDGs")]
         [SerializeField]
         private SDGDatabase _sdgSpriteDatabase;
@@ -144,7 +137,6 @@ namespace Assets.Script {
                 throw new Exception("Tentative de création d'une autre instance de PlayerManager alors que c'est un singleton.");
             }
             _instance = this;
-            switchButtonEvent = new SwitchEvent();
         }
 
 		protected void Start() {
@@ -154,6 +146,7 @@ namespace Assets.Script {
             _UIInGamePanel = GameObject.FindGameObjectWithTag(UI_PANEL_TAG);
             clouds.gameObject.SetActive(false);
             _loadingPanel = GameObject.FindGameObjectWithTag(LOADING_SCENE_TAG);
+            ActivePanelTransition(false);
 
             Events.Instance.AddListener<OnPinchEnd>(OnClickOnSceneButton);
             Events.Instance.AddListener<OnSceneLoaded>(SceneLoaded);
@@ -175,6 +168,7 @@ namespace Assets.Script {
 
         protected void RemoveHold(OnRemove e)
         {
+            _press = false;
             _bagButton.raycastTarget = true;
             Events.Instance.RemoveListener<OnRemove>(RemoveHold);
         }
@@ -217,24 +211,28 @@ namespace Assets.Script {
             _switchButtonArray.Find(p => p.player == PlayerManager.Instance.playerType).btn.interactable = false;
             clouds.gameObject.SetActive(true);
             _bagButton.gameObject.SetActive(false);
-            StartCoroutine(CloudCoroutine(true));          
+
+            if (!FtueManager.instance.active)
+            {
+                bool showMapUI = GameManager.Instance.LoadedScene == SceneString.MapView;
+                GlobalGaugesPanel.SetActive(showMapUI);
+            }
+
+            StartCoroutine(CloudCoroutine(true));
         }
 
         #endregion
         
         #region ButtonUtils
 
-        public void OnPressClickableButtons() {
-			if (_press) return;
-
-            /* Event for CameraComplement and Player */
-            pressButtonEvent.Invoke();
-            _press = true;
-        }
-
-        void UnPressClickableButtons(OnRemove e) {
-            _bagButton.raycastTarget = true;
-            _press = false;
+        public void OnPressFTUEButton(UIFtueImageContainer p)
+        {
+            if (!FtueManager.instance.active) return;
+            if (FtueManager.instance.currentStep.UItarget == null) return;
+            if (p == FtueManager.instance.currentStep.UItarget && FtueManager.instance.currentStep.waitOpeningPanel == null)
+            {
+                FtueManager.instance.ValidStep();
+            }
         }
 
         #endregion
@@ -242,14 +240,20 @@ namespace Assets.Script {
         #region SwitchButton
 
         public void OnClickOnSwitchButton(Button pButton) {
-			if (FtueManager.instance.active) return;
+			if (FtueManager.instance.active)
+            {
+                if (FtueManager.instance.currentStep.playerBtn != null)
+                {
+                    if (FtueManager.instance.currentStep.playerBtn.GetComponent<Button>() != pButton) return;
+                }
+                else return;
+            }
 
             SwitchBtnStruct btnStruct = _switchButtonArray.Find(e => e.btn.Equals(pButton));
             GlobalGaugesPanel.SetActive(false);
             foreach (SwitchBtnStruct btn in _switchButtonArray) btn.btn.interactable = false;
 
             Events.Instance.AddListener<OnEndSwitchedPlayer>(EndSwitchPlayer);
-            switchButtonEvent.Invoke(PlayerManager.Instance.GetPlayerByType(btnStruct.player));
 			Events.Instance.Raise(new SelectPlayer(PlayerManager.Instance.GetPlayerByType(btnStruct.player)));
         }
 
@@ -305,14 +309,21 @@ namespace Assets.Script {
                 {
                     tTime = Mathf.Clamp(tTime - (Time.deltaTime * (1f / SwitchPanel.TIME_TRANSITION)), 0f, 1f);
                     clouds.Move(Easing.SmoothStop(tTime, 2));
-                    if (tTime <= 0)
-                    {
-                        ChangeAllSceneButtons(showMapUI);                       
-                        _UIInGamePanel.SetActive(true);
-                    }
                     yield return null;
                 }
+                if (forceOpen) {
+                    if (GameManager.PARTY_TYPE == EPartyType.NEW) Events.Instance.Raise(new OnStartFtue());
+                }
             }
+        }
+
+        public void ActiveUI()
+        {
+            bool showMapUI = GameManager.Instance.LoadedScene == SceneString.MapView;
+            if (!showMapUI) PlayerManager.Instance.player.UpdateCells(false);
+            ChangeAllSceneButtons(showMapUI);
+            _UIInGamePanel.SetActive(true);
+            FtueManager.instance.OnEndTransition();
         }
 
 		public void OnClickOnSceneButton(OnPinchEnd e)
@@ -321,7 +332,6 @@ namespace Assets.Script {
 		}
 
         public void ChangeAllSceneButtons(bool mapView) {
-            _bagButton.gameObject.SetActive(!mapView);
             GlobalGaugesPanel.SetActive(mapView);
             foreach (SwitchBtnStruct btn in _switchButtonArray)
             {
@@ -330,7 +340,6 @@ namespace Assets.Script {
             _switchButtonArray.Find(e => e.player == PlayerManager.Instance.playerType).btn.interactable = false;
             if (PlayerManager.Instance.playerType == EPlayer.ECO) _bagButton.gameObject.SetActive(!mapView);
             else _bagButton.gameObject.SetActive(false);
-            _cloudPanel.SetActive(false);
         }
 
         #endregion
@@ -392,7 +401,14 @@ namespace Assets.Script {
 
         public void ClickStart()
         {
-            GameManager.Instance.OnClickOnStartButton();
+            panelSkip.SetEndCallBack(GameManager.Instance.OnClickOnStartButton);
+            panelSkip.Close();
+        }
+
+        public void ClickStartNoFTUE()
+        {
+            panelSkip.SetEndCallBack(GameManager.Instance.StartMainPlanet);
+            panelSkip.Close();
         }
 
         public void ClickContinue()
@@ -442,9 +458,22 @@ namespace Assets.Script {
             ShowSDGs();
         }
 
+        public void ActivePanelTransition(bool state)
+        {
+            _loadingPanel.SetActive(state);
+        }
+
+        public void SwitchFTUE()
+        {
+            tTime = 0f;
+            PNJState.Active(false);
+        }
+
         public void Clear()
         {
             tTime = 0f;
+            PNJState.Active(false);
+            foreach (GameObject go in menuPanel) go.SetActive(true);
         }
 
         protected void OnDestroy() {
@@ -452,7 +481,6 @@ namespace Assets.Script {
             Events.Instance.RemoveListener<OnSceneLoaded>(SceneLoaded);
 
             Events.Instance.RemoveListener<OnChangeGauges>(UpdateGauges);
-            Events.Instance.RemoveListener<OnRemove>(UnPressClickableButtons);
             Events.Instance.RemoveListener<OnUpdateInventory>(InventoryScreen.Instance.MajInventory);
             Events.Instance.RemoveListener<OnHold>(OnHoldMovement);
             _instance = null;

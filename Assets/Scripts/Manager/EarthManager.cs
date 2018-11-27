@@ -84,8 +84,8 @@ namespace Assets.Scripts.Manager
 
         public void CreatePlanet()
         {
-            if (playingPlanetName == ftuePlanetName) planetLink = Instantiate(planetFtueModel);
-            else if (playingPlanetName == planetName) planetLink = Instantiate(planetModel);
+            if (playingPlanetName == planetName) planetLink = Instantiate(planetModel);
+            else if (playingPlanetName == ftuePlanetName) planetLink = Instantiate(planetFtueModel);
             planetLink.transform.position = Vector3.zero;
             planetLink.transform.rotation = Quaternion.identity;
             planetLink.gameObject.name = playingPlanetName;
@@ -257,6 +257,7 @@ namespace Assets.Scripts.Manager
 
         public void DestroyPlanet()
         {
+            playingPlanetName = string.Empty;
             foreach (Cell c in _cells)
             {
                 c.transform.Clear();

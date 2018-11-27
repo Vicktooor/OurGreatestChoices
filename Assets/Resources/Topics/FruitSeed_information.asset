@@ -13,9 +13,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 8
   texts:
-    playerText: 
-    NPCText: 
+    playerText: FruitSeedInfo0
+    NPCText: FruitSeedAnswer0
     getInfo: 1
     nextTexts: []
+    smileySprite: {fileID: 0}
+    iconSprite: {fileID: 0}
   targetItem: {fileID: 11400000, guid: d2d1e6762cdc52d40aa8c6b5adc326a3, type: 2}
-  icon: {fileID: 21300000, guid: 2656f78e76eedeb46931b6489b451e73, type: 3}
+  icon: {fileID: 21300000, guid: 866a5ca203087bf4480741cba6fb20bf, type: 3}

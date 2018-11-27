@@ -79,8 +79,7 @@ public static class TextManager
         }
         else if (!_texts[_language].LocaTexts.ContainsKey(gKey))
         {
-            Debug.LogError(_language + "["+ keyPrefix + key + "] not found");
-            return null;
+           return _language + "["+ keyPrefix + key + "] not found";
         }
         return _texts[_language].LocaTexts[gKey];
     }

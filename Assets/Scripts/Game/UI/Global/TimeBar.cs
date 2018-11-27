@@ -12,7 +12,14 @@ public class TimeBar : MonoBehaviour
     {
         text = GetComponentInChildren<TextMeshProUGUI>();
         Events.Instance.AddListener<OnNewMonth>(NewMonth);
+        Events.Instance.AddListener<UpdateTime>(UpdateTimer);
         text.text = TextManager.GetText("1month") + " " + TimeManager.INITIAL_YEAR;
+    }
+
+    protected void UpdateTimer(UpdateTime e)
+    {
+        string month = TextManager.GetText(((TimeManager.Instance.ActualMonth % 12) + 1) + "month");
+        text.text = month + " " + (TimeManager.INITIAL_YEAR + TimeManager.Instance.ActualYear);
     }
 
     protected void NewMonth(OnNewMonth e)
@@ -26,6 +33,7 @@ public class TimeBar : MonoBehaviour
 
     public void OnDestroy()
     {
+        Events.Instance.RemoveListener<UpdateTime>(UpdateTimer);
         Events.Instance.RemoveListener<OnNewMonth>(NewMonth);
     }
 }

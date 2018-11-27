@@ -1,5 +1,6 @@
 ﻿using Assets.Script;
 using Assets.Scripts.Game.NGO;
+using Assets.Scripts.Game.UI.Ftue;
 using Assets.Scripts.Manager;
 using Assets.Scripts.Utils;
 using System;
@@ -39,21 +40,24 @@ namespace Assets.Scripts.Game.UI
 		public Transform arrowContainer;
 
 		protected NotepadTopic[] topics;
+        public NotepadTopic[] Topics { get { return topics; } }
         protected ContractorTopic contSelected;
         protected GovernmentTopic govSelected;
 
 		protected InteractablePNJ selectedNpc;
         protected DialoguePNJ selectedDialogue;
+        protected NPCDialogue activeDialogue;
 
         public UIObjectPointer simpleModel;
         public UIObjectPointIcon iconModel;
         public BillboardElement itemBillboard;
+        public NotePadInfo endInfo;
 
         public float displaySpeed;
 		protected float DisplaySpeed { get { return Mathf.Clamp(displaySpeed, 0.25f, 10f); } }
 
-        private int dialogueIndex = 0;
-        private bool giveInfo;
+        private bool _open = false;
+        public bool Open { get { return _open; } }
 
 		protected void Awake()
 		{
@@ -70,18 +74,18 @@ namespace Assets.Scripts.Game.UI
 
             ArrowDisplayer.Instances("NotePad").SetContainer(arrowContainer as RectTransform);
             ArrowDisplayer.Instances("NotePad").SetModels(simpleModel, iconModel);
+            endInfo.gameObject.SetActive(false);
         }
 
 		protected void OnEnable()
 		{
-			Events.Instance.AddListener<OnTalkToNPC>(TalkToNPC);
+            Events.Instance.AddListener<OnTalkToNPC>(TalkToNPC);
 			Events.Instance.AddListener<OnSetNotepadTopic>(SetTopics);
             Events.Instance.Raise(new OnPopUp());
         }
 
 		protected void OnDisable()
 		{
-            dialogueIndex = 0;
             Events.Instance.RemoveListener<OnTalkToNPC>(TalkToNPC);
 			Events.Instance.RemoveListener<OnSetNotepadTopic>(SetTopics);
 		}
@@ -112,19 +116,22 @@ namespace Assets.Scripts.Game.UI
 
 			if (targetPos.y > 0)
 			{
-				foreach (NotepadTopic topic in topics) topic.clickEnable = true;
+                _open = true;
+                foreach (NotepadTopic topic in topics) topic.clickEnable = true;
+                Events.Instance.Raise(new OnFTUEOpenDialogue());
 				Events.Instance.AddListener<OnActiveSelectTopic>(SelectTopic);
-			}
-
-			inTransition = false;
+                ControllerInput.AddScreen(transform);
+            }
+            inTransition = false;
 		}
 
 		protected void SetTopics(OnSetNotepadTopic e)
 		{
-			selectedNpc = e.npc;
-            selectedDialogue = InteractablePNJ.DialoguesDatabase[selectedNpc.IDname];
-            int topicIndex = 0;
+            UIManager.instance.PNJState.Active(false);
+            selectedNpc = e.npc;
+            selectedDialogue = InteractablePNJ.DialoguesDatabase[selectedNpc.TxtInfo.NPCText];
 
+            int topicIndex = 0;
             foreach (ContractorTopic ct in ResourcesManager.Instance.contractTopics)
             {
                 if (selectedDialogue.topicIDs.Contains(ct.id))
@@ -135,8 +142,8 @@ namespace Assets.Scripts.Game.UI
                     topics[index].SetIcon(ct.icon);
                     topics[index].contractorTopic = ct;
                     topics[index].topicType = typeof(ContractorTopic);
+                    topicIndex++;
                 }
-                topicIndex++;
             }
 
             foreach (GovernmentTopic gt in ResourcesManager.Instance.govTopics)
@@ -149,104 +156,102 @@ namespace Assets.Scripts.Game.UI
                     topics[index].SetIcon(gt.icon);
                     topics[index].govTopic = gt;
                     topics[index].topicType = typeof(GovernmentTopic);
+                    topicIndex++;
                 }
-                topicIndex++;
             }
 
 			if (topicIndex == 1) topics[1].gameObject.SetActive(false);
-			if (topicIndex == 0) foreach (NotepadTopic nt in topics) nt.gameObject.SetActive(false);
+			else if (topicIndex == 0) foreach (NotepadTopic nt in topics) nt.gameObject.SetActive(false);
+            else foreach (NotepadTopic nt in topics) nt.gameObject.SetActive(true);
 
-			StartCoroutine(DisplayCoroutine());
+            StartCoroutine(DisplayCoroutine());
         }
 
-        protected void SetNextDialogue(int targetIndex)
+        protected void SetNextDialogue()
         {
             int topicIndex = 0;
-            if (govSelected != null)
+            for (int i = 0; i < activeDialogue.nextTexts.Count; i++)
             {
-                NPCDialogue dial = GetNPCTextDromDialogueID(govSelected.texts, targetIndex, dialogueIndex);
-                if (dial != null)
+                topics[topicIndex].SetText(TextManager.GetText(activeDialogue.nextTexts[i].playerText));
+                topics[topicIndex].Clear();
+                topics[topicIndex].npcAnswer = TextManager.GetText(activeDialogue.nextTexts[i].NPCText);
+
+                if (contSelected != null)
                 {
-                    topics[topicIndex].SetText(TextManager.GetText(dial.playerText));
-                    topics[topicIndex].SetIcon(govSelected.icon);
-                    topics[topicIndex].Clear();
-                    topics[topicIndex].npcAnswer = TextManager.GetText(dial.NPCText);
-                    topics[topicIndex].govTopic = govSelected;
-                    topics[topicIndex].topicType = typeof(GovernmentTopic);
-                    giveInfo = dial.getInfo;
-                    topicIndex++;
-                }
-                else topics[targetIndex].gameObject.SetActive(false);
-            }
-            else if (contSelected != null)
-            {
-                NPCDialogue dial = GetNPCTextDromDialogueID(contSelected.text, targetIndex, dialogueIndex);
-                if (dial != null)
-                {
-                    topics[topicIndex].SetText(TextManager.GetText(dial.playerText));
                     topics[topicIndex].SetIcon(contSelected.icon);
-                    topics[topicIndex].Clear();
-                    topics[topicIndex].npcAnswer = TextManager.GetText(dial.NPCText);
                     topics[topicIndex].contractorTopic = contSelected;
                     topics[topicIndex].topicType = typeof(ContractorTopic);
-                    giveInfo = dial.getInfo;
-                    topicIndex++;
                 }
-                else topics[targetIndex].gameObject.SetActive(false);
-            }
-
-            dialogueIndex++;
-            if (topicIndex == 0)
-            {
-                if (giveInfo)
+                else if (govSelected != null)
                 {
-                    if (govSelected != null)
-                    {
-                        if (!InventoryPlayer.Instance.knowsItems.Contains(govSelected.targetItem))
-                        {
-                            InventoryPlayer.Instance.knowsItems.Add(govSelected.targetItem);
-                        }
-                    }
-                    else if (contSelected != null) OnPointTargetDialogue(contSelected);
-                }
-                PointingBubble.instance.NextDialogueStep(true);
+                    topics[topicIndex].SetIcon(govSelected.icon);
+                    topics[topicIndex].govTopic = govSelected;
+                    topics[topicIndex].topicType = typeof(GovernmentTopic);
+                }                
+                topicIndex++;
             }
-            else PointingBubble.instance.NextDialogueStep(false);
 
+            if (topicIndex == 1) topics[1].gameObject.SetActive(false);
+            else if (topicIndex == 0) foreach (NotepadTopic nt in topics) nt.gameObject.SetActive(false);
+            else foreach (NotepadTopic nt in topics) nt.gameObject.SetActive(true);
             Events.Instance.AddListener<OnActiveSelectTopic>(SelectTopic);
-        }
-
-        public static NPCDialogue GetNPCTextDromDialogueID(NPCDialogue dial, int topicIndex, int dialogueID)
-        {
-            if (dial.nextTexts.Count <= 0) return null;
-            if (dialogueID == 0)
-            {
-                if (dial.nextTexts.Count <= topicIndex + 1) return dial.nextTexts[topicIndex];
-                else return null;
-            }
-            else
-            {
-                if (dialogueID == 0)
-                {
-                    if (dial.nextTexts.Count <= topicIndex + 1) return dial.nextTexts[topicIndex];
-                    else return null;
-                }
-                if (dial.nextTexts.Count <= topicIndex + 1)
-                {
-                    return GetNPCTextDromDialogueID(dial.nextTexts[topicIndex], topicIndex, dialogueID--);
-                }
-                else return null;
-            }
         }
 
         protected void SelectTopic(OnActiveSelectTopic e)
 		{
-            if (e.topicItem.contractorTopic != null) contSelected = e.topicItem.contractorTopic;
-            if (e.topicItem.govTopic != null) govSelected = e.topicItem.govTopic;
-            PointingBubble.instance.LinkTopic(topics[e.notepadIndex]);
-            SetNextDialogue(e.notepadIndex);
             Events.Instance.RemoveListener<OnActiveSelectTopic>(SelectTopic);
+            PointingBubble.instance.LinkTopic(topics[e.notepadIndex]);
+            if (e.topicItem.contractorTopic != null)
+            {
+                contSelected = e.topicItem.contractorTopic;
+                if (activeDialogue != null) activeDialogue = activeDialogue.nextTexts[e.notepadIndex];
+                else activeDialogue = contSelected.text;
+            }
+            else if (e.topicItem.govTopic != null)
+            {
+                govSelected = e.topicItem.govTopic;
+                if (activeDialogue != null) activeDialogue = activeDialogue.nextTexts[e.notepadIndex];
+                else activeDialogue = govSelected.texts;
+            }
+
+            if (activeDialogue.nextTexts.Count <= 0)
+            {
+                PointingBubble.instance.NextDialogueStep(true);
+                ShowNextAnswer(true);
+                CloseNotePad();
+            }
+            else
+            {
+                ShowNextAnswer(false);
+                PointingBubble.instance.NextDialogueStep(false);
+                SetNextDialogue();
+            }
 		}
+
+        protected void ShowNextAnswer(bool end)
+        {
+            if (!FtueManager.instance.active && end && govSelected != null)
+            {
+                if (activeDialogue.smileySprite != null && activeDialogue.iconSprite != null)
+                {
+                    endInfo.smiley.texture = activeDialogue.smileySprite.texture;
+                    endInfo.icon.texture = activeDialogue.iconSprite.texture;
+                    endInfo.gameObject.SetActive(true);
+                }
+            }
+            if (activeDialogue.getInfo)
+            {
+                if (govSelected != null)
+                {
+                    if (!InventoryPlayer.Instance.knowsItems.Contains(govSelected.targetItem))
+                    {
+                        InventoryPlayer.Instance.knowsItems.Add(govSelected.targetItem);
+                        Events.Instance.Raise(new OnShowPin(EPin.Glossary, true));
+                    }
+                }
+                else if (contSelected != null) OnPointTargetDialogue(contSelected);
+            }
+        }
 
         public void CloseNotePad()
         {
@@ -256,10 +261,13 @@ namespace Assets.Scripts.Game.UI
                 topic.govTopic = null;
                 topic.clickEnable = false;
             }
+            _open = false;
             govSelected = null;
             contSelected = null;
             selectedDialogue = null;
             selectedNpc = null;
+            activeDialogue = null;
+            ControllerInput.RemoveScreen(transform);
             StartCoroutine(DisplayCoroutine());
             Events.Instance.RemoveListener<OnActiveSelectTopic>(SelectTopic);
         }
@@ -273,6 +281,8 @@ namespace Assets.Scripts.Game.UI
                 BillboardElement be = Instantiate(itemBillboard, pos + (pos.normalized * 0.15f), Quaternion.identity) as BillboardElement;
                 approachedItemsPos.Add(be);
                 DontDestroyOnLoad(be);
+                if (FtueManager.instance.active) nArrow.AddCallBack(FtueManager.instance.ValidStep);
+                else nArrow.AddCallBackPos(CleanBillboard, pos);
             }
             else
             {
@@ -280,8 +290,23 @@ namespace Assets.Scripts.Game.UI
                 BillboardElement be = Instantiate(itemBillboard, pos + (pos.normalized * 0.15f), Quaternion.identity) as BillboardElement;
                 approachedItemsPos.Add(be);
                 DontDestroyOnLoad(be);
+                if (FtueManager.instance.active) nArrow.AddCallBack(FtueManager.instance.ValidStep);
+                else nArrow.AddCallBackPos(CleanBillboard, pos);
             }
-            dialogueIndex = 0;
+        }
+
+        public void PointTarget(Vector3 worldPos, Sprite icon)
+        {
+            UIObjectPointIcon nArrow = ArrowDisplayer.Instances("NotePad").UseArrow<UIObjectPointIcon>(250f, 0, true, worldPos, icon, "NotePad");
+            if (FtueManager.instance.active) nArrow.AddCallBack(FtueManager.instance.ValidStep);
+            else nArrow.AddCallBackPos(CleanBillboard, worldPos);
+        }
+
+        public void PointTarget(Vector3 worldPos)
+        {
+            UIObjectPointer nArrow = ArrowDisplayer.Instances("NotePad").UseArrow<UIObjectPointer>(250f, 0, true, worldPos, "NotePad");
+            if (FtueManager.instance.active) nArrow.AddCallBack(FtueManager.instance.ValidStep);
+            else nArrow.AddCallBackPos(CleanBillboard, worldPos);
         }
 
         public void CleanBillboard(Vector3 targetItemPos)
@@ -297,6 +322,13 @@ namespace Assets.Scripts.Game.UI
             }
         }
 
+        public void CleanBillboards()
+        {
+            BillboardElement[] bList = approachedItemsPos.ToArray();
+            approachedItemsPos.Clear();
+            for (int i = 0; i < bList.Length; i++) Destroy(bList[i].gameObject);
+        }
+
         private void SetBillBoardVisibility(bool targetState)
         {
             foreach (BillboardElement be in approachedItemsPos) be.gameObject.SetActive(targetState);
@@ -308,22 +340,24 @@ namespace Assets.Scripts.Game.UI
 			{
 				view = ECameraTargetType.MAP;
                 ArrowDisplayer.Instances("NotePad").SetActiveArrows(false);
-                ArrowDisplayer.Instances("Ftue").SetActiveArrows(false);
+                ArrowDisplayer.Instances("FtueArrow").SetActiveArrows(false);
                 SetBillBoardVisibility(false);
             }
 			else if (e.mode == ECameraTargetType.ZOOM)
 			{
 				view = ECameraTargetType.ZOOM;
                 ArrowDisplayer.Instances("NotePad").SetActiveArrows(true);
-                ArrowDisplayer.Instances("Ftue").SetActiveArrows(true);
+                ArrowDisplayer.Instances("FtueArrow").SetActiveArrows(true);
                 SetBillBoardVisibility(true);
             }
 		}
              
-        private void GoToMenu(OnGoToMenu e)
+        public void GoToMenu(OnGoToMenu e)
         {
+            CleanBillboards();
             ArrowDisplayer.Instances("NotePad").CleanArrows();
-            ArrowDisplayer.Instances("Ftue").CleanArrows();
+            ArrowDisplayer.Instances("FtueArrow").CleanArrows();
+            _open = false;
         }
 
 		protected void OnDestroy()

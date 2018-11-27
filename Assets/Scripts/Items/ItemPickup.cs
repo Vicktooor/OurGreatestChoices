@@ -1,6 +1,7 @@
 ﻿using Assets.Script;
 using Assets.Scripts.Game;
 using Assets.Scripts.Game.UI;
+using Assets.Scripts.Game.UI.Ftue;
 using UnityEngine;
 
 public class ItemPickup : Interactable {
@@ -26,7 +27,7 @@ public class ItemPickup : Interactable {
     }
 
     public void PickUp() {
-        NotePad.Instance.CleanBillboard(transform.position); 
+        if (!FtueManager.instance.active) NotePad.Instance.CleanBillboard(transform.position); 
         Events.Instance.Raise(new OnPickUp());
         if (item.isPrimary)
         {

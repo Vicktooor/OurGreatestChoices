@@ -1,4 +1,5 @@
-﻿using FMODUnity;
+﻿using Assets.Scripts.Game;
+using FMODUnity;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -106,8 +107,53 @@ namespace Assets.Script
 			return null;
 		}
 
+        public Transform GetNearestNPCIcon()
+        {
+            Transform target = null;
+            float dist = 50f;
+            float tDist = 0f;
+            if (player.AssociateCell.PNJHelp != null)
+            {
+                target = player.AssociateCell.PNJHelp.transform;
+                dist = Mathf.Abs(Vector3.Distance(target.position, player.transform.position));               
+            }
+            foreach (Cell c in player.AssociateCell.Neighbors)
+            {
+                if (c.PNJHelp != null)
+                {
+                    tDist = Mathf.Abs(Vector3.Distance(c.PNJHelp.transform.position, player.transform.position));
+                    if (tDist < dist)
+                    {
+                        dist = tDist;
+                        target = c.PNJHelp.transform;
+                    }
+                }
+            }
+            return target;
+        }
+
+        public Transform GetNearestNPC()
+        {
+            Transform target = null;
+            float dist = 50f;
+            float tDist = 0f;
+            foreach (InteractablePNJ iNpc in InteractablePNJ.PNJs)
+            {
+                    tDist = Mathf.Abs(Vector3.Distance(iNpc.transform.position, player.transform.position));
+                    if (tDist < dist)
+                    {
+                        dist = tDist;
+                        target = iNpc.transform;
+                    }
+            }
+            return target;
+        }
+
         public void Clear()
         {
+            _playerType = EPlayer.NGO;
+            _playersArray.Clear();
+            _player = null;
             _init = false;
         }
 

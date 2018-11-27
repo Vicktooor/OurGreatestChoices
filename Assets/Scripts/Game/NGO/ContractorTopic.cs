@@ -11,6 +11,8 @@ public class NPCDialogue
     public string NPCText;
     public bool getInfo = true;
     public List<NPCDialogue> nextTexts;
+    public Sprite smileySprite;
+    public Sprite iconSprite;
 }
 
 namespace Assets.Scripts.Game.NGO

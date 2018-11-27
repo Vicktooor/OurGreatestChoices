@@ -48,19 +48,25 @@ public static class StreamingAssetAccessor
 
     public static T FromJson<T>(string filePath, RuntimePlatform platform) where T : class
     {
-        string path = GetStreamingAssetPath(platform) + filePath;   
-        if (platform != RuntimePlatform.Android)
+        string path = GetStreamingAssetPath(platform) + filePath;
+        Debug.Log(string.Format("From json strPath[{0}]", path));
+        if (File.Exists(path))
         {
-            StreamReader reader = File.OpenText(path);
-            T json = JsonUtility.FromJson<T>(reader.ReadToEnd());
-            reader.Close();
-            return json;
+            if (platform != RuntimePlatform.Android)
+            {
+                StreamReader reader = File.OpenText(path);
+                T json = JsonUtility.FromJson<T>(reader.ReadToEnd());
+                reader.Close();
+                return json;
+            }
+            else return null;
         }
-        else
+        else if (platform == RuntimePlatform.Android)
         {
-            T json = JsonUtility.FromJson<T>(ReadAndroidText(path));
-            return json;
+            string jsonTxt = ReadAndroidText(path);
+            return JsonUtility.FromJson<T>(jsonTxt);
         }
+        else return null;
     }
 
     public static object Deserialize(string pathFile)
@@ -72,9 +78,10 @@ public static class StreamingAssetAccessor
     {
         string path = GetStreamingAssetPath(platform) + pathFile;
         string persistentPath = PersistenDataManager.GetPersistentPath(pathFile);
+        Debug.Log(string.Format("Deserialize strPath[{0}] psrtPath[{1}]", path, persistentPath));
+        BinaryFormatter bf = new BinaryFormatter();
         if (File.Exists(path))
         {
-            BinaryFormatter bf = new BinaryFormatter();
             if (platform != RuntimePlatform.Android)
             {
                 FileStream reader = File.OpenRead(path);
@@ -82,15 +89,16 @@ public static class StreamingAssetAccessor
                 reader.Close();
                 return obj;
             }
-            else
-            {
-                byte[] file = ReadAndroidBytes(path);
-                File.WriteAllBytes(persistentPath, file);
-                FileStream reader = File.OpenRead(persistentPath);
-                object obj = bf.Deserialize(reader);
-                reader.Close();
-                return obj;
-            }
+            else return null;
+        }
+        else if (platform == RuntimePlatform.Android)
+        {
+            byte[] file = ReadAndroidBytes(path);
+            File.WriteAllBytes(persistentPath, file);
+            StreamReader wrp = new StreamReader(persistentPath);
+            object obj = bf.Deserialize(wrp.BaseStream);
+            wrp.Close();
+            return obj;
         }
         else return null;
     }
@@ -137,6 +145,7 @@ public static class PersistenDataManager
     public static T FromJson<T>(string filePath) where T : class
     {
         string persistentPath = GetPersistentPath(filePath);
+        Debug.Log(string.Format("From json prstPath[{0}]", persistentPath));
         if (File.Exists(persistentPath))
         {
             StreamReader reader = File.OpenText(persistentPath);
@@ -157,12 +166,13 @@ public static class PersistenDataManager
     public static object Deserialize(string filePath)
     {
         string persistentPath = GetPersistentPath(filePath);
+        Debug.Log(string.Format("Deserialize prstPath[{0}]", persistentPath));
         if (File.Exists(persistentPath))
         {
             BinaryFormatter bf = new BinaryFormatter();
-            FileStream reader = File.OpenRead(persistentPath);
-            object obj = bf.Deserialize(reader);
-            reader.Close();
+            StreamReader wrp = new StreamReader(persistentPath);
+            object obj = bf.Deserialize(wrp.BaseStream);
+            wrp.Close();
             return obj;
         }
         else return null;
@@ -344,6 +354,7 @@ public static class FileManager
 
     public static void CreateText(string path, string text)
     {
+        Debug.Log(string.Format("Create text Path[{0}]", path));
         using (FileStream fs = new FileStream(path, FileMode.Create))
         {
             using (StreamWriter writer = new StreamWriter(fs)) writer.Write(text);
@@ -358,6 +369,7 @@ public static class FileManager
 
     public static void CreateFile(string path, object obj)
     {
+        Debug.Log(string.Format("Create file Path[{0}]", path));
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Create(path);
         bf.Serialize(file, obj);

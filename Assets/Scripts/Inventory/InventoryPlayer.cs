@@ -1,5 +1,8 @@
 ﻿using Assets.Scripts.Game;
 using Assets.Scripts.Game.Save;
+using Assets.Scripts.Game.UI;
+using Assets.Scripts.Game.UI.Ftue;
+using Assets.Scripts.Manager;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,7 +16,7 @@ public class InventoryPlayer : MonoSingleton<InventoryPlayer>
     public List<Item> knowsItems = new List<Item>();
     public List<Item> itemsWornArray = new List<Item>();
     public Dictionary<EItemType, int> nbItems = new Dictionary<EItemType, int>();
-    public Dictionary<string, List<EItemType>> givedOject = new Dictionary<string, List<EItemType>>();
+    public Dictionary<string, Dictionary<EItemType, int>> givedOject = new Dictionary<string, Dictionary<EItemType, int>>();
 
     protected void Start()
     {
@@ -93,13 +96,27 @@ public class InventoryPlayer : MonoSingleton<InventoryPlayer>
             if (fromTransformation) Events.Instance.Raise(new OnTransformReward());
             if (itemsWornArray.Contains(pItem))
             {
-                nbItems[pItem.itemType]++;
+                nbItems[pItem.itemType] = nbItems[pItem.itemType] + 1;
             } 
             else
             {
                 itemsWornArray.Add(pItem);
-                nbItems[pItem.itemType]++;
+                if (nbItems.ContainsKey(pItem.itemType)) nbItems[pItem.itemType] = nbItems[pItem.itemType] + 1;
+                else nbItems.Add(pItem.itemType, 1);
             }           
+        }
+
+        if (FtueManager.instance.active)
+        {
+            if (FtueManager.instance.currentStep.inventoryTarget == pItem.itemType)
+            {
+                FtueManager.instance.currentStep.PickUp();
+                if (FtueManager.instance.currentStep.HaveMaxItem())
+                {
+                    if (FtueManager.instance.currentStep.getNbTarget > 1) NotePad.Instance.CleanBillboards();
+                    FtueManager.instance.ValidStep();
+                }
+            }
         }
 
         Events.Instance.Raise(new OnShowPin(EPin.Bag, true));
@@ -109,7 +126,7 @@ public class InventoryPlayer : MonoSingleton<InventoryPlayer>
 
     private void AddFromType(EItemType pItem)
     {
-        Item newItem = Resources.Load<Item>("Items/" + pItem.ToString());
+        Item newItem = ResourcesManager.Instance.ItemModels.Find(i => i.itemType == pItem);
         if (newItem == null) return;
         if (!knowsItems.Contains(newItem))
         {
@@ -133,14 +150,13 @@ public class InventoryPlayer : MonoSingleton<InventoryPlayer>
 
     private void AddKnowFromType(EItemType pItem)
     {
-        Item newItem = Resources.Load<Item>("Items/" + pItem.ToString());
+        Item newItem = ResourcesManager.Instance.ItemModels.Find(i => i.itemType == pItem);
         if (newItem == null) return;
         if (!knowsItems.Contains(newItem)) knowsItems.Add(newItem);
     }
 
     public void Transformation(OnTransformation e) {
         Add(e.item, true);
-        GiveItem(e.nameNPC, e.item.itemType);
         Events.Instance.Raise(new OnEndTransformation(e.index, e.item));
     }
 
@@ -150,31 +166,34 @@ public class InventoryPlayer : MonoSingleton<InventoryPlayer>
         {
             if (givedOject[npcName] != null)
             {
-                if (!givedOject[npcName].Contains(itemType))
-                    givedOject[npcName].Add(itemType);
+                if (givedOject[npcName].ContainsKey(itemType))
+                {
+                    givedOject[npcName][itemType]++;
+                }
             }
             else
             {
-                givedOject[npcName] = new List<EItemType>();
-                givedOject[npcName].Add(itemType);
+                givedOject[npcName] = new Dictionary<EItemType, int>
+                {
+                    { itemType, 1 }
+                };
             }
         }
         else
         {
-            givedOject.Add(npcName, new List<EItemType>() { itemType });
+            givedOject.Add(npcName, new Dictionary<EItemType, int>());
+            givedOject[npcName] = new Dictionary<EItemType, int>
+            {
+                { itemType, 1 }
+            };
         }
     }
 
-    public void Give(int index) {
+    public void Give(int index, string npcName) {
         EItemType eName = itemsWornArray[index].itemType;
         int nb = nbItems[eName] - 1;
         nbItems[eName] = nb;
-        if (nb == 0)
-        {
-            itemsWornArray.RemoveAt(index);
-            nbItems[eName] = 0;
-        }
-        Events.Instance.Raise(new OnUpdateInventory());
+        GiveItem(npcName, eName);
     }
 
     public int GetItemIndex(EItemType itemName)
@@ -209,6 +228,7 @@ public class InventoryPlayer : MonoSingleton<InventoryPlayer>
         itemsWornArray.Clear();
         nbItems.Clear();
         givedOject.Clear();
+        Events.Instance.Raise(new OnUpdateInventory());
     }
 
     private void OnDestroy() {

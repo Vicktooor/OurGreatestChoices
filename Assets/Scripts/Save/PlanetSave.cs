@@ -4,12 +4,14 @@ using System.IO;
 using System;
 using Assets.Scripts.Manager;
 using Assets.Scripts.Items;
+using Assets.Scripts.Game.UI.Ftue;
 
 [Serializable]
 public struct GivedItemSave
 {
     public string npcName;
     public EItemType[] givedItems;
+    public int[] nbGived;
 }
 
 [Serializable]
@@ -41,7 +43,7 @@ namespace Assets.Scripts.Game.Save
             List<SaveCell> cells, List<SavePlayerPosition> players,
             TimeSave timeSave, Dictionary<EItemType, int> inventory,
             WorldSave worldSave,
-            Dictionary<string, List<EItemType>> givedItems,
+            Dictionary<string, Dictionary<EItemType, int>> givedItems,
             BudgetsSave[] budgetsSave
             )
         {
@@ -72,10 +74,18 @@ namespace Assets.Scripts.Game.Save
             }
             GivedItems = new GivedItemSave[givedItems.Count];
             int k = 0;
-            foreach (KeyValuePair<string, List<EItemType>> item in givedItems)
+            foreach (KeyValuePair<string, Dictionary<EItemType, int>> item in givedItems)
             {
                 GivedItems[k].npcName = item.Key;
-                GivedItems[k].givedItems = item.Value.ToArray();
+                List<EItemType> lGived = new List<EItemType>();
+                List<int> lGivedNb = new List<int>();
+                foreach (KeyValuePair<EItemType, int> ite in item.Value)
+                {
+                    lGived.Add(ite.Key);
+                    lGivedNb.Add(ite.Value);
+                }
+                GivedItems[k].givedItems = lGived.ToArray();
+                GivedItems[k].nbGived = lGivedNb.ToArray();
                 k++;
             }
 		}
@@ -219,6 +229,12 @@ namespace Assets.Scripts.Game.Save
             }
             else return false;
         }
+
+        public static void DeleteParty()
+        {
+            string path = PersistenDataManager.GetPersistentPath("/Save/PartySave.gd");
+            if (File.Exists(path)) File.Delete(path);
+        }
         #endregion
 
         #region Planet
@@ -233,13 +249,8 @@ namespace Assets.Scripts.Game.Save
 
         public static bool LoadCells(string planetName)
         {
-            string path = StreamingAssetAccessor.GetStreamingAssetPath() + "Save/" + planetName + "Save.gd";            
-            if (File.Exists(path))
-            {
-                BaseCells = (List<SaveCell>)StreamingAssetAccessor.Deserialize("Save/" + planetName + "Save.gd");
-                return true;
-            }
-            else return false;
+            BaseCells = (List<SaveCell>)StreamingAssetAccessor.Deserialize("Save/" + planetName + "Save.gd");
+            return BaseCells != null;
         }
         #endregion
 
@@ -260,13 +271,8 @@ namespace Assets.Scripts.Game.Save
 
         public static bool LoadCitizens(string planetName)
         {
-            string path = StreamingAssetAccessor.GetStreamingAssetPath() + "Save/" + planetName + "CitizensSave.gd";
-            if (File.Exists(path))
-            {
-                CitizensID = (List<PositionID>)StreamingAssetAccessor.Deserialize("Save/" + planetName + "CitizensSave.gd");
-                return true;
-            }
-            else return false;
+            CitizensID = (List<PositionID>)StreamingAssetAccessor.Deserialize("Save/" + planetName + "CitizensSave.gd");
+            return CitizensID != null;
         }
         #endregion
 
@@ -282,18 +288,14 @@ namespace Assets.Scripts.Game.Save
 
         public static bool LoadPlayer(string saveName)
         {
-            string path = StreamingAssetAccessor.GetStreamingAssetPath() + "Save/" + saveName + "PlayerSave.gd";
-            if (File.Exists(path))
+            BasePlayerPos.Clear();
+            BasePlayerPos = (List<SavePlayerPosition>)StreamingAssetAccessor.Deserialize("Save/" + saveName + "PlayerSave.gd");
+            foreach (SavePlayerPosition ps in BasePlayerPos)
             {
-                BasePlayerPos = (List<SavePlayerPosition>)StreamingAssetAccessor.Deserialize("Save/" + saveName + "PlayerSave.gd");
-                foreach (SavePlayerPosition ps in BasePlayerPos)
-                {
-                    if (!EarthManager.Instance.playerPositions.ContainsKey(ps.player)) EarthManager.Instance.playerPositions.Add(ps.player, new KeyValuePair<int, Vector3>(ps.cellID, new Vector3(ps.X, ps.Y, ps.Z)));
-                    else EarthManager.Instance.playerPositions[ps.player] = new KeyValuePair<int, Vector3>(ps.cellID, new Vector3(ps.X, ps.Y, ps.Z));
-                }
-                return true;
+                if (!EarthManager.Instance.playerPositions.ContainsKey(ps.player)) EarthManager.Instance.playerPositions.Add(ps.player, new KeyValuePair<int, Vector3>(ps.cellID, new Vector3(ps.X, ps.Y, ps.Z)));
+                else EarthManager.Instance.playerPositions[ps.player] = new KeyValuePair<int, Vector3>(ps.cellID, new Vector3(ps.X, ps.Y, ps.Z));
             }
-            else return false;
+            return BasePlayerPos != null;
         }
 
         public static List<SavePlayerPosition> ConvertPlayerPositionToSerializable(Dictionary<EPlayer, KeyValuePair<int, Vector3>> allPos)
@@ -334,13 +336,8 @@ namespace Assets.Scripts.Game.Save
 
         public static bool LoadPNJs(string planetName)
         {
-            string path = StreamingAssetAccessor.GetStreamingAssetPath() + "Save/" + planetName + "PNJs.gd";
-            if (File.Exists(path))
-            {
-                PNJs = (List<PositionKey>)StreamingAssetAccessor.Deserialize("Save/" + planetName + "PNJs.gd");
-                return true;
-            }
-            else return false;
+            PNJs = (List<PositionKey>)StreamingAssetAccessor.Deserialize("Save/" + planetName + "PNJs.gd");
+            return PNJs != null;
         }
         #endregion
 

@@ -40,6 +40,8 @@ public class QuestManager : MonoBehaviour
     public Sprite NGOSprite;
     public Sprite EntrepreneurSprite;
 
+    public Tweener tweener;
+
     protected ECameraTargetType view;
 
     protected void Awake()
@@ -64,12 +66,24 @@ public class QuestManager : MonoBehaviour
             Quests.Add(_questList[i].quest);
         }
 
+        tweener.SetMethods(Tween, null, null, Disable);
+        TweenerLead.Instance.NewTween(GetComponent<RectTransform>(), tweener);
         gameObject.SetActive(false);
     }
 
     protected void OnEnable()
     {
         CheckValidation();
+        ControllerInput.AddScreen(transform);
+        TweenerLead.Instance.StartTween(tweener);
+    }
+
+    protected void Tween()
+    {
+        float x1 = Easing.Scale(Easing.SmoothStop, tweener.t, 2, 2f);
+        float x2 = Easing.FlipScale(Easing.SmoothStart, tweener.t, 2, 2f);
+        float x = Easing.Mix(x1, x2, 0.5f, tweener.t);
+        tweener.SetScale(x);
     }
 
     public void SelectQuest(Quest selectedQuest)
@@ -100,51 +114,23 @@ public class QuestManager : MonoBehaviour
                     InteractablePNJ_CoalPower coalPNJ = pnj as InteractablePNJ_CoalPower;
                     if (major != null)
                     {
-                        if (selectedQuest.itemType == EItemType.FruitSeed)
+                        if (major.HaveItem(selectedQuest.itemType))
                         {
-                            if (major.HasFruitSeed())
-                            {
-                                ValidQuest(selectedQuest);
-                                break;
-                            }
-                        }
-                        else if (selectedQuest.itemType == EItemType.Tracks)
-                        {
-                            if (major.HasMetro())
-                            {
-                                ValidQuest(selectedQuest);
-                                break;
-                            }
-                        }
-                        else if (selectedQuest.itemType == EItemType.FruitMarket)
-                        {
-                            if (major.HasFruitBasket())
-                            {
-                                ValidQuest(selectedQuest);
-                                break;
-                            }
+                            ValidQuest(selectedQuest);
                         }
                     }
                     else if (coalPNJ != null)
                     {
-                        if (selectedQuest.itemType == EItemType.WindTurbine)
+                        if (coalPNJ.HaveItem(selectedQuest.itemType))
                         {
-                            if (coalPNJ.IsUpdated())
-                            {
-                                ValidQuest(selectedQuest);
-                                break;
-                            }
+                            ValidQuest(selectedQuest);
                         }
                     }
                     else
                     {
-                        if (selectedQuest.itemType == EItemType.Carcass)
+                        if (pnj.HaveItem(selectedQuest.itemType))
                         {
-                            if (pnj.HaveHisItem())
-                            {
-                                ValidQuest(selectedQuest);
-                                break;
-                            }
+                            ValidQuest(selectedQuest);
                         }
                     }
                 }
@@ -328,6 +314,21 @@ public class QuestManager : MonoBehaviour
             ArrowDisplayer.Instances(ArrowDisplayerName).SetActiveArrows(true);
         }
         DisplayQuest();
+    }
+
+    public void Close()
+    {
+        TweenerLead.Instance.StartTween(tweener);
+    }
+
+    protected void Disable()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public void OnDisable()
+    {
+        ControllerInput.RemoveScreen(transform);
     }
 
     private bool QuestRunning(Quest quest)

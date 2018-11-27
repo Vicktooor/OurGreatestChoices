@@ -34,36 +34,51 @@ public class InteractablePNJ_TownHall : InteractablePNJ {
 
     private bool _happy = true;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        neededItems = new List<EItemType>()
+        {
+            EItemType.Tracks,
+            EItemType.FruitMarket,
+            EItemType.FruitSeed,
+            EItemType.Garden,
+            EItemType.Electricity,
+            EItemType.GreenElectricity
+        };
+    }
+
     protected override void CatchGivedObject()
     {
+        if (InventoryPlayer.Instance.givedOject.Count <= 0) return;
         if (InventoryPlayer.Instance.givedOject.ContainsKey(IDname))
         {
-            if (InventoryPlayer.Instance.givedOject[IDname].Contains(EItemType.Electricity))
+            if (InventoryPlayer.Instance.givedOject[IDname].ContainsKey(EItemType.Electricity))
             {
                 _haveElectricity = true;
                 if (HaveBudget(EWorldImpactType.ElecTownHallV1)) UpdateHousesElectricity();
             }
-            if (InventoryPlayer.Instance.givedOject[IDname].Contains(EItemType.GreenElectricity))
+            if (InventoryPlayer.Instance.givedOject[IDname].ContainsKey(EItemType.GreenElectricity))
             {
                 _haveGreenElectricity = true;
                 if (HaveBudget(EWorldImpactType.ElecCarsCompanyV2)) UpdateHousesGreenElectricity();
             }
-            if (InventoryPlayer.Instance.givedOject[IDname].Contains(EItemType.FruitSeed))
+            if (InventoryPlayer.Instance.givedOject[IDname].ContainsKey(EItemType.FruitSeed))
             {
                 _haveFruitSeed = true;
-                if (HaveBudget(EWorldImpactType.WoodyTownHall)) UpdateTrees();
+                UpdateTrees();
             }
-            if (InventoryPlayer.Instance.givedOject[IDname].Contains(EItemType.FruitMarket))
+            if (InventoryPlayer.Instance.givedOject[IDname].ContainsKey(EItemType.FruitMarket))
             {
                 _haveFruitBasket = true;
-                if (HaveBudget(EWorldImpactType.FruitMarketTownHall)) ShowFruitBasket();
+                ShowFruitBasket();
             }
-            if (InventoryPlayer.Instance.givedOject[IDname].Contains(EItemType.Garden))
+            if (InventoryPlayer.Instance.givedOject[IDname].ContainsKey(EItemType.Garden))
             {
                 _haveVegetableGarden = true;
-                if (HaveBudget(EWorldImpactType.VegetableTownHall)) UpdateVegetableGardens();
+                UpdateVegetableGardens();
             }
-            if (InventoryPlayer.Instance.givedOject[IDname].Contains(EItemType.Tracks))
+            if (InventoryPlayer.Instance.givedOject[IDname].ContainsKey(EItemType.Tracks))
             {
                 SetMetro(false);
             }
@@ -125,45 +140,22 @@ public class InteractablePNJ_TownHall : InteractablePNJ {
         }
         else if (itemType == EItemType.FruitSeed) {
             _haveFruitSeed = true;
-            bool haveActiveBudget = HaveBudget(EWorldImpactType.WoodyTownHall);
-            if (haveActiveBudget)
-            {
-                bool wasActive = _fruitSeedPlanted;
-                UpdateTrees();
-                if (!wasActive && _fruitSeedPlanted) ShowThanks(itemType, haveActiveBudget, _haveFruitSeed);
-            }
-            else if (!haveActiveBudget)
-            {
-                ShowThanks(itemType, haveActiveBudget, _haveFruitSeed);
-            }
+            bool wasActive = _fruitSeedPlanted;
+            UpdateTrees();
+            if (!wasActive && _fruitSeedPlanted) ShowThanks(itemType, true, _haveFruitSeed);
         }
-        else if (itemType == EItemType.FruitMarket) {
+        else if (itemType == EItemType.FruitMarket)
+        {
             _haveFruitBasket = true;
-            bool haveActiveBudget = HaveBudget(EWorldImpactType.FruitMarketTownHall);
-            if (haveActiveBudget)
-            {
-                bool wasActive = _fruitMarketOpen;
-                ShowFruitBasket();
-                if (!wasActive && _fruitMarketOpen) ShowThanks(itemType, haveActiveBudget, _haveFruitBasket);
-            }
-            else if (!haveActiveBudget)
-            {
-                ShowThanks(itemType, haveActiveBudget, _haveFruitBasket);
-            }
+            bool wasActive = _fruitMarketOpen;
+            ShowFruitBasket();
+            if (!wasActive && _fruitMarketOpen) ShowThanks(itemType, true, _haveFruitBasket);
         }
         else if (itemType == EItemType.Garden) {
             _haveVegetableGarden = true;
-            bool haveActiveBudget = HaveBudget(EWorldImpactType.VegetableTownHall);
-            if (haveActiveBudget)
-            {
-                bool wasActive = _gardenAvailable;
-                UpdateVegetableGardens();
-                if (!wasActive && _gardenAvailable) ShowThanks(itemType, haveActiveBudget, _haveVegetableGarden);
-            }
-            else if (!haveActiveBudget)
-            {
-                ShowThanks(itemType, haveActiveBudget, _haveVegetableGarden);
-            }
+            bool wasActive = _gardenAvailable;
+            UpdateVegetableGardens();
+            if (!wasActive && _gardenAvailable) ShowThanks(itemType, true, _haveVegetableGarden);
         }
         else if (itemType == EItemType.Tracks)
         {
@@ -175,6 +167,9 @@ public class InteractablePNJ_TownHall : InteractablePNJ {
 
     public override void OnUpdate(OnNewMonth e)
     {
+        if (!HaveBudget(EWorldImpactType.BasicTownHall)) budgetComponent.SetNewImpact(EWorldImpactType.BankruptedTownHall);
+        else budgetComponent.RemoveImpact(EWorldImpactType.BankruptedTownHall);
+
         if (!budgetComponent.Working)
         {
             _happy = false;
@@ -207,9 +202,9 @@ public class InteractablePNJ_TownHall : InteractablePNJ {
         SendBudget();
         if (InventoryPlayer.Instance.givedOject.ContainsKey(IDname))
         {
-            foreach (EItemType it in InventoryPlayer.Instance.givedOject[IDname])
+            foreach (KeyValuePair<EItemType, int> it in InventoryPlayer.Instance.givedOject[IDname])
             {
-                ReceiveItem(it);
+                ReceiveItem(it.Key);
             }
         }
     }
@@ -313,27 +308,34 @@ public class InteractablePNJ_TownHall : InteractablePNJ {
         QuestManager.Instance.CheckValidation();
     }
 
-    public override bool HaveHisItem()
+    public override bool HaveItem(EItemType itemType)
     {
-        return HasMetro();
+        if (itemType == EItemType.Electricity) if (_haveElectricity) return true;
+        if (itemType == EItemType.GreenElectricity) if (_haveGreenElectricity) return true;
+        if (itemType == EItemType.FruitMarket) if (_haveFruitBasket) return true;
+        if (itemType == EItemType.FruitSeed) if (_haveFruitSeed) return true;
+        if (itemType == EItemType.Tracks) if (_metroCreated) return true;
+        if (itemType == EItemType.Garden) if (_haveVegetableGarden) return true;
+        return false;
     }
 
-    public bool HasMetro()
+    public override bool HaveBudget(EItemType target)
     {
-        if (_metroCreated) return true;
-        else return false;
-    }
-
-    public bool HasFruitSeed()
-    {
-        if (_haveFruitSeed) return true;
-        else return false;
-    }
-
-    public bool HasFruitBasket()
-    {
-        if (_haveFruitBasket) return true;
-        else return false;
+        if (target == EItemType.Electricity)
+        {
+            if (_electrityHouse) return true;
+            return HaveBudget(EWorldImpactType.ElecTownHallV1);
+        }
+        else if (target == EItemType.GreenElectricity)
+        {
+            if (_greenelectricityHouse) return true;
+            return HaveBudget(EWorldImpactType.ElecTownHallV2);
+        }
+        else if (target == EItemType.FruitMarket) return true;
+        else if (target == EItemType.FruitSeed) return true;
+        else if (target == EItemType.Tracks) return true;
+        else if (target == EItemType.Garden) return true;
+        return base.HaveBudget(target);
     }
 
     protected void ActiveLight()

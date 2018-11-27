@@ -138,6 +138,11 @@ namespace Assets.Scripts.Manager
             if (!impacts.Contains(type)) impacts.Add(type);
         }
 
+        public void RemoveImpact(EWorldImpactType type)
+        {
+            if (impacts.Contains(type)) impacts.Remove(type);
+        }
+
         public BudgetsSave GenerateSave()
         {
             BudgetsSave newSave = new BudgetsSave();

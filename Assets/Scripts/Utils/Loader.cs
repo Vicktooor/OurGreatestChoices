@@ -9,20 +9,27 @@ public class Loader : MonoBehaviour
 {
     public void Start()
     {
+#if UNITY_STANDALONE
         StreamingAssetAccessor.Platform = RuntimePlatform.WindowsPlayer;
+#endif
+#if UNITY_ANDROID
+        StreamingAssetAccessor.Platform = RuntimePlatform.Android;
+#endif
+#if UNITY_IPHONE
+        StreamingAssetAccessor.Platform = RuntimePlatform.IPhonePlayer;
+#endif
+
         TextManager.SetLanguage(SystemLanguage.English);
 
         ResourcesManager.Instance.Init();
 
-        PlanetSave.LoadCitizens(EarthManager.Instance.planetName);
-        PlanetSave.LoadPlayer(EarthManager.Instance.planetName);
-        PlanetSave.LoadPNJs(EarthManager.Instance.planetName);
-
         MainLoader<Sprite>.Instance.LoadAsync("Sprites/", "happyness0");
         MainLoader<Sprite>.Instance.LoadAsync("Sprites/", "happyness1");
         MainLoader<Sprite>.Instance.LoadAsync("Sprites/", "happyness2");
-        MainLoader<Sprite>.Instance.LoadAsync("Sprites/", "Check_Off");
+        MainLoader<Sprite>.Instance.LoadAsync("Sprites/", "money_icon");
+        MainLoader<Sprite>.Instance.LoadAsync("Sprites/", "money_icon_lock");
         MainLoader<Sprite>.Instance.LoadAsync("Sprites/", "Check_On");
+        MainLoader<Sprite>.Instance.LoadAsync("Sprites/", "Check_Off");
 
         if (PlanetMaker.instance)
         {

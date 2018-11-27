@@ -37,7 +37,9 @@ public class Item : ScriptableObject {
 
     //For Glossary Overview
     public Sprite icon;
+    public Sprite ecoIcon;
     public Sprite hiddenIcon;
+    public Sprite ecoHiddenIcon;
 
     public string glossaryDesc;
 }

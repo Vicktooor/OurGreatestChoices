@@ -21,13 +21,25 @@ public class InteractablePNJ_CarsCompany : InteractablePNJ {
     [SerializeField]
     private GameObject _carsCompany;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        neededItems = new List<EItemType>()
+        {
+            EItemType.Carcass,
+            EItemType.Battery,
+            EItemType.GreenBattery
+        };
+    }
+
     protected override void CatchGivedObject()
     {
+        if (InventoryPlayer.Instance.givedOject.Count <= 0) return;
         if (InventoryPlayer.Instance.givedOject.ContainsKey(IDname))
         {
-            if (InventoryPlayer.Instance.givedOject[IDname].Contains(EItemType.Carcass)) _hasCarcass = true;
-            if (InventoryPlayer.Instance.givedOject[IDname].Contains(EItemType.Battery)) _haveBattery = true;
-            if (InventoryPlayer.Instance.givedOject[IDname].Contains(EItemType.GreenBattery)) _haveGreenBattery = true;
+            if (InventoryPlayer.Instance.givedOject[IDname].ContainsKey(EItemType.Carcass)) _hasCarcass = true;
+            if (InventoryPlayer.Instance.givedOject[IDname].ContainsKey(EItemType.Battery)) _haveBattery = true;
+            if (InventoryPlayer.Instance.givedOject[IDname].ContainsKey(EItemType.GreenBattery)) _haveGreenBattery = true;
 
             if (_hasCarcass && HaveBudget(EWorldImpactType.CarsCompany))
             {
@@ -78,7 +90,7 @@ public class InteractablePNJ_CarsCompany : InteractablePNJ {
         {
             _haveGreenBattery = true;
             bool haveActiveBudget = HaveBudget(EWorldImpactType.ElecCarsCompanyV2);
-            if (haveActiveBudget && _isCompanyActivated && !_greenVehicle)
+            if (haveActiveBudget && _isCompanyActivated && !_greenVehicle && _normalVehicle)
             {
                 UpdateGreenElectricityCars();
                 ShowThanks(itemType, haveActiveBudget, _haveGreenBattery);
@@ -123,10 +135,32 @@ public class InteractablePNJ_CarsCompany : InteractablePNJ {
         base.OnUpdate(e);
     }
 
-    public override bool HaveHisItem()
+    public override bool HaveItem(EItemType itemType)
     {
-        if (_hasCarcass) return true;
+        if (itemType == EItemType.Carcass) if (_hasCarcass) return true;
+        if (itemType == EItemType.Battery) if (_haveBattery) return true;
+        if (itemType == EItemType.GreenBattery) if (_haveGreenBattery) return true; 
         return false;
+    }
+
+    public override bool HaveBudget(EItemType target)
+    {
+        if (target == EItemType.Battery)
+        {
+            if (_normalVehicle) return true;
+            return HaveBudget(EWorldImpactType.ElecCarsCompanyV1);
+        }
+        else if (target == EItemType.GreenBattery)
+        {
+            if (_greenVehicle) return true;
+            return HaveBudget(EWorldImpactType.ElecCarsCompanyV2);
+        }
+        else if (target == EItemType.Carcass)
+        {
+            if (_isCompanyActivated) return true;
+            return HaveBudget(EWorldImpactType.CarsCompany);
+        }
+        return base.HaveBudget(target);
     }
 
     public override void ReceiveBudget() {
@@ -136,16 +170,17 @@ public class InteractablePNJ_CarsCompany : InteractablePNJ {
         else DisplayMood(true);
         if (InventoryPlayer.Instance.givedOject.ContainsKey(IDname))
         {
-            foreach (EItemType it in InventoryPlayer.Instance.givedOject[IDname])
+            foreach (KeyValuePair<EItemType, int> it in InventoryPlayer.Instance.givedOject[IDname])
             {
-                ReceiveItem(it);
+                ReceiveItem(it.Key);
             }
         }
     }
 
     void UpdateElectricityCars(bool showFX = true) {
-        if (_normalVehicle || _greenVehicle) return; 
+        if (_normalVehicle || _greenVehicle) return;
         _normalVehicle = true;
+        budgetComponent.RemoveImpact(EWorldImpactType.CarsCompany);
         budgetComponent.SetNewImpact(EWorldImpactType.ElecCarsCompanyV1);
         if (showFX) UIManager.instance.AddSDGNotification(new int[3] { 6, 13, 14 });
         for (int i = 0; i < _carsList.Count; i++) {
@@ -159,6 +194,7 @@ public class InteractablePNJ_CarsCompany : InteractablePNJ {
     {
         if (_greenVehicle) return;
         _greenVehicle = true;
+        budgetComponent.RemoveImpact(EWorldImpactType.ElecCarsCompanyV1);
         budgetComponent.SetNewImpact(EWorldImpactType.ElecCarsCompanyV2);
         if (showFX) UIManager.instance.AddSDGNotification(new int[3] { 6, 13, 14 });
         for (int i = 0; i < _carsList.Count; i++)

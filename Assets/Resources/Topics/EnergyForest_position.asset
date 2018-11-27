@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07259032130286f479e079872e0f957a, type: 3}
+  m_Name: EnergyForest_position
+  m_EditorClassIdentifier: 
+  id: 2
+  text:
+    playerText: EnergyInfo0
+    NPCText: EnergyAnswer0
+    getInfo: 1
+    nextTexts: []
+  icon: {fileID: 21300000, guid: 16945bfcd1fc5944ca31d99f6d4791c9, type: 3}
+  arrowIcon: {fileID: 21300000, guid: 0ae0c99863a8be74c854fe4c5911c746, type: 3}
+  targetWorldPos: {x: 1.363157, y: -0.5560021, z: -1.39265}

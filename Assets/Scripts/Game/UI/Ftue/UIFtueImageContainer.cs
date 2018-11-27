@@ -19,29 +19,50 @@ public class UIFtueImageContainer : UIFtueElement
 
     protected void Awake()
     {
-        imgs = GetComponentsInChildren<Image>();
-        rawImgs = GetComponentsInChildren<RawImage>();
+        imgs = GetComponentsInChildren<Image>(true);
+        rawImgs = GetComponentsInChildren<RawImage>(true);
     }
 
     protected virtual void SetAlpha(float alpha)
     {
-        for (int i = 0; i < imgs.Length; i++)
+        if (imgs != null)
         {
-            Color lColor = imgs[i].color;
-            lColor.a = alpha;
-            imgs[i].color = lColor;
+            for (int i = 0; i < imgs.Length; i++)
+            {
+                Color lColor = imgs[i].color;
+                lColor.a = alpha;
+                imgs[i].color = lColor;
+            }
         }
-
-        for (int i = 0; i < rawImgs.Length; i++)
+        
+        if (rawImgs != null)
         {
-            Color lColor = rawImgs[i].color;
-            lColor.a = alpha;
-            rawImgs[i].color = lColor;
+            for (int i = 0; i < rawImgs.Length; i++)
+            {
+                Color lColor = rawImgs[i].color;
+                lColor.a = alpha;
+                rawImgs[i].color = lColor;
+            }
         }
+        
     }
 
     public void SetState(bool state)
     {
-        gameObject.SetActive(state);
+        gameObject.SetActive(state); if (imgs != null)
+        {
+            for (int i = 0; i < imgs.Length; i++)
+            {
+                imgs[i].raycastTarget = state;
+            }
+        }
+
+        if (rawImgs != null)
+        {
+            for (int i = 0; i < rawImgs.Length; i++)
+            {
+                rawImgs[i].raycastTarget = state;
+            }
+        }
     }
 }

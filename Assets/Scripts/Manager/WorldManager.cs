@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Game;
 using Assets.Scripts.Game.Objects;
 using Assets.Scripts.Game.Save;
+using Assets.Scripts.Game.UI.Ftue;
 using Assets.Scripts.Utils;
 using System;
 using System.Collections;

@@ -11,6 +11,12 @@ namespace Assets.Scripts.Game.UI
 	[RequireComponent(typeof(RectTransform))]
 	public class UIObjectPointer : MonoBehaviour
 	{
+        internal class CallBackPos
+        {
+            public Action<Vector3> method;
+            public Vector3 param;
+        }
+
         public static float INTERACT_DISTANCE = 0.2f;
 
 		public float pointRotation;
@@ -20,10 +26,12 @@ namespace Assets.Scripts.Game.UI
 
         protected string _displayerInstanceName;
 
+        [SerializeField]
 		protected Transform uiTarget = null;
 		protected Vector3 worldTarget = Vector3.zero;
 
         protected List<Action> callbacks = new List<Action>();
+        private List<CallBackPos> callbacksPos = new List<CallBackPos>();
 
 		[SerializeField]
 		protected float _pointDistance;
@@ -31,6 +39,8 @@ namespace Assets.Scripts.Game.UI
 			get { return Mathf.Clamp(_pointDistance, 0, 1500f); }
 			set { _pointDistance = Mathf.Clamp(value, 0, 1500f); }
 		}
+
+        private float _activePointDistance;
 
 		protected virtual void Awake()
 		{
@@ -42,6 +52,7 @@ namespace Assets.Scripts.Game.UI
             _displayerInstanceName = diName;
             autoDestroy = pautoDestroy;
             PointDistance = pDistance;
+            _activePointDistance = pDistance;
             pointRotation = pAngle;
             autoRotation = autoRot;
             worldTarget = worldPos;
@@ -54,6 +65,7 @@ namespace Assets.Scripts.Game.UI
             _displayerInstanceName = diName;
             autoDestroy = pautoDestroy;
             PointDistance = pDistance;
+            _activePointDistance = pDistance;
             pointRotation = pAngle;
             autoRotation = autoRot;
             worldTarget = Vector3.zero;
@@ -80,7 +92,7 @@ namespace Assets.Scripts.Game.UI
             Player playerTransform = PlayerManager.Instance.player;
             if (playerTransform != null && autoDestroy)
             {
-                if (Vector3.Distance(worldTarget, playerTransform.transform.position) <= INTERACT_DISTANCE)
+                if (Vector3.Distance(worldTarget, playerTransform.transform.position) <= INTERACT_DISTANCE / 2f)
                 {
                     ActiveCallBacks();
                     ArrowDisplayer.Instances(_displayerInstanceName).DestroyArrow(this);
@@ -104,7 +116,7 @@ namespace Assets.Scripts.Game.UI
 
 			Vector2 textureSize = new Vector2(rect.sizeDelta.x / 2f, rect.sizeDelta.y / 2f);
 
-			lTargetPos -= dir * (PointDistance / (xRatio * yRatio));
+			lTargetPos -= dir * (_activePointDistance / (xRatio * yRatio));
 			if (targetScreenPos.x > screenCenter.x * 2f) lTargetPos.x = (screenCenter.x * xRatio) - textureSize.x;
 			if (targetScreenPos.x < 0) lTargetPos.x = -(screenCenter.x * xRatio) + textureSize.x;
 			if (targetScreenPos.y > screenCenter.y * 2f) lTargetPos.y = (screenCenter.y * yRatio) - textureSize.y;
@@ -123,15 +135,43 @@ namespace Assets.Scripts.Game.UI
             if (!callbacks.Contains(callBack)) callbacks.Add(callBack);
         }
 
+        public void AddCallBackPos(Action<Vector3> callBack, Vector3 param)
+        {
+            CallBackPos cb = new CallBackPos();
+            cb.method = callBack;
+            cb.param = param;
+            if (callbacksPos.Find(m => m.method == callBack) != null) callbacksPos.Add(cb);
+        }
+
         protected void ActiveCallBacks()
         {
             foreach (Action method in callbacks) method();
+            foreach (CallBackPos cb in callbacksPos) cb.method(cb.param);
             callbacks.Clear();
+            callbacksPos.Clear();
         }
 
         public void Update()
         {
+            MoveAnimation();
             FollowTarget();
+        }
+
+        public void SetAnimProperties(float animTime, float pAnimDist)
+        {
+            tAnim = 0f;
+            tAnimTime = animTime;
+            animDist = pAnimDist;
+        }
+
+        private float tAnim = 0f;
+        private float tAnimTime = 0.75f;
+        private float animDist = 25f;
+        private void MoveAnimation()
+        {
+            if (tAnimTime > 0f) tAnim = (tAnim + Mathf.Clamp01(Time.deltaTime * (1f / tAnimTime))) % 1f;
+            float x = Easing.Arch(tAnim);
+            _activePointDistance = PointDistance + (animDist * x);
         }
 
         public Vector3 GetWorldTargetPos()

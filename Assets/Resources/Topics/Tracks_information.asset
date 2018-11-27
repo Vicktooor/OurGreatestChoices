@@ -13,9 +13,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 16
   texts:
-    playerText: 
-    NPCText: 
+    playerText: TracksInfo0
+    NPCText: TracksAnswer0
     getInfo: 1
     nextTexts: []
+    smileySprite: {fileID: 0}
+    iconSprite: {fileID: 0}
   targetItem: {fileID: 11400000, guid: 88f6bad7ffcf6a245a6ad73e56385e22, type: 2}
-  icon: {fileID: 21300000, guid: 11d1df8384a515b40ad0dc181846537e, type: 3}
+  icon: {fileID: 21300000, guid: 866a5ca203087bf4480741cba6fb20bf, type: 3}

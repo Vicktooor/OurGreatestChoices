@@ -18,7 +18,9 @@ MonoBehaviour:
   NGOItem: {fileID: 0}
   EcoItem: {fileID: 0}
   GouvItem: {fileID: 0}
-  nbForCraft: 3
+  nbForCraft: 15
   icon: {fileID: 21300000, guid: 11d1df8384a515b40ad0dc181846537e, type: 3}
+  ecoIcon: {fileID: 0}
   hiddenIcon: {fileID: 21300000, guid: 75fcf4b2c4c696647a5763f249b06c31, type: 3}
+  ecoHiddenIcon: {fileID: 0}
   glossaryDesc: GlossaryTracks

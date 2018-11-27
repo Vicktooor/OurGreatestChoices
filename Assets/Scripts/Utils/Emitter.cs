@@ -15,14 +15,14 @@ public class Emitter : MonoBehaviour {
 
         Events.Instance.AddListener<OnSceneLoaded>(StopEmitter);
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
     void StopEmitter(OnSceneLoaded pEvent) {
         if (GameManager.Instance.LoadedScene == SceneString.MapView) _emitter.Stop();
         else _emitter.Play();
+    }
+
+    private void OnDestroy()
+    {
+        Events.Instance.RemoveListener<OnSceneLoaded>(StopEmitter);
     }
 }

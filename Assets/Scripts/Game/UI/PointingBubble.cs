@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Game.NGO;
+﻿using Assets.Script;
+using Assets.Scripts.Game.NGO;
 using System;
 using System.Collections;
 using TMPro;
@@ -39,13 +40,13 @@ namespace Assets.Scripts.Game.UI
 
         private void OnEnable()
         {
-            ControllerInput.OpenScreens.Add(transform);
+            ControllerInput.AddScreen(transform);
             active = true;
         }
 
         private void OnDisable()
         {
-            ControllerInput.OpenScreens.Remove(transform);
+            ControllerInput.RemoveScreen(transform);
             active = false;
         }
 
@@ -67,7 +68,7 @@ namespace Assets.Scripts.Game.UI
 			speakingPos = npc.transform.position;
 			_speakingNPC = npc;
 			Point();
-            ChangeText(TextManager.GetText(InteractablePNJ.DialoguesDatabase[npc.IDname].introText));
+            ChangeText(TextManager.GetText(InteractablePNJ.DialoguesDatabase[npc.TxtInfo.NPCText].introText));
             StartCoroutine(WaitForTouch());
 		}
 
@@ -134,12 +135,29 @@ namespace Assets.Scripts.Game.UI
 
             if (toClose)
             {
-                selectedTopic = null;
-                _speakingNPC = null;
-                speakingPos = Vector3.zero;
-                Events.Instance.Raise(new OnEndSpeakingNPC());
-                Show(false);
+                StartCoroutine(EndSpeakCoroutine());
             }
+        }
+
+        protected IEnumerator EndSpeakCoroutine()
+        {
+            ChangeText(TextManager.GetText(InteractablePNJ.DialoguesDatabase[_speakingNPC.TxtInfo.NPCText].outroText));
+            bool receiveTouch = false;
+            while (!receiveTouch)
+            {
+                if (Input.GetKeyDown(KeyCode.Mouse0)) receiveTouch = true;
+                if (Input.touchCount > 1) receiveTouch = true;
+                yield return null;
+            }
+            selectedTopic = null;
+            speakingPos = Vector3.zero;
+            Events.Instance.Raise(new OnEndSpeakingNPC());
+            UIManager.instance.PNJState.pnj = _speakingNPC;
+            UIManager.instance.PNJState.SetTarget(PlayerManager.Instance.GetNearestNPCIcon());
+            UIManager.instance.PNJState.Active(true);
+            NotePad.Instance.endInfo.gameObject.SetActive(false);
+            _speakingNPC = null;
+            Show(false);
         }
 
         protected IEnumerator TouchForClose()

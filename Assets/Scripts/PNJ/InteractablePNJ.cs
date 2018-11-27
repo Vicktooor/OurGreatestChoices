@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Game.NGO;
 using Assets.Scripts.Game.Save;
 using Assets.Scripts.Game.UI;
+using Assets.Scripts.Game.UI.Ftue;
 using Assets.Scripts.Manager;
 using System;
 using System.Collections;
@@ -45,7 +46,7 @@ public class InteractablePNJ : Interactable
     public static List<InteractablePNJ> PNJs = new List<InteractablePNJ>();
     public static float helpDistance = 0.9f;
 
-    public string IDname;
+    public string IDname = string.Empty;
     private string dialogueKey;
 
     [Header("Budget Component")]
@@ -57,6 +58,12 @@ public class InteractablePNJ : Interactable
 	[Header("UI Head sprite")]
 	public Sprite pictoHead;
 
+    private NPCWrap _txtInfo;
+    public NPCWrap TxtInfo { get { return _txtInfo; } }
+
+    [HideInInspector]
+    public List<EItemType> neededItems = new List<EItemType>();
+
     public bool HaveBudget(EWorldImpactType target) 
     {
         if (ResourcesManager.Instance.BudgetValues.ContainsKey(target))
@@ -64,6 +71,20 @@ public class InteractablePNJ : Interactable
             return budgetComponent.budget >= ResourcesManager.Instance.BudgetValues[target].targetBudget;
         }
         else return false;
+    }
+
+    public bool HaveRequiredItem(EWorldImpactType target)
+    {
+        if (ResourcesManager.Instance.BudgetValues.ContainsKey(target))
+        {
+            return budgetComponent.budget >= ResourcesManager.Instance.BudgetValues[target].targetBudget;
+        }
+        else return false;
+    }
+
+    virtual public bool HaveBudget(EItemType target)
+    {
+        return false;
     }
 
     protected override void Awake()
@@ -77,6 +98,10 @@ public class InteractablePNJ : Interactable
     {
         PositionKey found = PlanetSave.PNJs.Find(p => new Vector3(p.x, p.y, p.z) == transform.position);
         IDname = found.key;
+
+        NPCWrap npcText = ResourcesManager.Instance.NPCs.objects.Find(npc => npc.ID == IDname);
+        if (npcText != null) _txtInfo = npcText;
+
         budgetComponent = new BudgetComponent(IDname);
         if (GameManager.PARTY_TYPE == EPartyType.SAVE)
         {
@@ -102,7 +127,7 @@ public class InteractablePNJ : Interactable
         base.OnDisable();
     }
 
-    public virtual bool HaveHisItem()
+    public virtual bool HaveItem(EItemType itemType)
     {
         return false;
     }
@@ -197,6 +222,24 @@ public class InteractablePNJ : Interactable
 
     public bool CanTalkTo(EPlayer playerType)
     {
+        if (FtueManager.instance.active)
+        {
+            if (playerType == EPlayer.ECO)
+            {
+                if (FtueManager.instance.currentStep.transformTarget != EPlayer.NONE)
+                {
+                    if (FtueManager.instance.currentStep.transformTarget == item.type) return true;
+                    else return false;
+                }
+                else return false;
+            }
+            else if (playerType == EPlayer.GOV || playerType == EPlayer.NGO)
+            {
+                if (FtueManager.instance.currentStep.targetNPCIcon) return true;
+                else return false;
+            }
+        }
+
         if (playerType == EPlayer.GOV)
         {
             if (budgetComponent.initialBudget > 0) return true;
@@ -204,9 +247,13 @@ public class InteractablePNJ : Interactable
         }
         else if (playerType == EPlayer.NGO)
         {
-            if (DialoguesDatabase.ContainsKey(IDname))
+            if (_txtInfo != null)
             {
-                if (DialoguesDatabase[IDname].topicIDs.Count > 0) return true;
+                if (DialoguesDatabase.ContainsKey(_txtInfo.NPCText))
+                {
+                    if (DialoguesDatabase[_txtInfo.NPCText].topicIDs.Count > 0) return true;
+                }
+                else return false;
             }
             return false;
         }
@@ -226,6 +273,11 @@ public class InteractablePNJ : Interactable
                 else if (haveItem) PointingBubble.instance.PNJThanks(this, txts.haveItemText);
             }
         }
+    }
+
+    virtual public EWorldImpactType GetBudgetEnum(EItemType itemType)
+    {
+        return EWorldImpactType.None;
     }
 
     protected override void OnDestroy()

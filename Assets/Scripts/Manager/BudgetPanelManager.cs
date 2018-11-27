@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System;
-using Assets.Scripts.Game.UI.Global;
 using System.Collections.Generic;
 using TMPro;
 using Assets.Scripts.Game.UI;
 using Assets.Script;
 using Assets.Scripts.Game;
 using UnityEngine.UI;
+using Assets.Scripts.Game.UI.Ftue;
 
 namespace Assets.Scripts.Manager
 {
@@ -16,8 +16,6 @@ namespace Assets.Scripts.Manager
 	/// </summary>
 	public class BudgetPanelManager : MonoBehaviour
 	{
-		private bool _toggle = false;
-
 		#region Instance
 		private static BudgetPanelManager _instance;
 
@@ -43,6 +41,8 @@ namespace Assets.Scripts.Manager
         public TextMeshProUGUI buildingMoney;
         public TextMeshProUGUI stockMoney;
 
+        public Tweener tweener;
+
 		protected void Awake()
 		{
 			if (_instance != null)
@@ -50,32 +50,44 @@ namespace Assets.Scripts.Manager
 				throw new Exception("Tentative de création d'une autre instance de BudgetPanelManager alors que c'est un singleton.");
 			}
 			_instance = this;
-
-			Events.Instance.AddListener<OnPopupBuilding>(Open);
+            TweenerLead.Instance.NewTween(GetComponent<RectTransform>(), tweener);
+            Events.Instance.AddListener<OnPopupBuilding>(Open);
             gameObject.SetActive(false);
         }
 
         protected void OnEnable()
         {
-            Events.Instance.AddListener<OnEndTween>(EndTween);
+            ControllerInput.AddScreen(transform);
         }
 
         protected void OnDisable()
         {
-            Events.Instance.RemoveListener<OnEndTween>(EndTween);
-        }     
+            ControllerInput.RemoveScreen(transform);
+            if (ControllerInput.instance) ControllerInput.instance.ResetDatasTouch();
+        }
 
-        protected void EndTween(OnEndTween e)
+        protected void CheckFtue()
         {
-            if (buildingBudget.initialBudget > 0) Set();
-            else Close();
+            if (FtueManager.instance.active)
+            {
+                if (FtueManager.instance.currentStep.waitOpeningPanel == transform) FtueManager.instance.ValidStep();
+            }
+        }
+
+        private void Opening()
+        {
+            float x1 = Easing.Scale(Easing.SmoothStop, tweener.t, 2, 2f);
+            float x2 = Easing.FlipScale(Easing.SmoothStart, tweener.t, 2, 2f);
+            float x = Easing.Mix(x1, x2, 0.5f, tweener.t);
+            tweener.SetScale(x);
         }
 
         private void Set()
         {
+            Active();
             buildingIcon.texture = _npc.pictoHead.texture;
-            buildingMoney.text = (buildingBudget.budget * WorldValues.PLAYER_MONEY_MULTIPLICATOR).ToString("#") + "/ -";
-            stockMoney.text = (InventoryPlayer.Instance.moneyStock * WorldValues.PLAYER_MONEY_MULTIPLICATOR).ToString("#") + "/" + (InventoryPlayer.Instance.maxStock * WorldValues.PLAYER_MONEY_MULTIPLICATOR);
+            buildingMoney.text = (buildingBudget.budget * WorldValues.PLAYER_MONEY_MULTIPLICATOR).ToString("#0") + "/ -";
+            stockMoney.text = (InventoryPlayer.Instance.moneyStock * WorldValues.PLAYER_MONEY_MULTIPLICATOR).ToString("#0") + "/" + (InventoryPlayer.Instance.maxStock * WorldValues.PLAYER_MONEY_MULTIPLICATOR);
         }
 
         public void ClickGive()
@@ -84,6 +96,15 @@ namespace Assets.Scripts.Manager
             {
                 _npc.ReceiveBudget();
                 Events.Instance.Raise(new OnUpdateNPCInfo());
+                if (FtueManager.instance.active)
+                {
+                    if (FtueManager.instance.currentStep.targetBudget != 0)
+                    {
+                        FtueManager.instance.currentStep.GetBudget();
+                        if (FtueManager.instance.currentStep.HaveBudget())
+                            FtueManager.instance.ValidStep();
+                    }
+                }
             }
             Set();
         }
@@ -94,37 +115,47 @@ namespace Assets.Scripts.Manager
             {
                 _npc.SendBudget();
                 Events.Instance.Raise(new OnUpdateNPCInfo());
+                if (FtueManager.instance.active)
+                {
+                    if (FtueManager.instance.currentStep.targetBudget != 0)
+                    {
+                        FtueManager.instance.currentStep.GetBudget();
+                        if (FtueManager.instance.currentStep.HaveBudget())
+                            FtueManager.instance.ValidStep();
+                    }
+                }
             }
             Set();
         }
 
-		protected void Toggle()
-		{
-			if (_toggle)
-			{
-                PlayerManager.Instance.player.ShowNPCState();
-                gameObject.SetActive(false);
-				_toggle = false;
-			}
-			else
-			{
-				gameObject.SetActive(true);
-				_toggle = true;
-			}
-		}
+        private void Active()
+        {
+            gameObject.SetActive(true);
+        }
 
 		protected void Open(OnPopupBuilding e)
 		{
             _npc = e.npc;
 			buildingBudget = e.buildingbudget;
-            UIName.text = TextManager.GetText(_npc.IDname);      
-			Toggle();
-		}
+            UIName.text = TextManager.GetText(_npc.IDname);
+            tweener.SetMethods(Opening, Set, CheckFtue, null);
+            TweenerLead.Instance.StartTween(tweener);
+        }
+
+        private void TweenClose()
+        {
+            PlayerManager.Instance.player.ShowNPCState();
+            gameObject.SetActive(false);
+        }
 
 		public void Close()
 		{
-			Toggle();
-		}
+            if (tweener.Opened)
+            {
+                tweener.SetMethods(Opening, null, null, TweenClose);
+                TweenerLead.Instance.StartTween(tweener);
+            }
+        }
 
 		protected void OnDestroy()
 		{

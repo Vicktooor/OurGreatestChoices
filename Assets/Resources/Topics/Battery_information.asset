@@ -16,14 +16,8 @@ MonoBehaviour:
     playerText: BatteryInfo0
     NPCText: BatteryAnswer0
     getInfo: 1
-    nextTexts:
-    - playerText: BatteryInfo1.0
-      NPCText: BatteryAnswer1.0
-      getInfo: 1
-      nextTexts: []
-    - playerText: BatteryInfo1.1
-      NPCText: BatteryAnswer1.1
-      getInfo: 0
-      nextTexts: []
+    nextTexts: []
+    smileySprite: {fileID: 0}
+    iconSprite: {fileID: 0}
   targetItem: {fileID: 11400000, guid: 142a82c31e64d534fb224f2b6c4e4691, type: 2}
-  icon: {fileID: 21300000, guid: 29ec5c3adea2d2b43b63e29024e6f27f, type: 3}
+  icon: {fileID: 21300000, guid: 866a5ca203087bf4480741cba6fb20bf, type: 3}

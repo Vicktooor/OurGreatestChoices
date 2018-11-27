@@ -18,7 +18,9 @@ MonoBehaviour:
   NGOItem: {fileID: 11400000, guid: 142a82c31e64d534fb224f2b6c4e4691, type: 2}
   EcoItem: {fileID: 11400000, guid: 142a82c31e64d534fb224f2b6c4e4691, type: 2}
   GouvItem: {fileID: 11400000, guid: 090c1381c0ed40c45a4f9cedd5b9cba7, type: 2}
-  nbForCraft: 3
+  nbForCraft: 0
   icon: {fileID: 21300000, guid: 16945bfcd1fc5944ca31d99f6d4791c9, type: 3}
+  ecoIcon: {fileID: 0}
   hiddenIcon: {fileID: 21300000, guid: e2c5921c7e1142d4d900377a177ea8d1, type: 3}
+  ecoHiddenIcon: {fileID: 0}
   glossaryDesc: 

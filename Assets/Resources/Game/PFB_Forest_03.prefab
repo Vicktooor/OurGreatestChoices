@@ -2864,8 +2864,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a1a05dc71c123448b2508558d3b6471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minDistance: 0.05
-  _maxDistance: 0.1
+  _minDistance: 0.025
+  _maxDistance: 0.05
   _maxAngle: 30
   _timeToBack: 2
   _player: {fileID: 0}
@@ -2873,7 +2873,6 @@ MonoBehaviour:
   popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
   popTime: 0.25
   popPct: 8
-  playerTransform: {fileID: 0}
 --- !u!114 &114074428922879324
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2902,8 +2901,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a1a05dc71c123448b2508558d3b6471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minDistance: 0.05
-  _maxDistance: 0.1
+  _minDistance: 0.025
+  _maxDistance: 0.05
   _maxAngle: 30
   _timeToBack: 2
   _player: {fileID: 0}
@@ -2911,7 +2910,6 @@ MonoBehaviour:
   popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
   popTime: 0.25
   popPct: 8
-  playerTransform: {fileID: 0}
 --- !u!114 &114119989406918752
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2923,8 +2921,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a1a05dc71c123448b2508558d3b6471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minDistance: 0.05
-  _maxDistance: 0.1
+  _minDistance: 0.025
+  _maxDistance: 0.05
   _maxAngle: 30
   _timeToBack: 2
   _player: {fileID: 0}
@@ -2932,7 +2930,6 @@ MonoBehaviour:
   popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
   popTime: 0.25
   popPct: 8
-  playerTransform: {fileID: 0}
 --- !u!114 &114191449657601304
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2944,8 +2941,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a1a05dc71c123448b2508558d3b6471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minDistance: 0.05
-  _maxDistance: 0.1
+  _minDistance: 0.025
+  _maxDistance: 0.05
   _maxAngle: 30
   _timeToBack: 2
   _player: {fileID: 0}
@@ -2953,7 +2950,6 @@ MonoBehaviour:
   popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
   popTime: 0.25
   popPct: 8
-  playerTransform: {fileID: 0}
 --- !u!114 &114259068378802140
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2965,8 +2961,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a1a05dc71c123448b2508558d3b6471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minDistance: 0.05
-  _maxDistance: 0.1
+  _minDistance: 0.025
+  _maxDistance: 0.05
   _maxAngle: 30
   _timeToBack: 2
   _player: {fileID: 0}
@@ -2974,7 +2970,6 @@ MonoBehaviour:
   popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
   popTime: 0.25
   popPct: 8
-  playerTransform: {fileID: 0}
 --- !u!114 &114271072349032546
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2986,8 +2981,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a1a05dc71c123448b2508558d3b6471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minDistance: 0.05
-  _maxDistance: 0.1
+  _minDistance: 0.025
+  _maxDistance: 0.05
   _maxAngle: 30
   _timeToBack: 2
   _player: {fileID: 0}
@@ -2995,7 +2990,6 @@ MonoBehaviour:
   popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
   popTime: 0.25
   popPct: 8
-  playerTransform: {fileID: 0}
 --- !u!114 &114277631074917642
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3007,8 +3001,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a1a05dc71c123448b2508558d3b6471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minDistance: 0.05
-  _maxDistance: 0.1
+  _minDistance: 0.025
+  _maxDistance: 0.05
   _maxAngle: 30
   _timeToBack: 2
   _player: {fileID: 0}
@@ -3016,7 +3010,6 @@ MonoBehaviour:
   popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
   popTime: 0.25
   popPct: 8
-  playerTransform: {fileID: 0}
 --- !u!114 &114310047371556456
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3039,8 +3032,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a1a05dc71c123448b2508558d3b6471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minDistance: 0.05
-  _maxDistance: 0.1
+  _minDistance: 0.025
+  _maxDistance: 0.05
   _maxAngle: 30
   _timeToBack: 2
   _player: {fileID: 0}
@@ -3048,7 +3041,6 @@ MonoBehaviour:
   popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
   popTime: 0.25
   popPct: 8
-  playerTransform: {fileID: 0}
 --- !u!114 &114578924551127976
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3060,8 +3052,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a1a05dc71c123448b2508558d3b6471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minDistance: 0.05
-  _maxDistance: 0.1
+  _minDistance: 0.025
+  _maxDistance: 0.05
   _maxAngle: 30
   _timeToBack: 2
   _player: {fileID: 0}
@@ -3069,7 +3061,6 @@ MonoBehaviour:
   popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
   popTime: 0.25
   popPct: 8
-  playerTransform: {fileID: 0}
 --- !u!114 &114677000452669704
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3081,8 +3072,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a1a05dc71c123448b2508558d3b6471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minDistance: 0.05
-  _maxDistance: 0.1
+  _minDistance: 0.025
+  _maxDistance: 0.05
   _maxAngle: 30
   _timeToBack: 2
   _player: {fileID: 0}
@@ -3090,7 +3081,6 @@ MonoBehaviour:
   popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
   popTime: 0.25
   popPct: 8
-  playerTransform: {fileID: 0}
 --- !u!114 &114719402847443748
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3102,8 +3092,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a1a05dc71c123448b2508558d3b6471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minDistance: 0.05
-  _maxDistance: 0.1
+  _minDistance: 0.025
+  _maxDistance: 0.05
   _maxAngle: 30
   _timeToBack: 2
   _player: {fileID: 0}
@@ -3111,7 +3101,6 @@ MonoBehaviour:
   popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
   popTime: 0.25
   popPct: 8
-  playerTransform: {fileID: 0}
 --- !u!114 &114779588722757914
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3123,8 +3112,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a1a05dc71c123448b2508558d3b6471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minDistance: 0.05
-  _maxDistance: 0.1
+  _minDistance: 0.025
+  _maxDistance: 0.05
   _maxAngle: 30
   _timeToBack: 2
   _player: {fileID: 0}
@@ -3132,7 +3121,6 @@ MonoBehaviour:
   popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
   popTime: 0.25
   popPct: 8
-  playerTransform: {fileID: 0}
 --- !u!114 &114958236930090760
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3144,8 +3132,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a1a05dc71c123448b2508558d3b6471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minDistance: 0.05
-  _maxDistance: 0.1
+  _minDistance: 0.025
+  _maxDistance: 0.05
   _maxAngle: 30
   _timeToBack: 2
   _player: {fileID: 0}
@@ -3153,4 +3141,3 @@ MonoBehaviour:
   popItem: {fileID: 11400000, guid: 7e60b63e59ea8ec4f8e956cd6dcb2bde, type: 2}
   popTime: 0.25
   popPct: 8
-  playerTransform: {fileID: 0}

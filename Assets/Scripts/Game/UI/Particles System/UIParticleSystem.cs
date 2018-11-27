@@ -90,17 +90,10 @@ public class UIParticleSystem : MonoBehaviour {
     protected Image[] ParticlePool;
     protected int ParticlePoolPointer;
 
-
-	// Use this for initialization
-	void Start () {    
-    }
-
     void Awake()
     {
-        if (ParticlePool == null)
-            Init();
-        if (PlayOnAwake)
-            Play();
+        if (ParticlePool == null) Init();
+        if (PlayOnAwake) Play();
     }
 
     private void Init()

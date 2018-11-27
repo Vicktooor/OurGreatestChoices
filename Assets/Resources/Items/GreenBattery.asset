@@ -18,7 +18,9 @@ MonoBehaviour:
   NGOItem: {fileID: 0}
   EcoItem: {fileID: 0}
   GouvItem: {fileID: 0}
-  nbForCraft: 3
+  nbForCraft: 20
   icon: {fileID: 21300000, guid: d75f981844ec9d741afbec1663d2e714, type: 3}
+  ecoIcon: {fileID: 21300000, guid: 21b4be6f949df8843a06638ec9901144, type: 3}
   hiddenIcon: {fileID: 21300000, guid: 213957fd0ba706f49b8827a2652d88ae, type: 3}
+  ecoHiddenIcon: {fileID: 21300000, guid: 9bf358ea870668d47b114dd7e18eac50, type: 3}
   glossaryDesc: GlossaryGreenBattery

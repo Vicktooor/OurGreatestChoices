@@ -1,5 +1,6 @@
 ﻿using Assets.Script;
 using Assets.Scripts.Game;
+using Assets.Scripts.Game.UI.Ftue;
 using Assets.Scripts.Manager;
 using System.Collections;
 using System.Collections.Generic;
@@ -103,7 +104,16 @@ public class BouncingTree : MonoBehaviour {
             SetVecUp();
 
             if (CheckDistancePivot()) {
-                if (!popJumping && canPopItem && !poping && transform.parent.gameObject.activeSelf) StartCoroutine(PopCoroutine());
+                if (!popJumping && canPopItem && !poping && transform.parent.gameObject.activeSelf)
+                {
+                    if (FtueManager.instance.active)
+                    {
+                        FtueComponent step = FtueManager.instance.currentStep;
+                        if (step.popTarget == popItem.itemType && step.CanPop()) StartCoroutine(PopCoroutine(100f));
+                        else StartCoroutine(PopCoroutine(-1));
+                    }
+                    else StartCoroutine(PopCoroutine(popPct));
+                }
 
                 SetAngle();
                 SetAxis();
@@ -118,24 +128,43 @@ public class BouncingTree : MonoBehaviour {
 
     #region Set
 
-    protected IEnumerator PopCoroutine()
+    protected IEnumerator PopCoroutine(float popPourcentage)
     {
         poping = true;
         float t = 0;
         float random;
+        bool poped = false;
         while (poping && CheckDistancePivot())
         {
-            t += Time.deltaTime * (1f / popTime);
-            t = Mathf.Clamp01(t);
-            if (t >= 1)
+            if (popJumping || !PlayerManager.Instance.player.Moving)
             {
-                random = Random.Range(0f, 100f);
-                if (random <= popPct) Pop();
-                t = 0;
+                yield return null;
+            }
+            else
+            {
+                t += Time.deltaTime * (1f / popTime);
+                t = Mathf.Clamp01(t);
+                if (t >= 1)
+                {
+                    random = Random.Range(0f, 100f);
+                    if (random <= popPourcentage)
+                    {
+                        Pop();
+                        if (FtueManager.instance.active) FtueManager.instance.currentStep.PopOne();
+                        poped = true;
+                    }
+                    t = 0;
+                }
             }
             yield return null;
         }
-        if (!popJumping) poping = false;
+
+        if (popPourcentage >= 100f && !poped)
+        {
+            Pop();
+            if (FtueManager.instance.active) FtueManager.instance.currentStep.PopOne();
+        }
+        poping = false;
     }
 
     private Vector3 popDirection = Vector3.zero;
@@ -153,7 +182,6 @@ public class BouncingTree : MonoBehaviour {
 
     protected IEnumerator PopJumpCoroutine(Transform target)
     {
-        poping = true;  
         popJumping = true;
         float t = 0f;
         Vector3 basePos = target.position;
@@ -169,7 +197,6 @@ public class BouncingTree : MonoBehaviour {
             yield return null;
         }
         popJumping = false;
-        poping = false;
     }
 
     // Set Distance between Player and Pivot

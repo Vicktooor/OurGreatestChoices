@@ -13,9 +13,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 19
   texts:
-    playerText: 
-    NPCText: 
-    getInfo: 1
-    nextTexts: []
+    playerText: WindTurbineInfo0
+    NPCText: WindTurbineAnswer0
+    getInfo: 0
+    nextTexts:
+    - playerText: WindTurbineInfo1
+      NPCText: WindTurbineAnswer1
+      getInfo: 0
+      nextTexts: []
+      smileySprite: {fileID: 21300000, guid: a04ee5996b0bd5a45a92277d0be3170f, type: 3}
+      iconSprite: {fileID: 21300000, guid: dbe86e57dd5a1a743a268fb90d07f410, type: 3}
+    - playerText: WindTurbineInfo2
+      NPCText: WindTurbineAnswer2
+      getInfo: 1
+      nextTexts: []
+      smileySprite: {fileID: 21300000, guid: 985119896924ecd49a85ca070ee12778, type: 3}
+      iconSprite: {fileID: 21300000, guid: 6d52a66d3c561974db6c7b1c5bfa132b, type: 3}
+    smileySprite: {fileID: 0}
+    iconSprite: {fileID: 0}
   targetItem: {fileID: 11400000, guid: fca5a0b200099834dbcdb2fb60003e78, type: 2}
-  icon: {fileID: 21300000, guid: 6d52a66d3c561974db6c7b1c5bfa132b, type: 3}
+  icon: {fileID: 21300000, guid: 866a5ca203087bf4480741cba6fb20bf, type: 3}

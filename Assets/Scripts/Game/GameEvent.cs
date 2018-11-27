@@ -24,6 +24,8 @@ public class OnFtueNextStep : GameEvent { }
 public class OnValidFtueStep : GameEvent { }
 #endregion
 
+public class OnOpenUI : GameEvent { }
+
 #region Dialogue Event
 public class OnDialogueInfo : GameEvent { }
 public class OnTalkToNPC : GameEvent { }
@@ -62,12 +64,12 @@ public class OnSetDialogueTarget : GameEvent
 }
 #endregion
 
-public class OnEndTween : GameEvent { }
-
 public class OnFocusPlayer : GameEvent { }
 
 /* Controller Input */
 public class OnTapStepFTUE : PlayerEvent {}
+
+public class OnStartFtue : GameEvent { }
 
 public class OnTap : PlayerEvent {
     public Vector3 targetPos;
@@ -91,12 +93,7 @@ public class OnTapItemPickUp : PlayerEvent {
     }
 }
 
-public class OnHold : PlayerEvent {
-	public Vector2 touchPosition;
-    public OnHold(Vector2 touchPos) {
-        touchPosition = touchPos;
-    }
-}
+public class OnHold : PlayerEvent { }
 public class OnRemove : GameEvent { }
 
 public class TimeEvent : GameEvent { }
@@ -275,6 +272,15 @@ public class OnPopupBuilding : GameEvent {
     }
 }
 
+public class OnPanelBtnState : GameEvent
+{
+    public bool interactable;
+    public OnPanelBtnState(bool inte)
+    {
+        interactable = inte;
+    }
+}
+
 public class OnPopupDialogue : GameEvent {
     public TextAsset textFile;
     public string textString;
@@ -333,6 +339,7 @@ public class OnPlayerInitFinish : GameEvent { }
 
 public class OnApplyCullingDistance : GameEvent { }
 
+public class OnFTUEOpenDialogue : GameEvent { }
 
 /* Pinch */
 public class OnEndSwitchedPlayer : GameEvent { }
@@ -364,8 +371,8 @@ public class OnSwitchScene : GameEvent
 }
 public class CloudIn : GameEvent { }
 public class CloudOut : GameEvent { }
+public class OnTransitionEnd: GameEvent { }
 
-public class OnOpenPanel : GameEvent { }
 public class OnUpdateMainMenu : GameEvent { }
 public class OnChangeLanguageUI : GameEvent { }
 public class OnGoToMenu : GameEvent { }
@@ -397,6 +404,10 @@ public class OnShowPin : GameEvent
         targetState = iState;
     }
 }
+
+public class OnEndPanelZoom : GameEvent { }
+
+public class UpdateTime : GameEvent { }
 
 public class OnSaveRoads : GameEvent { }
 

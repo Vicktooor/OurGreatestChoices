@@ -13,9 +13,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 7
   texts:
-    playerText: 
-    NPCText: 
+    playerText: FruitBasketInfo0
+    NPCText: FruitBasketAnswer0
     getInfo: 1
-    nextTexts: []
+    nextTexts:
+    - playerText: 
+      NPCText: 
+      getInfo: 0
+      nextTexts:
+      - playerText: 
+        NPCText: 
+        getInfo: 0
+        nextTexts: []
+        smileySprite: {fileID: 0}
+        iconSprite: {fileID: 0}
+      - playerText: 
+        NPCText: 
+        getInfo: 0
+        nextTexts: []
+        smileySprite: {fileID: 0}
+        iconSprite: {fileID: 0}
+      smileySprite: {fileID: 0}
+      iconSprite: {fileID: 0}
+    - playerText: 
+      NPCText: 
+      getInfo: 0
+      nextTexts: []
+      smileySprite: {fileID: 0}
+      iconSprite: {fileID: 0}
+    smileySprite: {fileID: 0}
+    iconSprite: {fileID: 0}
   targetItem: {fileID: 11400000, guid: 76d42ae169cd23341b5e6a7478e826a8, type: 2}
-  icon: {fileID: 21300000, guid: d10910662fe6bc74286130f311b4836e, type: 3}
+  icon: {fileID: 21300000, guid: 866a5ca203087bf4480741cba6fb20bf, type: 3}

@@ -525,7 +525,7 @@ namespace Assets.Scripts.Manager {
         #region Snapshot
 
         void SwitchSnapshot(OnSceneLoaded e) {
-
+            Events.Instance.RemoveListener<OnSceneLoaded>(SwitchSnapshot);
             StudioEventEmitter lEmitter;
 
             int lLength = _emitterArray.Length;

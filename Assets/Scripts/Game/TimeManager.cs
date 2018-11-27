@@ -24,6 +24,7 @@ namespace Assets.Scripts.Game
 		public static int INITIAL_YEAR = 2018;
 		protected float _currentYearTime;
 		protected float _currentMonthTime;
+		protected float _currentBimensualTime;
 		protected float _currentWeekTime;
 		protected float _currentDeforestationTime;
 		protected float _currentPolutionTime;
@@ -44,12 +45,14 @@ namespace Assets.Scripts.Game
 		protected float _weekTime;
 		public float WeekTime { get { return _weekTime; } }
 
+        protected float _bimensualTime;
+
 		protected float _dayTime;
 		public float DayTime { get { return _dayTime; } }
 
         public float NormalizeYearTime { get { return _currentYearTime / YearTime; } }
 
-        public bool canActive = false;
+        public bool active = false;
 
         public float skySpeed = 5f;
         private float SkyboxSpeed { get { return Mathf.Clamp(skySpeed, 0.1f, 10f); } }
@@ -58,7 +61,8 @@ namespace Assets.Scripts.Game
 		{
             base.Awake();
 			_instance = this;
-			_monthTime = YearTime / 12f;
+            _bimensualTime = YearTime / 6f;
+            _monthTime = YearTime / 12f;
 			_weekTime = YearTime / 51f;
 			_dayTime = YearTime / 365f;
 			RestartTime();
@@ -72,7 +76,8 @@ namespace Assets.Scripts.Game
             _actualYear = 0;
 			_actualMonth = 0;
 			_actualWeek = 0;
-		}
+            Events.Instance.Raise(new UpdateTime());
+        }
 
         private float _skyRot = 0;
 		protected void Update()
@@ -83,18 +88,19 @@ namespace Assets.Scripts.Game
                 if (FtueManager.instance.active && GameManager.PARTY_TYPE != EPartyType.NONE)
                 {
                     _skyRot = (_skyRot + (Time.deltaTime * (SkyboxSpeed / 10f))) % 360f;
-                    RenderSettings.skybox.SetFloat("_Rotation", _skyRot);
+                    if (!GameManager.Instance.IsChangingScene) RenderSettings.skybox.SetFloat("_Rotation", _skyRot);
                 }
             }
 
-            if (!canActive) return;
+            if (!active) return;
 
             _skyRot = (_skyRot + (Time.deltaTime * (SkyboxSpeed / 10f))) % 360f;
-            RenderSettings.skybox.SetFloat("_Rotation", _skyRot);
+            if (!GameManager.Instance.IsChangingScene) RenderSettings.skybox.SetFloat("_Rotation", _skyRot);
 
             _currentYearTime += Time.deltaTime;
 			_currentMonthTime += Time.deltaTime;
 			_currentWeekTime += Time.deltaTime;
+            _currentBimensualTime += Time.deltaTime;
 
             if (_currentWeekTime >= _weekTime)
 			{
@@ -108,8 +114,6 @@ namespace Assets.Scripts.Game
 				_currentMonthTime = 0;
 				++_actualMonth;
 				Events.Instance.Raise(new OnNewMonth(_actualMonth));
-                Events.Instance.Raise(new OnUpdateForest());
-                Events.Instance.Raise(new OnUpdateGround());
             }
 
 			if (_currentYearTime >= _yearTime)
@@ -118,22 +122,29 @@ namespace Assets.Scripts.Game
 				++_actualYear;
 				Events.Instance.Raise(new OnNewYear(_actualYear + INITIAL_YEAR));
 			}
+
+            if (_currentBimensualTime >= _bimensualTime)
+            {
+                _currentBimensualTime = 0;
+                Events.Instance.Raise(new OnUpdateForest());
+                Events.Instance.Raise(new OnUpdateGround());
+            }
         }
 
         public void Active()
         {
-            canActive = true;
+            active = true;
         }
 
         public void Desactive()
         {
-            canActive = false;
+            active = false;
         }
 
         public void Stop()
         {
             RestartTime();
-            canActive = false;
+            active = false;
         }
 
         public void LoadSave()
@@ -144,6 +155,7 @@ namespace Assets.Scripts.Game
             _actualWeek = PlanetSave.GameStateSave.SavedTime.actualWeek;
             _actualMonth = PlanetSave.GameStateSave.SavedTime.actualMonth;
             _actualYear = PlanetSave.GameStateSave.SavedTime.actualYear;
+            Events.Instance.Raise(new UpdateTime());
         }
 
         public TimeSave GenerateSave()

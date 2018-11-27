@@ -268,13 +268,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a1a05dc71c123448b2508558d3b6471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minDistance: 0.05
-  _maxDistance: 0.1
+  _minDistance: 0.025
+  _maxDistance: 0.05
   _maxAngle: 30
   _timeToBack: 2
-  _pivot: {fileID: 0}
   _player: {fileID: 0}
-  playerTransform: {fileID: 0}
+  canPopItem: 0
+  popItem: {fileID: 0}
+  popTime: 0
+  popPct: 0
 --- !u!114 &114631492960445758
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -296,9 +298,9 @@ MonoBehaviour:
   radius: 0.1
   item: {fileID: 0}
   _meshRenderer: {fileID: 0}
+  ID: 0
   unHappyState: {fileID: 1571826672100984}
   fruitsMarketState: {fileID: 1681779515668086}
-  dialogueText: []
 --- !u!136 &136562126795037396
 CapsuleCollider:
   m_ObjectHideFlags: 1

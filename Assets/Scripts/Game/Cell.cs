@@ -94,12 +94,12 @@ namespace Assets.Scripts.Game
 
         public bool walkable = true;
 
-        private BillboardNPCState _npcBillboardState;
         private BillboardBubble _citizenBubble;
         private BillboardHelp _pnjHelp;
+        public BillboardHelp PNJHelp { get { return _pnjHelp; } }
 
-		#region Edition protperties
-		protected bool _isElevating;
+        #region Edition protperties
+        protected bool _isElevating;
 		#endregion
 
 		/// <summary>

@@ -2,6 +2,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine.UI;
+using Assets.Scripts.Game.UI.Ftue;
 
 public class TransformThumbnail : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class TransformThumbnail : MonoBehaviour
         int nbSource = InventoryPlayer.Instance.nbItems[sourceItem.itemType];
         if (nbSource >= resultItem.nbForCraft) _textMesh.color = goodColor;
         else _textMesh.color = badColor;
-        _textMesh.text = InventoryPlayer.Instance.nbItems[sourceItem.itemType] + "/" + resultItem.nbForCraft;
+        _textMesh.text = InventoryPlayer.Instance.nbItems[sourceItem.itemType] + "/" + ((FtueManager.instance.active) ? 3 : resultItem.nbForCraft);
         _img.texture = sourceItem.icon.texture;
     }
 }

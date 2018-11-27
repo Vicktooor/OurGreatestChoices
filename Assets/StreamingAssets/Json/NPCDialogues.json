@@ -1,11 +1,11 @@
 {
     "objects": [
         {
-            "key": "MajorForest",
+            "key": "Major",
             "value": {
-                "introText": "MajorForest_In",
-                "outroText": "MajorForest_Ou",
-                "topicIDs": [ 0, 1 ],
+                "introText": "Major_In",
+                "outroText": "Major_Ou",
+                "topicIDs": [ 7 ],
                 "thanks": [
                     {
                         "itemType": "Electricity",
@@ -47,11 +47,11 @@
             }
         },
         {
-            "key": "CarsCompanyForest",
+            "key": "CarsCompanyDesert",
             "value": {
                 "introText": "CarsCompany_In",
                 "outroText": "CarsCompany_Ou",
-                "topicIDs": [ 1, 2 ],
+                "topicIDs": [ 21, 14 ],
                 "thanks": [
                     {
                         "itemType": "Battery",
@@ -75,11 +75,67 @@
             }
         },
         {
-            "key": "CoalPowerForest",
+            "key": "CarsCompanyForest",
+            "value": {
+                "introText": "CarsCompany_In",
+                "outroText": "CarsCompany_Ou",
+                "topicIDs": [ 21, 15 ],
+                "thanks": [
+                    {
+                        "itemType": "Battery",
+                        "haveBudgetText": "CarCompanyHaveMoneyWithoutItem_Battery",
+                        "haveItemText": "CarCompanyHaveItemWithoutMoney_Battery",
+                        "fullThanks": "CarCompanyFullThanks_Battery"
+                    },
+                    {
+                        "itemType": "GreenBattery",
+                        "haveBudgetText": "CarCompanyHaveMoneyWithoutItem_GreenBattery",
+                        "haveItemText": "CarCompanyHaveItemWithoutMoney_GreenBattery",
+                        "fullThanks": "CarCompanyFullThanks_GreenBattery"
+                    },
+                    {
+                        "itemType": "Carcass",
+                        "haveBudgetText": "CarCompanyHaveMoneyWithoutItem_Carcass",
+                        "haveItemText": "CarCompanyHaveItemWithoutMoney_Carcass",
+                        "fullThanks": "CarCompanyFullThanks_Carcass"
+                    }
+                ]
+            }
+        },
+        {
+            "key": "CarsCompanyMoutain",
+            "value": {
+                "introText": "CarsCompany_In",
+                "outroText": "CarsCompany_Ou",
+                "topicIDs": [ 21, 14 ],
+                "thanks": [
+                    {
+                        "itemType": "Battery",
+                        "haveBudgetText": "CarCompanyHaveMoneyWithoutItem_Battery",
+                        "haveItemText": "CarCompanyHaveItemWithoutMoney_Battery",
+                        "fullThanks": "CarCompanyFullThanks_Battery"
+                    },
+                    {
+                        "itemType": "GreenBattery",
+                        "haveBudgetText": "CarCompanyHaveMoneyWithoutItem_GreenBattery",
+                        "haveItemText": "CarCompanyHaveItemWithoutMoney_GreenBattery",
+                        "fullThanks": "CarCompanyFullThanks_GreenBattery"
+                    },
+                    {
+                        "itemType": "Carcass",
+                        "haveBudgetText": "CarCompanyHaveMoneyWithoutItem_Carcass",
+                        "haveItemText": "CarCompanyHaveItemWithoutMoney_Carcass",
+                        "fullThanks": "CarCompanyFullThanks_Carcass"
+                    }
+                ]
+            }
+        },
+        {
+            "key": "CoalPower",
             "value": {
                 "introText": "CoalPower_In",
                 "outroText": "CoalPower_Ou",
-                "topicIDs": [ 0, 2 ],
+                "topicIDs": [ 19, 15 ],
                 "thanks": [
                     {
                         "itemType": "WindTurbine",
@@ -88,6 +144,94 @@
                         "fullThanks": "CoalFullThanks_WindTurbine"
                     }
                 ]
+            }
+        },
+        {
+            "key": "CoalPowerForestFtue",
+            "value": {
+                "introText": "CoalPower_In",
+                "outroText": "CoalPower_Ou",
+                "topicIDs": [ 19, 20 ],
+                "thanks": [
+                    {
+                        "itemType": "WindTurbine",
+                        "haveBudgetText": "CoalHaveMoneyWithoutItem_WindTurbine",
+                        "haveItemText": "CoalHaveItemWithoutMoney_WindTurbine",
+                        "fullThanks": "CoalFullThanks_WindTurbine"
+                    }
+                ]
+            }
+        },
+        {
+            "key": "School",
+            "value": {
+                "introText": "School_In",
+                "outroText": "School_Ou",
+                "topicIDs": [ 8, 23 ]
+            }
+        },
+        {
+            "key": "MaritimeAssociationForest",
+            "value": {
+                "introText": "MaritimeAssociation_In",
+                "outroText": "MaritimeAssociation_Ou",
+                "topicIDs": [ 9, 2 ]
+            }
+        },
+        {
+            "key": "MaritimeAssociationDesert",
+            "value": {
+                "introText": "MaritimeAssociation_In",
+                "outroText": "MaritimeAssociation_Ou",
+                "topicIDs": [ 9, 3 ]
+            }
+        },
+        {
+            "key": "MaritimeAssociationMountain",
+            "value": {
+                "introText": "MaritimeAssociation_In",
+                "outroText": "MaritimeAssociation_Ou",
+                "topicIDs": [ 9, 24 ]
+            }
+        },
+        {
+            "key": "Deforestation",
+            "value": {
+                "introText": "Deforestation_In",
+                "outroText": "Deforestation_Ou",
+                "topicIDs": [ 17 ]
+            }
+        },
+        {
+            "key": "CERN",
+            "value": {
+                "introText": "CERN_In",
+                "outroText": "CERN_Ou",
+                "topicIDs": [ 10, 1 ]
+            }
+        },
+        {
+            "key": "IronMineForest",
+            "value": {
+                "introText": "IronMine_In",
+                "outroText": "IronMine_Ou",
+                "topicIDs": [ 0, 2 ]
+            }
+        },
+        {
+            "key": "IronMineDesert",
+            "value": {
+                "introText": "IronMine_In",
+                "outroText": "IronMine_Ou",
+                "topicIDs": [ 0, 3 ]
+            }
+        },
+        {
+            "key": "OilPlant",
+            "value": {
+                "introText": "OilPlant_In",
+                "outroText": "OilPlant_Ou",
+                "topicIDs": [ 16 ]
             }
         }
     ]

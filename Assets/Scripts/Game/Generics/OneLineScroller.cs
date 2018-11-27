@@ -14,6 +14,7 @@ public class OneLineScroller : MonoBehaviour
     private RectTransform _rect;
     private List<RectTransform> _elementList;
     private int _nbElement;
+    public int NbElement { get { return _nbElement; } }
     private Vector3 _basePos;
     private float _length;
     private int _currentIndex = 0;
@@ -248,5 +249,17 @@ public class OneLineScroller : MonoBehaviour
             _moving = false;
             if (_callback != null) _callback();
         }
+    }
+
+    public void Clear()
+    {
+        _currentIndex = 0;
+        _nbElement = 0;
+        _moving = false;
+        foreach (RectTransform rt in _elementList)
+        {
+            Destroy(rt.gameObject);
+        }
+        _elementList.Clear();
     }
 }

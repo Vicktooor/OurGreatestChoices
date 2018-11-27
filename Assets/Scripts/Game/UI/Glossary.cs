@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.Game.UI.Ftue;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -27,22 +28,53 @@ public class Glossary : MonoSingleton<Glossary>
     private GlossaryInfo[] _infos;
     private int _index = 0;
 
+    public Tweener tweener;
+
     protected override void Awake()
     {
         base.Awake();
         scroller.Init();
+        TweenerLead.Instance.NewTween(GetComponent<RectTransform>(), tweener);
+        gameObject.SetActive(false);
     }
 
     private void OnEnable()
     {
+        ControllerInput.AddScreen(transform);
         _itemTransformedNGODesc.transform.parent.gameObject.SetActive(false);
         _itemTransformedEcoDesc.transform.parent.gameObject.SetActive(false);
         _itemTransformedGouvDesc.transform.parent.gameObject.SetActive(false);
         MajScrollIcons();
-        scroller.Place(_index);
+        if (FtueManager.instance.active)
+        {
+            if (FtueManager.instance.currentStep.scrollerIndex != -1)
+            {
+                _index = FtueManager.instance.currentStep.scrollerIndex;
+            }
+        }
+        scroller.Place(-_index);
         Set(_index);
         scroller.SetMoveCallback(OnSrollMove);
         Events.Instance.Raise(new OnClickGlossary());
+
+        tweener.SetMethods(Tween, null, CheckFtue, null);
+        TweenerLead.Instance.StartTween(tweener);
+    }
+
+    protected void CheckFtue()
+    {
+        if (FtueManager.instance.active)
+        {
+            if (FtueManager.instance.currentStep.waitOpeningPanel == transform) FtueManager.instance.ValidStep();
+        }
+    }
+
+    private void Tween()
+    {
+        float x1 = Easing.Scale(Easing.SmoothStop, tweener.t, 2, 2f);
+        float x2 = Easing.FlipScale(Easing.SmoothStart, tweener.t, 2, 2f);
+        float x = Easing.Mix(x1, x2, 0.5f, tweener.t);
+        tweener.SetScale(x);
     }
 
     private void MajScrollIcons()
@@ -71,9 +103,9 @@ public class Glossary : MonoSingleton<Glossary>
 
         if (InventoryPlayer.Instance.knowsItems.Contains(_primaryItems[pIndex].EcoItem))
         {
-            _itemTransformedEcoImage.GetComponent<Image>().sprite = _primaryItems[pIndex].EcoItem.icon;
+            _itemTransformedEcoImage.GetComponent<Image>().sprite = _primaryItems[pIndex].EcoItem.ecoIcon;
         }
-        else _itemTransformedEcoImage.GetComponent<Image>().sprite = _primaryItems[pIndex].EcoItem.hiddenIcon;
+        else _itemTransformedEcoImage.GetComponent<Image>().sprite = _primaryItems[pIndex].EcoItem.ecoHiddenIcon;
 
         if (InventoryPlayer.Instance.knowsItems.Contains(_primaryItems[pIndex].GouvItem))
         {
@@ -87,8 +119,23 @@ public class Glossary : MonoSingleton<Glossary>
         Set(scroller.CurrentIndex);
     }
 
+    public void Close()
+    {
+        if (tweener.Opened)
+        {
+            tweener.SetMethods(Tween, null, null, Disable);
+            TweenerLead.Instance.StartTween(tweener);
+        }
+    }
+
+    private void Disable()
+    {     
+        gameObject.SetActive(false);
+    }
+
     private void OnDisable()
     {
+        ControllerInput.RemoveScreen(transform);
         scroller.DelMoveCallback();
     }
 

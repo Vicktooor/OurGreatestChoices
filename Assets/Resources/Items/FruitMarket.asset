@@ -18,7 +18,9 @@ MonoBehaviour:
   NGOItem: {fileID: 0}
   EcoItem: {fileID: 0}
   GouvItem: {fileID: 0}
-  nbForCraft: 3
+  nbForCraft: 10
   icon: {fileID: 21300000, guid: d10910662fe6bc74286130f311b4836e, type: 3}
+  ecoIcon: {fileID: 21300000, guid: d10910662fe6bc74286130f311b4836e, type: 3}
   hiddenIcon: {fileID: 21300000, guid: 4b519f9872346fa4fbe83f8950c4cf31, type: 3}
+  ecoHiddenIcon: {fileID: 21300000, guid: 4b519f9872346fa4fbe83f8950c4cf31, type: 3}
   glossaryDesc: GlossaryFruitMarket

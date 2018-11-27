@@ -4,6 +4,7 @@ using Assets.Scripts.Game.UI;
 using Assets.Scripts.Items;
 using Assets.Scripts.Manager;
 using FMODUnity;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,9 +33,6 @@ public class Player : MonoBehaviour
 	#region Public Variable
 	// GameObject of the Planet
 	public GameObject planet;
-
-    // Anchor for the Collision
-    public Transform raycastAnchor;
 
     // The distance to check the Collision
     public float distanceCollision;
@@ -121,11 +119,25 @@ public class Player : MonoBehaviour
     private const float PLAYER_HEIGHT = 0.5f;
     public static float NPC_HELP_DIST = 0.2f;
 
+    private Vector3 posCallBack = Vector3.zero;
+    private Action vCallBack;
+
     //public Transform targetToMove; //A MODIFIER
 
     private const string TAG_NONWALKABLE = "NonWalkable";
 
 	public EPlayer playerType;
+
+    private Vector3 _lastPos;
+    private Vector3 _currentPos;
+    private bool _moving = false;
+    public bool Moving { get { return _moving; } }
+
+    public void SetPosCallBack(Vector3 pos, Action cb)
+    {
+        posCallBack = pos;
+        vCallBack = cb;
+    }
 
     void OnEnable() {
 		_transform = GetComponent<Transform>();
@@ -140,12 +152,8 @@ public class Player : MonoBehaviour
         Events.Instance.AddListener<OnClickInteractable>(StopMove);
         Events.Instance.AddListener<OnPickUp>(StopMovePickUp);
         Events.Instance.AddListener<OnFusion>(StopMoveFusion);
-
         Events.Instance.AddListener<OnFtueNextStep>(StopMove);
-
-        if (UIManager.instance) {
-            UIManager.instance.pressButtonEvent.AddListener(CancelMove);
-        }
+        Events.Instance.AddListener<OnOpenUI>(CancelMove);
     }
 
 	void OnDisable()
@@ -155,20 +163,14 @@ public class Player : MonoBehaviour
         Events.Instance.RemoveListener<OnTapItemPickUp>(LaunchCoroutineTapItemPickUp);
         Events.Instance.RemoveListener<OnHold>(CancelCoroutineTap);
 		Events.Instance.RemoveListener<OnRemove>(PermitMove);
-
-		if (UIManager.instance)
-		{
-			UIManager.instance.pressButtonEvent.RemoveListener(CancelMove);
-		}
-
 		Events.Instance.RemoveListener<OnInteraction>(OnInteraction);
 		Events.Instance.RemoveListener<OnDesinteraction>(OnDesinteraction);
 		Events.Instance.RemoveListener<SharePlayerPosition>(ReceivePosition);
 		Events.Instance.RemoveListener<OnClickInteractable>(StopMove);
 		Events.Instance.RemoveListener<OnPickUp>(StopMovePickUp);
 		Events.Instance.RemoveListener<OnFusion>(StopMoveFusion);
-
 		Events.Instance.RemoveListener<OnFtueNextStep>(StopMove);
+		Events.Instance.RemoveListener<OnOpenUI>(CancelMove);
 	}
 
 	#region Move Functions
@@ -294,6 +296,7 @@ public class Player : MonoBehaviour
             }
         }
         else if (!_isTapMoving) SetAnimation(false);
+        _currentPos = _transform.position;
     }
 
 	protected void LateUpdate()
@@ -305,8 +308,11 @@ public class Player : MonoBehaviour
 			{
 				EarthManager.Instance.playerPositions[playerType] = new KeyValuePair<int, Vector3>(_associateCell.ID, _transform.position);
 			}
-		}
-	}
+        }
+        if (_lastPos.Equals(_currentPos)) _moving = false;
+        else _moving = true;
+        _lastPos = _transform.position;
+    }
 
     #region FootStep
 
@@ -382,10 +388,18 @@ public class Player : MonoBehaviour
         if (colType == ECollision.NONE) {
             transform.position += (k * playerAsset.transform.forward) * (Time.deltaTime / 3f);
             transform.position = SnapToPlanet(transform.position);
+            if (posCallBack != Vector3.zero)
+            {
+                if (Vector3.Distance(transform.position, posCallBack) <= 0.1f)
+                {
+                    vCallBack();
+                    posCallBack = Vector3.zero;
+                    vCallBack = null;
+                }
+            }
         }
-        else
+        else if (colType == ECollision.WALL)
         {
-            if (colType == ECollision.GROUND) return;
             Vector3 lForward = playerAsset.transform.forward.normalized;
             float angle = Vector3.Angle(lForward, normalSlideVector);
             Vector3 slideDir = Vector3.RotateTowards(lForward, normalSlideVector, angle * Mathf.Deg2Rad, 0f);
@@ -399,7 +413,7 @@ public class Player : MonoBehaviour
         UpdateCells(false);
     }
 
-    protected void UpdateCells(bool targetNPC)
+    public void UpdateCells(bool targetNPC)
     {
         Vector3 playerPos = _transform.position;
         _associateCell.UpdateProps();
@@ -460,15 +474,13 @@ public class Player : MonoBehaviour
 
         if (tPnj != null)
         {
+            if (tPnj.budgetComponent == null) return;  
             if (tPnj.budgetComponent.type != EBudgetType.None && tPnj.budgetComponent.type != EBudgetType.CERN)
             {
-                if (PlayerManager.Instance.playerType == EPlayer.GOV || PlayerManager.Instance.playerType == EPlayer.ECO)
-                {
-                    UIManager.instance.PNJState.pnj = tPnj;
-                    UIManager.instance.PNJState.SetTarget(tPnj.transform);
-                    UIManager.instance.PNJState.SetVisibility(dist, NPC_HELP_DIST);
-                    UIManager.instance.PNJState.Active(true);
-                }
+                UIManager.instance.PNJState.pnj = tPnj;
+                UIManager.instance.PNJState.SetTarget(PlayerManager.Instance.GetNearestNPCIcon());
+                UIManager.instance.PNJState.SetVisibility(dist, NPC_HELP_DIST);
+                UIManager.instance.PNJState.Active(true);
             }
             else
             {
@@ -515,6 +527,7 @@ public class Player : MonoBehaviour
 		StopAllCoroutines();
 		moveHold = false;
         SetAnimation(false);
+        Reoriente();
     }
 
 	protected void StopMoveFusion(OnFusion e)
@@ -549,13 +562,12 @@ public class Player : MonoBehaviour
         if (GameManager.Instance.LoadedScene == SceneString.ZoomView) LaunchTap();
     }
 
-	protected void LaunchCoroutineTapNPC(OnTapNPC e)
+	public void LaunchCoroutineTapNPC(OnTapNPC e)
 	{
 		if (_onUI || e.playerType != playerType) return;
 		_isHolding = false;
 		_targetInteractable = e.npc;
         LaunchTap();
-
     }
 
     protected void LaunchCoroutineTapItemPickUp(OnTapItemPickUp e) {
@@ -582,13 +594,23 @@ public class Player : MonoBehaviour
     }
 
 	protected void CancelMove() {
-		_targetInteractable = null;
+        StopAllCoroutines();
+        _targetInteractable = null;
         _targetItemPickUp = null;
         _tapPosition = Vector3.zero;
-		_onUI = true;
+        SetAnimation(false);
     }
 
-	protected void OnInteraction(OnInteraction e) {
+    protected void CancelMove(OnOpenUI e)
+    {
+        StopAllCoroutines();
+        _targetInteractable = null;
+        _targetItemPickUp = null;
+        _tapPosition = Vector3.zero;
+        SetAnimation(false);
+    }
+
+    protected void OnInteraction(OnInteraction e) {
 		if (GameManager.Instance.LoadedScene == SceneString.ZoomView) return;
 
 		StopAllCoroutines();
@@ -617,7 +639,7 @@ public class Player : MonoBehaviour
     protected IEnumerator CoroutineRotation(Vector3 targetPos)
 	{	
 		Vector3 previousPos = transform.position;
-		float stopDistance = 0.05f;
+		float stopDistance = 0.12f;
         if (_targetInteractable) stopDistance = 0.125f;
         if(_targetItemPickUp) stopDistance = 0.05f;
 
@@ -641,13 +663,23 @@ public class Player : MonoBehaviour
                 }
 
 				_targetRotation = Quaternion.LookRotation(transform.position - previousPos, transform.position);
-				Reoriente();
-
 				playerAsset.transform.rotation = Quaternion.Lerp(playerAsset.transform.rotation, _targetRotation, Time.deltaTime * 10);
 				transform.position = SnapToPlanet(transform.position);
+                Reoriente();
                 UpdateCells(true);
+
+                if (posCallBack != Vector3.zero)
+                {
+                    if (Vector3.Distance(transform.position, posCallBack) <= 0.2f)
+                    {
+                        vCallBack();
+                        posCallBack = Vector3.zero;
+                        vCallBack = null;
+                    }
+                }
             }
             else {
+                _targetItemPickUp = null;
                 _isTapMoving = false;
                 StopMove();
                 break;
@@ -656,11 +688,6 @@ public class Player : MonoBehaviour
             DoEmitter();
 
             yield return null;
-		}
-
-		if (transform.position - previousPos != Vector3.zero) {
-			_targetRotation = Quaternion.LookRotation(transform.position - previousPos, transform.position);
-			playerAsset.transform.rotation = Quaternion.Slerp(playerAsset.transform.rotation, _targetRotation, 1);
 		}
 			
 		transform.position = SnapToPlanet(transform.position);
@@ -683,7 +710,7 @@ public class Player : MonoBehaviour
             yield break;
         }
 
-        if (Vector3.Distance(transform.position, targetPos) <= stopDistance * 3f)
+        if (Vector3.Distance(transform.position, targetPos) <= stopDistance)
         {
             InteractablePNJ lPnj = _targetInteractable as InteractablePNJ;
             NPCGender genderComponent = lPnj.GetComponent<NPCGender>();
@@ -693,6 +720,7 @@ public class Player : MonoBehaviour
                 if (lPnj && lPnj.CanTalkTo(EPlayer.NGO))
                 {
                     playerAsset.transform.rotation = Quaternion.LookRotation(lPnj.transform.position - transform.position, transform.up);
+                    UIManager.instance.PNJState.Active(false);
                     PointingBubble.instance.Show(true);
                     PointingBubble.instance.SetProperties(lPnj);
                     QuestManager.Instance.NGOTalkTo(lPnj.IDname);
@@ -767,9 +795,16 @@ public class Player : MonoBehaviour
                 _associateCell.ShowHelp(playerPos);
             }
 		}
-	}
+        Events.Instance.AddListener<OnSceneLoaded>(OnLoadScene);
+    }
 
-	protected void Reoriente()
+    private void OnLoadScene(OnSceneLoaded e)
+    {
+        Events.Instance.RemoveListener<OnSceneLoaded>(OnLoadScene);
+        Events.Instance.Raise(new OnTransitionEnd());
+    }
+
+    protected void Reoriente()
 	{
 		Vector3 upVector = transform.position.normalized;
 		Vector3 rightVector = Vector3.Cross(upVector, Vector3.up).normalized;

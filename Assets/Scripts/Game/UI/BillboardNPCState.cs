@@ -4,13 +4,24 @@ using Assets.Scripts.Manager;
 using UnityEngine.UI;
 using Assets.Scripts.Items;
 using Assets.Script;
+using System.Collections.Generic;
 
 public class BillboardNPCState : BillboardElement
 {
     public InteractablePNJ pnj;
-    public RawImage _smileyRenderer;
-    public RawImage _itemMark;
-    public RawImage _budgetMark;
+    public RawImage smileyRenderer;
+    public RawImage itemMark;
+    public RawImage budgetMark;
+
+    public RectTransform starFeedback;
+    public List<RawImage> stars;
+
+    public Sprite starLockSprite;
+    public Sprite starUnlockSprite;
+
+    public List<GameObject> arrows;
+
+    private int targetIndex = 0;
 
     protected override void Awake()
     {
@@ -24,11 +35,27 @@ public class BillboardNPCState : BillboardElement
         {
             SetVisibility(Vector3.Distance(PlayerManager.Instance.player.transform.position, pnj.Position),  Player.NPC_HELP_DIST);
             UpdateInfo();
+            for (int i = 0; i < stars.Count; i++)
+            {
+                if (i >= pnj.neededItems.Count) stars[i].gameObject.SetActive(false);
+                else
+                {
+                    EItemType lEItem = pnj.neededItems[i];
+                    Item lItem = ResourcesManager.Instance.ItemModels.Find(it => it.itemType == lEItem);
+                    if (pnj.HaveItem(lEItem) && pnj.HaveBudget(lEItem)) stars[i].texture = starUnlockSprite.texture;
+                    else stars[i].texture = starLockSprite.texture;
+                    stars[i].gameObject.SetActive(true);
+                }
+            }
+            if (pnj.neededItems.Count > 1) for (int i = 0; i < arrows.Count; i++) arrows[i].SetActive(true);
+            else for (int i = 0; i < arrows.Count; i++) arrows[i].SetActive(false);
         }
     }
 
     public void SetVisibility(float dist, float refDist)
     {
+        starFeedback.transform.position = stars[targetIndex].transform.position;
+
         if (!gameObject.activeSelf) Active(true);
         float k;
         float minDist = refDist / 2f;
@@ -51,27 +78,52 @@ public class BillboardNPCState : BillboardElement
 
     public void UpdateInfo()
     {
+        starFeedback.transform.position = stars[targetIndex].transform.position;
+        stars[targetIndex].transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
+
+        EItemType lEItem = pnj.neededItems[targetIndex];
+        Item lItem = ResourcesManager.Instance.ItemModels.Find(i => i.itemType == lEItem);
         int happinessPoint = 0;
-        BudgetComponent comp = pnj.budgetComponent;
-        if (pnj.HaveHisItem())
+        if (pnj.HaveItem(lEItem))
         {
             happinessPoint++;
-            _itemMark.texture = MainLoader<Sprite>.Instance.GetResource("Check_On").texture;
+            itemMark.texture = lItem.icon.texture;
         }
-        else _itemMark.texture = MainLoader<Sprite>.Instance.GetResource("Check_Off").texture;
-        /*if (comp.budget >= comp.targetBudget)
+        else itemMark.texture = lItem.hiddenIcon.texture;
+        if (pnj.HaveBudget(lEItem))
         {
             happinessPoint++;
-            _budgetMark.texture = MainLoader<Sprite>.Instance.GetResource("Check_On").texture;
+            budgetMark.texture = MainLoader<Sprite>.Instance.GetResource("money_icon").texture;
         }
-        else _budgetMark.texture = MainLoader<Sprite>.Instance.GetResource("Check_Off").texture;*/
-        _smileyRenderer.texture = MainLoader<Sprite>.Instance.GetResource("happyness" + happinessPoint).texture;
+        else budgetMark.texture = MainLoader<Sprite>.Instance.GetResource("money_icon_lock").texture;
+        smileyRenderer.texture = MainLoader<Sprite>.Instance.GetResource("happyness" + happinessPoint).texture;
     }
 
     public void Active(bool state)
     {
-        if (!gameObject.activeSelf && state && pnj != null) UpdateInfo();
-        gameObject.SetActive(state);
+        if (pnj != null)
+        {
+            if (pnj.neededItems.Count > 0)
+            {
+                UpdateInfo();
+                for (int i = 0; i < stars.Count; i++)
+                {
+                    if (i >= pnj.neededItems.Count) stars[i].gameObject.SetActive(false);
+                    else
+                    {
+                        EItemType lEItem = pnj.neededItems[i];
+                        Item lItem = ResourcesManager.Instance.ItemModels.Find(it => it.itemType == lEItem);
+                        if (pnj.HaveItem(lEItem) && pnj.HaveBudget(lEItem)) stars[i].texture = starUnlockSprite.texture;
+                        else stars[i].texture = starLockSprite.texture;
+                        stars[i].gameObject.SetActive(true);
+                    }
+                }
+                if (pnj.neededItems.Count > 1) for (int i = 0; i < arrows.Count; i++) arrows[i].SetActive(true);
+                else for (int i = 0; i < arrows.Count; i++) arrows[i].SetActive(false);
+                gameObject.SetActive(state);
+            }
+            else gameObject.SetActive(false);
+        } else gameObject.SetActive(false);
     }
 
     public void SetTarget(Transform target)
@@ -79,8 +131,36 @@ public class BillboardNPCState : BillboardElement
         GetComponent<UIOverlay>().targetTransform = target;
     }
 
+    public void Right()
+    {
+        stars[targetIndex].transform.localScale = Vector3.one;
+        targetIndex = (targetIndex + 1) % pnj.neededItems.Count;
+        UpdateInfo();
+    }
+
+    public void Left()
+    {
+        stars[targetIndex].transform.localScale = Vector3.one;
+        targetIndex = (targetIndex - 1) % pnj.neededItems.Count;
+        if (targetIndex < 0) targetIndex = pnj.neededItems.Count - 1;
+        UpdateInfo();
+    }
+
+    public void SetFromItem(EItemType iType)
+    {
+        if (pnj.neededItems.Contains(iType))
+        {
+            stars[targetIndex].transform.localScale = Vector3.one;
+            targetIndex = pnj.neededItems.IndexOf(iType);
+            UpdateInfo();
+        }
+    }
+
     public void Clear()
     {
+        stars[targetIndex].transform.localScale = Vector3.one;
+        starFeedback.transform.position = stars[0].transform.position;
+        targetIndex = 0;
         pnj = null;
         GetComponent<UIOverlay>().targetTransform = null;
     }

@@ -3,17 +3,17 @@
         {
             "ID": "MajorForest",
             "impactType": "BasicTownHall",
-            "NPCText": "MajorForest"
+            "NPCText": "Major"
         },
         {
             "ID": "MajorDesert",
             "impactType": "BasicTownHall",
-            "NPCText": "MajorForest"
+            "NPCText": "Major"
         },
         {
             "ID": "MajorMountain",
             "impactType": "BasicTownHall",
-            "NPCText": "MajorForest"
+            "NPCText": "Major"
         },
 
 
@@ -25,99 +25,111 @@
         {
             "ID": "CarsCompanyDesert",
             "impactType": "CarsCompany",
-            "NPCText": "CarsCompanyForest"
+            "NPCText": "CarsCompanyDesert"
         },
         {
             "ID": "CarsCompanyMountain",
             "impactType": "CarsCompany",
-            "NPCText": "CarsCompanyForest"
+            "NPCText": "CarsCompanyMountain"
         },
 
 
         {
             "ID": "SchoolForest",
             "impactType": "School",
-            "NPCText": ""
+            "NPCText": "School"
         },
         {
             "ID": "SchoolDesert",
             "impactType": "School",
-            "NPCText": ""
+            "NPCText": "School"
         },
         {
             "ID": "SchoolMountain",
             "impactType": "School",
-            "NPCText": ""
+            "NPCText": "School"
         },
 
 
         {
             "ID": "CoalForest",
             "impactType": "CoalPowerPlant",
-            "NPCText": "CoalPowerForest"
+            "NPCText": "CoalPower"
         },
         {
             "ID": "CoalDesert",
             "impactType": "CoalPowerPlant",
-            "NPCText": "CoalPowerForest"
+            "NPCText": "CoalPower"
         },
         {
             "ID": "CoalMountain",
             "impactType": "CoalPowerPlant",
-            "NPCText": "CoalPowerForest"
+            "NPCText": "CoalPower"
+        },
+        {
+            "ID": "CoalForestFtue",
+            "impactType": "CoalPowerPlant",
+            "NPCText": "CoalPowerForestFtue"
         },
 
 
         {
             "ID": "IronMineForest",
             "impactType": "None",
-            "NPCText": ""
+            "NPCText": "IronMineForest"
         },
         {
             "ID": "IronMineDesert",
             "impactType": "None",
-            "NPCText": ""
+            "NPCText": "IronMineDesert"
         },
 
 
         {
             "ID": "Deforestation",
             "impactType": "None",
-            "NPCText": ""
+            "NPCText": "Deforestation"
         },
 
 
         {
             "ID": "OilPlantForest",
             "impactType": "OilPlant",
-            "NPCText": ""
+            "NPCText": "OilPlant"
         },
         {
             "ID": "OilPlantDesert",
             "impactType": "OilPlant",
-            "NPCText": ""
+            "NPCText": "OilPlant"
         },
         {
             "ID": "OilPlantMountain",
             "impactType": "OilPlant",
-            "NPCText": ""
+            "NPCText": "OilPlant"
         },
 
 
         {
             "ID": "MaritimeForest",
             "impactType": "MaritimeAssociation",
-            "NPCText": ""
+            "NPCText": "MaritimeAssociationForest"
         },
         {
             "ID": "MaritimeDesert",
             "impactType": "MaritimeAssociation",
-            "NPCText": ""
+            "NPCText": "MaritimeAssociationDesert"
         },
         {
-            "ID": "MaritimeDesert",
+            "ID": "MaritimeMountain",
             "impactType": "MaritimeAssociation",
-            "NPCText": ""
+            "NPCText": "MaritimeAssociationMountain"
+        },
+
+
+        {
+            "ID": "CERN",
+            "impactType": "CERN",
+            "NPCText": "CERN"
         }
     ]
 }

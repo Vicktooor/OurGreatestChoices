@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+public enum EControlEnable { On, Off}
+
 public class ControllerInput : MonoBehaviour {
 
     public static List<Transform> OpenScreens = new List<Transform>();
@@ -62,9 +64,6 @@ public class ControllerInput : MonoBehaviour {
     // The radius of the Planet
     float _planetRadius;
 
-    // Bool to know if the player click on UI elements
-    bool _isOnUI = false;
-
     // Result of raycast;
     RaycastHit _hit;
     public Interactable Hit { get
@@ -96,6 +95,8 @@ public class ControllerInput : MonoBehaviour {
     private bool _safeBlocking = false;
     private bool _controlEnable = true;
 
+    public EControlEnable ControlEnable = EControlEnable.On;
+
     private uint _startFrameTap;
 
     private static ControllerInput _instance;
@@ -117,7 +118,7 @@ public class ControllerInput : MonoBehaviour {
         _panelNumber = OpenScreens.Count;
         if (_safeBlocking) return;
 
-        if (_panelNumber != _previousPanelNumber && _panelNumber == 0)
+        if (_panelNumber != _previousPanelNumber && _panelNumber <= 0)
         {
             StartCoroutine(SafeClosePanelCoroutine());
             _previousPanelNumber = _panelNumber;
@@ -127,17 +128,18 @@ public class ControllerInput : MonoBehaviour {
         if (GameManager.Instance.LoadedScene == SceneString.MapView) frameTap = 1;
         else frameTap = _startFrameTap;
 
+        if (ControlEnable == EControlEnable.Off) return;
+
         if (FtueManager.instance.active && FtueManager.instance.activeInput == FtueInputs.PINCH) {
             if (Pinch()) return;
         }
 
-        if (!FtueManager.instance.active && _panelNumber == 0)
+        if ((!FtueManager.instance.active && _panelNumber == 0) || (FtueManager.instance.playerFree && _panelNumber == 0))
         {
             _controlEnable = true;
-            if (Pinch()) return;
+            if (!FtueManager.instance.active) if (Pinch()) return;
             TouchHit();
         }
-        else if (OpenScreens.Count > 0 && _controlEnable) ResetDatasTouch();
 
         _previousPanelNumber = _panelNumber;
     }
@@ -256,7 +258,7 @@ public class ControllerInput : MonoBehaviour {
             }
             else
             {
-                if (_frameCounter > frameTap && !_isOnUI) Events.Instance.Raise(new OnHold(Input.mousePosition));
+                if (_frameCounter > frameTap) Events.Instance.Raise(new OnHold());
             }
         }
         else
@@ -266,17 +268,11 @@ public class ControllerInput : MonoBehaviour {
                 _lastTouch = Input.GetTouch(0);
 
                 GetTapPosition(_lastTouch);
-                GetTouchPositionFromCenter(_lastTouch);
+                GetTouchPositionFromCenter();
                 GetTouchPosition(_lastTouch);
 
                 _touching = true;
                 _frameCounter++;
-
-                if (_frameCounter > frameTap)
-                {
-                    Events.Instance.Raise(new OnHold(_lastTouch.position));
-                    return;
-                }
 
                 if (CheckTapLayer(_layerInteract, _lastTouch)) _tapInteract = true;
                 else if (CheckTapLayer(_layerCell, _lastTouch)) _tapCell = true;
@@ -284,9 +280,9 @@ public class ControllerInput : MonoBehaviour {
             else _touching = false;
 
             if (!_touching)
-            {
+            {               
                 GetTapPosition(_lastTouch);
-                GetTouchPositionFromCenter(_lastTouch);
+                GetTouchPositionFromCenter();
                 GetTouchPosition(_lastTouch);
 
                 if (_frameCounter > 0 && _frameCounter <= frameTap)
@@ -300,7 +296,7 @@ public class ControllerInput : MonoBehaviour {
                     else if (_tapCell)
                     {
                         TapCell();
-                        ResetDatasTouch();
+                        
                         return;
                     }
                 }
@@ -310,17 +306,20 @@ public class ControllerInput : MonoBehaviour {
                     return;
                 }
             }
+            else
+            {
+                if (_frameCounter > frameTap) Events.Instance.Raise(new OnHold());
+            }
         }
     }
 
     bool CheckTapUILayer()
     {
-        if(Input.touchCount > 0) {
-            if (EventSystem.current.IsPointerOverGameObject(_touchInput.fingerId)) {
-                return true;
-            }
-        }
-        return EventSystem.current.IsPointerOverGameObject();
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        return results.Count > 0;
     }
 
     bool CheckTapLayer(LayerMask pLayer)
@@ -340,10 +339,16 @@ public class ControllerInput : MonoBehaviour {
     bool TapInteract()
     {
 		InteractablePNJ pnj = _hit.transform.GetComponent<InteractablePNJ>();
-        
-		if (pnj != null) {
+        BillboardHelp helpSprite = _hit.transform.GetComponent<BillboardHelp>();
+
+        if (pnj != null) {
             Events.Instance.Raise(new OnTapNPC(pnj));
 			return true;
+        }
+        else if (helpSprite != null)
+        {
+            Events.Instance.Raise(new OnTapNPC(helpSprite.pnj));
+            return true;
         }
         else if (_hit.transform.GetComponent<ItemPickup>() && PlayerManager.Instance.playerType == EPlayer.ECO) {
             Events.Instance.Raise(new OnTapItemPickUp(_hit.transform.gameObject));		
@@ -357,7 +362,6 @@ public class ControllerInput : MonoBehaviour {
     }
 
     public void ResetDatasTouch() {
-        _isOnUI = false;
         _isHolding = false;
         _frameCounter = 0;
 
@@ -422,17 +426,6 @@ public class ControllerInput : MonoBehaviour {
         }
     }
 
-    void GetTouchPositionFromCenter(Touch lastTouch)
-    {
-        float lTouchDistanceX;
-        float lTouchDistanceY;
-
-        lTouchDistanceX = (lastTouch.position.x - _screenCenter.x) / _screenCenter.x;
-        lTouchDistanceY = (lastTouch.position.y - _screenCenter.y) / _screenCenter.y;
-
-        _touchCenterPosition = new Vector2(lTouchDistanceX, lTouchDistanceY);
-    }
-
     void GetTapPosition() {
         Ray ray = GetRay();
 
@@ -459,11 +452,7 @@ public class ControllerInput : MonoBehaviour {
         Ray ray = new Ray();
 
         if (Camera.main) {
-			if (!GameManager.Instance.IsOnDesk)
-			{
-				if (Input.touchCount == 1) return Camera.main.ScreenPointToRay(_touchInput.position);
-			}
-			else return Camera.main.ScreenPointToRay(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
+			return Camera.main.ScreenPointToRay(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
         }
         return ray;
     }
@@ -474,13 +463,28 @@ public class ControllerInput : MonoBehaviour {
 
         if (Camera.main)
         {
-            if (!GameManager.Instance.IsOnDesk)
-            {
-                return Camera.main.ScreenPointToRay(lastTouch.position);
-            }
-            else return Camera.main.ScreenPointToRay(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
+            return Camera.main.ScreenPointToRay(lastTouch.position);
         }
         return ray;
+    }
+
+    public static void AddScreen(Transform trf)
+    {
+        if (!OpenScreens.Contains(trf))
+        {
+            Events.Instance.Raise(new OnOpenUI());
+            OpenScreens.Add(trf);
+        }
+        Events.Instance.Raise(new OnPanelBtnState(OpenScreens.Count <= 0));
+    }
+
+    public static void RemoveScreen(Transform trf)
+    {
+        if (OpenScreens.Contains(trf))
+        {
+            OpenScreens.Remove(trf);
+        }
+        Events.Instance.Raise(new OnPanelBtnState(OpenScreens.Count <= 0));
     }
 }
 

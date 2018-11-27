@@ -1,5 +1,6 @@
 ﻿using Assets.Script;
 using Assets.Scripts.Game.UI;
+using Assets.Scripts.Game.UI.Ftue;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -10,7 +11,6 @@ public class InventoryScreen : MonoSingleton<InventoryScreen>
     private RectTransform _rectTransform;
 
     public InventoryElement giveTarget;
-    public Transform dragImageTransform;
     private InventoryElement _targetDraggable;
     private List<RaycastResult> _hitObjects = new List<RaycastResult>();
     private bool _dragging;
@@ -29,21 +29,35 @@ public class InventoryScreen : MonoSingleton<InventoryScreen>
         base.Awake();
         scroller.Init();
         _rectTransform = GetComponent<RectTransform>();
-        UITweener.Instance.NewTween(_rectTransform, tweener);
+    }
+
+    protected void Start()
+    {
+        TweenerLead.Instance.NewTween(_rectTransform, tweener);
     }
 
     public void HandleActiveFromNPC(InteractablePNJ npc)
     {
+        ControllerInput.AddScreen(transform);
         giveTarget.gameObject.SetActive(false);
         NPCpanel.clickedNPC = npc;
-        tweener.SetMethods(Move, OpenTransform, null, CloseUI);
-        UITweener.Instance.StartTween(_rectTransform);
+        tweener.SetMethods(Move, OpenTransform, CheckFtue, CloseUI);
+        TweenerLead.Instance.StartTween(tweener);
+    }
+
+    protected void CheckFtue()
+    {
+        if (FtueManager.instance.active)
+        {
+            if (FtueManager.instance.currentStep.transformTarget != EPlayer.NONE) FtueManager.instance.ValidStep(); 
+        }
     }
 
     public void HandleActiveFromInventory()
     {
+        ControllerInput.AddScreen(transform);
         tweener.SetMethods(Move, OpenInventory, Opened, CloseUI);
-        UITweener.Instance.StartTween(_rectTransform);
+        TweenerLead.Instance.StartTween(tweener);
     }
 
     public void Move()
@@ -51,7 +65,7 @@ public class InventoryScreen : MonoSingleton<InventoryScreen>
         float x1 = Easing.Scale(Easing.SmoothStop, tweener.t, 2, 2f);
         float x2 = Easing.FlipScale(Easing.SmoothStart, tweener.t, 2, 2f);
         float x = Easing.Mix(x1, x2, 0.5f, tweener.t);
-        _rectTransform.localPosition = MathCustom.LerpUnClampVector(tweener.TweenInfo.startPos, tweener.targetPos, x);
+        tweener.SetPos(x);
     }
 
     public void OpenTransform()
@@ -59,20 +73,33 @@ public class InventoryScreen : MonoSingleton<InventoryScreen>
         UIManager.instance.PNJState.Active(false);
         NPCpanel.gameObject.SetActive(true);
         bagButton.SetActive(false);
-        UIManager.instance.PNJState.Active(false);
-        ControllerInput.OpenScreens.Add(transform);
     }
 
     public void OpenInventory()
     {
-        UIManager.instance.PNJState.Active(false);
+        if (FtueManager.instance.active)
+        {
+            if (FtueManager.instance.currentStep.scrollerIndex != -1)
+            {
+                scroller.Place(-FtueManager.instance.currentStep.scrollerIndex);
+            }
+        }
+
         NPCpanel.gameObject.SetActive(false);
         bagButton.SetActive(false);
-        ControllerInput.OpenScreens.Add(transform);
     }
 
     public void Opened()
     {
+        if (FtueManager.instance.active)
+        {
+            if (FtueManager.instance.currentStep.scrollerIndex != -1)
+            {
+                int i = FtueManager.instance.currentStep.scrollerIndex;
+                if (FtueManager.instance.currentStep.drag.active)
+                    FtueManager.instance.DetachTarget(scrollElement[i].transform);
+            }
+        }
         ActiveDrag();
     }
 
@@ -81,16 +108,26 @@ public class InventoryScreen : MonoSingleton<InventoryScreen>
         InteractablePNJ pnj = GetNPC();
         if (pnj)
         {
-            UIManager.instance.PNJState.pnj = pnj;
-            UIManager.instance.PNJState.SetTarget(pnj.transform);
-            UIManager.instance.PNJState.SetVisibility(0f, 1f);
-            UIManager.instance.PNJState.Active(true);
+            if (pnj.neededItems.Count > 0)
+            {
+                UIManager.instance.PNJState.pnj = pnj;
+                UIManager.instance.PNJState.SetTarget(PlayerManager.Instance.GetNearestNPCIcon());
+                UIManager.instance.PNJState.SetVisibility(0f, 1f);
+                UIManager.instance.PNJState.Active(true);
+            }
         }       
         StopDrag();
         giveTarget.gameObject.SetActive(false);
         NPCpanel.gameObject.SetActive(false);
         bagButton.SetActive(true);
-        ControllerInput.OpenScreens.Remove(transform);
+        ControllerInput.RemoveScreen(transform);
+        ControllerInput.instance.ResetDatasTouch();
+    }
+
+    public void Close()
+    {
+        tweener.SetMethods(Move, null, null, CloseUI);
+        TweenerLead.Instance.StartTween(tweener);
     }
 
     public void MajInventory(OnUpdateInventory e)
@@ -102,7 +139,7 @@ public class InventoryScreen : MonoSingleton<InventoryScreen>
         {
             item = items[i];
             InventoryElement ie = scrollElement.Find(el => el.itemType == item.itemType);
-            if (ie != null && InventoryPlayer.Instance.nbItems[item.itemType] <= 0)
+            if (InventoryPlayer.Instance.nbItems[item.itemType] <= 0)
             {
                 InventoryPlayer.Instance.itemsWornArray.Remove(item);
                 scrollElement.Remove(ie);
@@ -186,19 +223,32 @@ public class InventoryScreen : MonoSingleton<InventoryScreen>
         if (npc.CanAccept(item))
         {
             FBX_Give.instance.Play(new Vector3(draggerTransform.transform.position.x, draggerTransform.transform.position.y, draggerTransform.transform.position.z));
-            PointingBubble.instance.Show(true);
+
+            if (FtueManager.instance.active)
+            {
+                if (FtueManager.instance.currentStep.drag.active)
+                {
+                    FtueManager.instance.AttachTarget(scrollElement[FtueManager.instance.currentStep.scrollerIndex].transform);
+                    FtueManager.instance.ValidStep();
+                }
+            }
+            else
+            {
+                PointingBubble.instance.Show(true);
+                PointingBubble.instance.ActiveTouchForClose();
+            }
 
             int itemIndex = InventoryPlayer.Instance.GetItemIndex(item.itemType);
-            InventoryPlayer.Instance.Give(itemIndex);
+            InventoryPlayer.Instance.Give(itemIndex, npc.IDname);
             Events.Instance.Raise(new OnGive(itemIndex));
-            PointingBubble.instance.ActiveTouchForClose();
-
+            
             npc.ReceiveItem(item.itemType);
+            UIManager.instance.PNJState.SetFromItem(item.itemType);
+            Events.Instance.Raise(new OnUpdateNPCInfo());
+            MajInventory(null);
+            if (scroller.CurrentIndex >= scroller.NbElement && scroller.NbElement > 0) scroller.Move(1);
 
-            UIManager.instance.PNJState.pnj = npc;
-            UIManager.instance.PNJState.SetTarget(npc.transform);
-            UIManager.instance.PNJState.SetVisibility(0f, 1f);  
-            UIManager.instance.PNJState.Active(true);
+            if (FtueManager.instance.active) HandleActiveFromInventory();
         }
         else
         {

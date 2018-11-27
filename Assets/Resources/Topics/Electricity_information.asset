@@ -16,14 +16,8 @@ MonoBehaviour:
     playerText: ElecInfo0
     NPCText: ElecAnswer0
     getInfo: 1
-    nextTexts:
-    - playerText: ElecInfo1.0
-      NPCText: ElecAnswer1.0
-      getInfo: 1
-      nextTexts: []
-    - playerText: ElecInfo1.1
-      NPCText: ElecAnswer1.1
-      getInfo: 0
-      nextTexts: []
+    nextTexts: []
+    smileySprite: {fileID: 0}
+    iconSprite: {fileID: 0}
   targetItem: {fileID: 11400000, guid: 090c1381c0ed40c45a4f9cedd5b9cba7, type: 2}
-  icon: {fileID: 21300000, guid: bf756632782e8b048ab948cff53dd3bf, type: 3}
+  icon: {fileID: 21300000, guid: 866a5ca203087bf4480741cba6fb20bf, type: 3}

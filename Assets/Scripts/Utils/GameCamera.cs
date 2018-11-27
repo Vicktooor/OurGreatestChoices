@@ -187,7 +187,7 @@ namespace Assets.Scripts.Utils
 
 		protected void PlayerToPlayer(GameObject go)
 		{
-			StartCoroutine(TransitionCoroutine(ECameraTargetType.MAP, Vector3.zero, go.GetComponent<Player>()));
+			StartCoroutine(TransitionCoroutine(ECameraTargetType.MAP, go.GetComponent<Player>()));
 		}
 
 		public static float ClampAngle(float angle, float min, float max)
@@ -201,8 +201,8 @@ namespace Assets.Scripts.Utils
 
 		protected void ChangeScene()
 		{
-			if (mode == ECameraTargetType.MAP) StartCoroutine(TransitionCoroutine(ECameraTargetType.ZOOM, Vector3.zero, player));
-			else StartCoroutine(TransitionCoroutine(ECameraTargetType.MAP, Vector3.zero, player));
+			if (mode == ECameraTargetType.MAP) StartCoroutine(TransitionCoroutine(ECameraTargetType.ZOOM, player));
+			else StartCoroutine(TransitionCoroutine(ECameraTargetType.MAP, player));
 		}
 
         private bool _rolling = false;
@@ -217,26 +217,27 @@ namespace Assets.Scripts.Utils
             _rolling = false;
 		}
 
-		/// <summary>
-		/// Camera transition coroutine
-		/// </summary>
-		/// <param name="transitionType"></param>
-		/// <param name="targetView"></param>
-		/// <param name="centerPos">Use only with circle transition</param>
-		/// <returns></returns>
-		protected IEnumerator TransitionCoroutine(ECameraTargetType targetView, Vector3 centerPos, Player targetPlayer)
+        /// <summary>
+        /// Camera transition coroutine
+        /// </summary>
+        /// <param name="transitionType"></param>
+        /// <param name="targetView"></param>
+        /// <param name="centerPos">Use only with circle transition</param>
+        /// <returns></returns>
+        private ECameraTargetType _targetMode = ECameraTargetType.NONE;
+		protected IEnumerator TransitionCoroutine(ECameraTargetType targetView, Player targetPlayer)
 		{
+            ControllerInput.instance.ControlEnable = EControlEnable.Off;
+            UIManager.instance.PNJState.Active(false);
 			if (FtueManager.instance.active && targetView != mode) Events.Instance.Raise(new OnInputFtuePinch());
 
 			_transitionRunning = true;
 			Block();
 			float t = 0;
-			Vector3 targetPosition;
-			Quaternion targetRotation;
 			Vector3 basePosition = transform.position;
 			Quaternion baseRotation = transform.rotation;
 
-			CameraManager.Instance.TransformCameraTarget(targetPlayer.playerAsset.transform, out targetPosition, out targetRotation, mode);
+			CameraManager.Instance.TransformCameraTarget(targetPlayer.transform, out targetPosition, out targetRotation, targetView);
 
 			while (t < 1)
 			{
@@ -268,35 +269,93 @@ namespace Assets.Scripts.Utils
                         break;
                 }
                 yield return null;
-            }
+            }   
 
-			if (targetView == ECameraTargetType.MAP)
-			{
-				if (mode == ECameraTargetType.ZOOM)
-				{
-					transform.position = transform.position + transform.position.normalized * CameraManager.Instance.MapViewDistance;
-					if (planetTransform != null) transform.LookAt(planetTransform);
-                    CameraManager.Instance.HandleZoomEnd();
-				}
-                else Events.Instance.Raise(new OnEndSwitchedPlayer());
+            _targetMode = targetView;
+            if (targetView == mode)
+            {
+                ControllerInput.instance.ControlEnable = EControlEnable.On;
+                player = targetPlayer;
+                Events.Instance.Raise(new OnEndSwitchedPlayer());
+                Unblock();
+                _transitionRunning = false;
+                StopAllCoroutines();
             }
-			if (targetView == ECameraTargetType.ZOOM)
-			{
-                CameraManager.Instance.HandleZoomEnd();
-            }
-
-			player = targetPlayer;
-			if (FtueManager.instance.active && targetView != mode) Events.Instance.Raise(new OnEndFtuePinch());
-			mode = targetView;		
-			Unblock();
-			_transitionRunning = false;
-			StopAllCoroutines();
+            else
+            {
+                if (FtueManager.instance.active) Events.Instance.Raise(new OnEndFtuePinch());
+                Events.Instance.AddListener<OnTransitionEnd>(FinishTransition);
+            } 
 		}
 
-        private bool _zoomRunning = false;
+        protected void FinishTransition(OnTransitionEnd e)
+        {
+            player = PlayerManager.Instance.GetPlayer();
+            CameraManager.Instance.TransformCameraTarget(player.transform, out targetPosition, out targetRotation, _targetMode);
+            Events.Instance.RemoveListener<OnTransitionEnd>(FinishTransition);
+            if (_targetMode == ECameraTargetType.MAP)
+            {
+                if (mode == ECameraTargetType.ZOOM)
+                {
+                    mode = _targetMode;
+                    StartCoroutine(DezoomIntroCoroutine());
+                }
+            }
+            if (_targetMode == ECameraTargetType.ZOOM)
+            {
+                mode = _targetMode;
+                StartCoroutine(ZoomIntroCoroutine());
+            }
+        }
+
+        private IEnumerator ZoomIntroCoroutine()
+        {
+            float t = 0f;
+            float x = 0;
+            float xr = 0;
+            transform.LookAt(player.transform);
+            Quaternion r = transform.rotation;
+            Vector3 initPos = transform.position;
+            while (t < 1f)
+            {
+                t = Mathf.Clamp(t + (Time.deltaTime * (1f / 2f)), 0f, 1f);
+                x = Easing.CrossFade(Easing.SmoothStart, 2, Easing.SmoothStop, 2, t);
+                xr = Easing.Mix(Easing.SmoothStop, 2, Easing.SmoothStart, 4, 0.3f, t);
+                transform.position = Vector3.Lerp(initPos, targetPosition, x);
+                transform.rotation = Quaternion.Lerp(r, targetRotation, xr);
+                yield return null;
+            }
+
+            ControllerInput.instance.ControlEnable = EControlEnable.On;
+            CameraManager.Instance.HandleZoomEnd();
+            Unblock();
+            _transitionRunning = false;
+            StopAllCoroutines();
+        }
+
+        private IEnumerator DezoomIntroCoroutine()
+        {
+            Vector3 initPos = transform.position;
+            float t = 0f;
+            float x = 0;
+            while (t < 1f)
+            {
+                t = Mathf.Clamp(t + (Time.deltaTime * (1f / 2f)), 0f, 1f);
+                x = Easing.CrossFade(Easing.SmoothStart, 2, Easing.SmoothStop, 2, t);
+                transform.position = Vector3.Lerp(initPos, targetPosition, x);
+                transform.LookAt(planetTransform);
+                yield return null;
+            }
+
+            ControllerInput.instance.ControlEnable = EControlEnable.On;
+            CameraManager.Instance.HandleZoomEnd();
+            Unblock();
+            _transitionRunning = false;
+            StopAllCoroutines();
+        }
+
 		protected IEnumerator ZoomCoroutine(float targetValue)
 		{
-            _zoomRunning = true;
 			int zoom = 0;
 			if (targetValue > CameraManager.Instance.StepHeight) zoom = 1;
 			else if (targetValue < CameraManager.Instance.StepHeight) zoom = -1;
@@ -314,11 +373,12 @@ namespace Assets.Scripts.Utils
 					if (CameraManager.Instance.StepHeight < targetValue) CameraManager.Instance.StepHeight = targetValue;
 				}
 
-				if(PlayerManager.Instance.playerType != EPlayer.ECO) PointingBubble.instance.Point();
+				if(PlayerManager.Instance.playerType == EPlayer.NGO) PointingBubble.instance.Point();
 
 				yield return null;
 			}
-            _zoomRunning = false;
+
+            Events.Instance.Raise(new OnEndPanelZoom());
 		}
 
 		protected void Reoriente()

@@ -33,6 +33,10 @@
             "value": "Desert workshop chief"
         },
         {
+            "key": "#CoalForestFtue",
+            "value": "Workshop chief"
+        },
+        {
             "key": "#CoalMountain",
             "value": "Mountain workshop chief"
         },
@@ -56,109 +60,232 @@
 
 
         {
-            "key": "#MajorForest_In",
-            "value": "Welcome"
+            "key": "#Major_In",
+            "value": "Welcome in town ! May I be of assistance?"
         },
         {
-            "key": "#MajorForest_Ou",
-            "value": "Bye"
-        }, 
+            "key": "#Major_Ou",
+            "value": "Good luck!"
+        },
         {
             "key": "#CarsCompany_In",
-            "value": "Hi"
+            "value": "Welcome to my car company! Can I help you?"
         },
         {
             "key": "#CarsCompany_Ou",
-            "value": "Goodbye"
+            "value": "Come again sometime!"
         },
         {
             "key": "#CoalPower_In",
-            "value": "Hello"
+            "value": "Yes, this is the Coal Power Plant."
         },
         {
             "key": "#CoalPower_Ou",
-            "value": "tchuss"
+            "value": "Have fun, I guess."
+        },
+        {
+            "key": "#School_In",
+            "value": "Hello! Can our establishment help you in any way?"
+        },
+        {
+            "key": "#School_Ou",
+            "value": "I hope to have been of assistance to you. Goodbye!"
+        },
+        {
+            "key": "#MaritimeAssociation_In",
+            "value": "Underwater Wildlife Protectors, at your service!"
+        },
+        {
+            "key": "#MaritimeAssociation_Ou",
+            "value": "Thank you for your time!"
+        },
+        {
+            "key": "#Deforestation_In",
+            "value": "Hey, taking a hike in the woods?"
+        },
+        {
+            "key": "#Deforestation_Ou",
+            "value": "Stay safe out there!"
+        },
+        {
+            "key": "#CERN_In",
+            "value": "You are looking at the CERN. Can they provide you with anything?"
+        },
+        {
+            "key": "#CERN_Ou",
+            "value": "We kindly appreciate your patronage."
+        },
+        {
+            "key": "#IronMine_In",
+            "value": "Need anythin' from the Iron Mine?"
+        },
+        {
+            "key": "#IronMine_Ou",
+            "value": "See ya."
+        },
+        {
+            "key": "#OilPlant_In",
+            "value": "Hi, can I help you ?"
+        },
+        {
+            "key": "#OilPlant_Ou",
+            "value": "See you around!"
         },
 
 
 
         {
-            "key": "#BatteryInfo0",
-            "value": "Battery info ?"
+            "key": "#MajorHaveMoneyWithoutItem_Elec",
+            "value": "Thanks! Now I just need electricity!"
         },
         {
-            "key": "#BatteryAnswer0",
-            "value": "Well ..."
+            "key": "#MajorHaveItemWithoutMoney_Elec",
+            "value": "Thanks! Now I just need budget!"
         },
         {
-            "key": "#BatteryInfo1.0",
-            "value": "Humhum"
+            "key": "#MajorFullThanks_Elec",
+            "value": "Hoho, this should lighten up the mood for our citizens!"
         },
         {
-            "key": "#BatteryAnswer1.0",
-            "value": "I remember ..."
+            "key": "#MajorHaveMoneyWithoutItem_GreenElec",
+            "value": "Thanks! Now I just need green electricity!"
         },
         {
-            "key": "#BatteryInfo1.1",
-            "value": "I see"
+            "key": "#MajorHaveItemWithoutMoney_GreenElec",
+            "value": "Thanks! Now I just need money!"
         },
         {
-            "key": "#BatteryAnswer1.1",
-            "value": "Could you ... ?"
+            "key": "#MajorFullThanks_GreenElec",
+            "value": "The city council should gladly greenlight this energy proposal!"
+        },
+        {
+            "key": "#MajorFullThanks_Tracks",
+            "value": "We should never lose track of our transportation systems... Hoho!"
+        },
+        {
+            "key": "#MajorHaveMoneyWithoutItem_Garden",
+            "value": "Thanks! Now I just need vegetable garden!"
+        },
+        {
+            "key": "#MajorHaveItemWithoutMoney_Garden",
+            "value": "Thanks! Now I just need budget!"
+        },
+        {
+            "key": "#MajorFullThanks_Garden",
+            "value": "If I ever thought you could have a garden on your own roof..."
+        },
+        {
+            "key": "#MajorHaveMoneyWithoutItem_FruitMarket",
+            "value": "Thanks! Now I just need some fruit basket!"
+        },
+        {
+            "key": "#MajorHaveItemWithoutMoney_FruitMarket",
+            "value": "Thanks! Now I just need budget!"
+        },
+        {
+            "key": "#MajorFullThanks_FruitMarket",
+            "value": "Rejoice, everyone: The fruit market is now open for business!"
+        },
+        {
+            "key": "#MajorHaveMoneyWithoutItem_FruitSeed",
+            "value": "Thanks! Now I just need seed!"
+        },
+        {
+            "key": "#MajorHaveItemWithoutMoney_FruitSeed",
+            "value": "Thanks! Now I just need budget!"
+        },
+        {
+            "key": "#MajorFullThanks_FruitSeed",
+            "value": "I can already see the green city award from here..."
         },
 
-        
-        
+
+
         {
-            "key": "#ElecInfo0",
-            "value": "Elec info ?"
+            "key": "#CarCompanyHaveMoneyWithoutItem_Battery",
+            "value": "Thanks! Now I just need battery!"
         },
         {
-            "key": "#ElecAnswer0",
-            "value": "Well ..."
+            "key": "#CarCompanyHaveItemWithoutMoney_Battery",
+            "value": "Clean cars? If I had more funds, sure, I'd do it!"
         },
         {
-            "key": "#ElecInfo1.0",
-            "value": "Humhum"
+            "key": "#CarCompanyFullThanks_Battery",
+            "value": "Clean cars? Yeah, let's stop polluting!"
         },
         {
-            "key": "#ElecAnswer1.0",
-            "value": "I remember ..."
+            "key": "#CarCompanyHaveMoneyWithoutItem_GreenBattery",
+            "value": "Thanks! Now I just need green battery!"
         },
         {
-            "key": "#ElecInfo1.1",
-            "value": "I see"
+            "key": "#CarCompanyHaveItemWithoutMoney_GreenBattery",
+            "value": "Even cleaner cars? I like the sound of that, let's get more funding!"
         },
         {
-            "key": "#ElecAnswer1.1",
-            "value": "Could you ... ?"
+            "key": "#CarCompanyFullThanks_GreenBattery",
+            "value": "Even cleaner cars? We're doing this. Right now!"
+        },
+        {
+            "key": "#CarCompanyHaveMoneyWithoutItem_Carcass",
+            "value": "Thanks! Now I just need carcass!"
+        },
+        {
+            "key": "#CarCompanyHaveItemWithoutMoney_Carcass",
+            "value": "Thanks! Now I just need money!"
+        },
+        {
+            "key": "#CarCompanyFullThanks_Carcass",
+            "value": "With the local Iron Mine as our supplier, we can finally open shop!"
         },
 
 
 
         {
-            "key": "#EnergyInfo0",
-            "value": "Energy info ?"
+            "key": "#CoalHaveMoneyWithoutItem_WindTurbine",
+            "value": "Thanks! Now I just need windturbine!"
         },
         {
-            "key": "#EnergyAnswer0",
-            "value": "Well ..."
+            "key": "#CoalHaveItemWithoutMoney_WindTurbine",
+            "value": "Alright, as soon as we have the money, the energy transition begins!"
         },
         {
-            "key": "#EnergyInfo1.0",
-            "value": "Humhum"
+            "key": "#CoalFullThanks_WindTurbine",
+            "value": "Renewable energy, here we come!"
+        },
+
+
+
+        {
+            "key": "#WindTurbineInfo0",
+            "value": "Do you need something ?"
         },
         {
-            "key": "#EnergyAnswer1.0",
-            "value": "I remember ..."
+            "key": "#WindTurbineAnswer0",
+            "value": "The planet need something!"
         },
         {
-            "key": "#GEnergyInfo1.1",
-            "value": "I see"
+            "key": "#WindTurbineInfo1",
+            "value": "Why ?"
         },
         {
-            "key": "#EnergyAnswer1.1",
-            "value": "Could you ... ?"
+            "key": "#WindTurbineAnswer1",
+            "value": "Actually forests are decreasing because we use wood to produce energy..."
+        },
+        {
+            "key": "#WindTurbineInfo2",
+            "value": "Will a wind turbine system helps you ?"
+        },
+        {
+            "key": "#WindTurbineAnswer2",
+            "value": "Yes a lot but we can't make it here!"
+        },
+        {
+            "key": "#IronInfo0",
+            "value": "I will find you the solution!"
+        },
+        {
+            "key": "#IronAnswer0",
+            "value": "Oh really? Thanks! Find the iron mine, they may could help you!"
         },
 
 

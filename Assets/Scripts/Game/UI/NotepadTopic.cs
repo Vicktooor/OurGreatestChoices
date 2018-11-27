@@ -24,6 +24,7 @@ namespace Assets.Scripts.Game.UI
 
 		protected TextMeshProUGUI textMesh;
 		protected RawImage icon;
+        protected Image img;
 
 		public bool clickEnable;
 
@@ -34,6 +35,7 @@ namespace Assets.Scripts.Game.UI
 		{
 			textMesh = GetComponentInChildren<TextMeshProUGUI>();
 			icon = GetComponentInChildren<RawImage>();
+            img = GetComponent<Image>();
 		}
 
 		public void OnPointerClick(PointerEventData eventData)
@@ -54,6 +56,11 @@ namespace Assets.Scripts.Game.UI
 		{
 			textMesh.text = txt;
 		}
+
+        public void SetColor(Color c)
+        {
+            img.color = c;
+        }
 
         public void Clear()
         {

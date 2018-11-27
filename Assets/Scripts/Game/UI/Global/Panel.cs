@@ -10,12 +10,12 @@ namespace Assets.Scripts.Game.UI.Global
 	{
         public void OnEnable()
         {
-            ControllerInput.OpenScreens.Add(transform);
+            ControllerInput.AddScreen(transform);
         }
 
         public void OnDisable()
         {
-            ControllerInput.OpenScreens.Remove(transform);
+            ControllerInput.RemoveScreen(transform);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Game.UI;
+using Assets.Scripts.Game.UI.Ftue;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -119,9 +120,9 @@ public class NPCScreen : MonoBehaviour {
 
     public void OnTransformation() {
         int leftNB = InventoryPlayer.Instance.nbItems[_sourceItem.itemType];
-        if (leftNB >= _resultItem.nbForCraft)
+        if (leftNB >= _resultItem.nbForCraft || (FtueManager.instance.active && leftNB >= 3))
         {
-            leftNB -= _resultItem.nbForCraft;
+            leftNB -= (FtueManager.instance.active) ? 3 :_resultItem.nbForCraft;
             InventoryPlayer.Instance.nbItems[_sourceItem.itemType] = leftNB;
             thumbnail.Set(_sourceItem, _resultItem);
             Events.Instance.AddListener<OnEndTransformation>(OnEndTransformation);
